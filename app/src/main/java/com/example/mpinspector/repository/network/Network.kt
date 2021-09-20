@@ -1,4 +1,4 @@
-package com.example.mpinspector.repository
+package com.example.mpinspector.repository.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory

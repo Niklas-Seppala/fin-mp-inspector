@@ -3,7 +3,15 @@ package com.example.mpinspector.repository
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.mpinspector.ParliamentMembersData
+import com.example.mpinspector.repository.db.MpDatabase
+import com.example.mpinspector.repository.models.MemberOfParliamentModel
+import com.example.mpinspector.repository.network.ImageWebService
+import com.example.mpinspector.repository.network.MpWebService
+import com.example.mpinspector.repository.network.Network
 import com.example.mpinspector.utils.BitmapUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -15,8 +23,22 @@ class Repository {
     private val mpWebService = Network.mpClient.create(MpWebService::class.java)
     private val imgWebService = Network.imageClient.create(ImageWebService::class.java)
 
-    suspend fun getMps(): List<MpModel> {
-        return mpWebService.getMps()
+    suspend fun getMps(): LiveData<List<MemberOfParliamentModel>> {
+
+        // PASKAA
+//        val dao = MpDatabase.getInstance().mpDao()
+//        val fromDb = dao.getAll()
+//        Log.d("TAG", fromDb.value!!.size.toString())
+//
+//        if ((fromDb.value?.size ?: 0) == 0) {
+//            val fromNetwork = mpWebService.getMps()
+//            for (mp in fromNetwork) {
+//                dao.insertOrUpdate(mp)
+//            }
+//            return MutableLiveData(fromNetwork)
+//        }
+//        return fromDb
+        TODO()
     }
 
     @Throws(IllegalArgumentException::class)

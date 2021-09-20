@@ -14,6 +14,7 @@ import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentMpBinding
 import com.example.mpinspector.repository.Repository
 import com.example.mpinspector.utils.PartyMapper
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -37,15 +38,14 @@ class MpFragment : Fragment() {
         binding.button.setOnClickListener { viewModel.next() }
         viewModel.currentMp.observe(viewLifecycleOwner, { update(it) })
 
-//        lifecycleScope.launch {
-//            val mps = this.async {
-//                Repository.instance.getMps()
-//            }
-//            val img = this.async {
-//                Repository.instance.getImage(activity, 1467)
-//            }
-//            awaitAll(mps, img)
-//        }
+        lifecycleScope.launch {
+            val mps = this.async(Dispatchers.IO) {
+                Repository.instance.getMps()
+            }
+            for (m in mps.await().value!!) {
+                Log.d("asd", "${m.first} ${m.last} pn: ${m.personNumber}")
+            }
+        }
     }
 
     private fun update(mp: MemberOfParliament) {
