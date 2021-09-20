@@ -5,7 +5,8 @@
     <string name="mpFragFullName">%1$s %2$s</string>
     <string name="mpFragIsMinister">Minister</string>
     <string name="mpFragSeatNum">Seat %1$d</string>
-    <string name="mpFragAge">Born in %1$d</string>
+<!--    <string name="mpFragAge">Born in %1$d</string>-->
+    <string name="mpFragAge">Age %1$d</string>
     <string name="mpFragNextBtn">Next MP</string>
 
     <!--Party names-->

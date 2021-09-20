@@ -12,22 +12,20 @@ import com.example.mpinspector.MemberOfParliament
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentMpBinding
 import com.example.mpinspector.utils.PartyMapper
+import java.util.*
 
 class MpFragment : Fragment() {
     private val logTag = "MP_FRAG"
     private lateinit var binding: FragmentMpBinding
     private lateinit var viewModel: MpViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_mp, container, false)
+    override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View {
+        binding = DataBindingUtil.inflate(infl, R.layout.fragment_mp, cont, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreated(view: View, sInstState: Bundle?) {
+        super.onViewCreated(view, sInstState)
         viewModel = ViewModelProvider(this).get(MpViewModel::class.java)
         viewModel.next()
 
@@ -36,25 +34,27 @@ class MpFragment : Fragment() {
     }
 
     private fun update(mp: MemberOfParliament) {
-        var partyIcon = -1
-        var partyName = -1
-        val acquireResources = kotlin.runCatching { // TODO: Tidy up
-            partyIcon = PartyMapper.partyIcon(mp.party)
-            partyName = PartyMapper.partyName(mp.party)
-        }
-
-        if (acquireResources.isFailure) {
-            Log.e(logTag, "update acquireResources fails") // TODO: inform UI about the failure
-            return
-        }
+        // Try to get party name and icon resources.
+        val (iconRes, pNameRes) = runCatching<Pair<Int, Int>> {
+            val icon = PartyMapper.partyIcon(mp.party)
+            val name = PartyMapper.partyName(mp.party)
+            icon to name
+        }.fold(onSuccess = { it }, onFailure = {
+            Log.e(logTag, "Update fails: ${it.message}")
+            return // Abort update. TODO: inform UI about the failure
+        })
 
         binding.mpFragNameTv.text = getString(R.string.mpFragFullName, mp.first, mp.last)
         binding.mpFragMinisterTv.text = if (mp.minister) getString( R.string.mpFragIsMinister) else ""
         binding.mpFragConstTv.text = mp.constituency
         binding.mpFragSeatTv.text = getString(R.string.mpFragSeatNum, mp.seatNumber)
-        binding.mpFragAgeTv.text = getString(R.string.mpFragAge, mp.bornYear)
+        binding.mpFragAgeTv.text = getString(R.string.mpFragAge, (year - mp.bornYear))
 
-        binding.mpFragPartyIv.setImageResource(partyIcon)
-        binding.mpFragPartyName.text = getString(partyName)
+        binding.mpFragPartyIv.setImageResource(iconRes)
+        binding.mpFragPartyName.text = getString(pNameRes)
+    }
+
+    private companion object {
+        private val year = Calendar.getInstance().get(Calendar.YEAR)
     }
 }
