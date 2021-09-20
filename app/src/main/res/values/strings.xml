@@ -1,5 +1,22 @@
 <resources>
     <string name="app_name">Mp Inspector</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--    mpFragment-->
+    <string name="mpFragFullName">%1$s %2$s</string>
+    <string name="mpFragIsMinister">Minister</string>
+    <string name="mpFragSeatNum">Seat %1$d</string>
+    <string name="mpFragAge">Born in %1$d</string>
+    <string name="mpFragNextBtn">Next MP</string>
+
+    <!--Party names-->
+    <string name="partyKok">Kokoomus</string>
+    <string name="partyKesk">Keskusta</string>
+    <string name="partyLiik">Liike Nyt</string>
+    <string name="partyVas">Vasemmisto Liitto</string>
+    <string name="partyVihr">Vihreät</string>
+    <string name="partyPs">Perussuomalaiset</string>
+    <string name="partySd">SDP</string>
+    <string name="partyKd">Kristillisdemokraatit</string>
+    <string name="partyR">RKP</string>
+
 </resources>

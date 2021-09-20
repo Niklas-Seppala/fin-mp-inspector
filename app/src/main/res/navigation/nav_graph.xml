@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/mpFragment"
-        android:name="com.example.mpinspector.MpFragment"
+        android:name="com.example.mpinspector.mpFrag.MpFragment"
         android:label="MpFragment"
         tools:layout="@layout/fragment_mp"/>
 </navigation>

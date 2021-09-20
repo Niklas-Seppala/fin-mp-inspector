@@ -9,14 +9,84 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/mpFragNameTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="MP FRAGMENT" />
+            tools:text="Sale Ninistöö" />
+
+        <ImageView
+            android:id="@+id/mpFragPartyIv"
+            android:layout_width="130dp"
+            android:layout_height="101dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mpFragNameTv"
+            tools:src="@mipmap/ic_party_kok" />
+
+        <TextView
+            android:id="@+id/mpFragPartyName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:textSize="16sp"
+            tools:text="Kokoomus"
+            app:layout_constraintStart_toEndOf="@+id/mpFragPartyIv"
+            app:layout_constraintTop_toTopOf="@+id/mpFragPartyIv" />
+
+        <TextView
+            android:id="@+id/mpFragMinisterTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/mpFragNameTv"
+            app:layout_constraintStart_toEndOf="@+id/mpFragNameTv"
+            tools:text="Minister" />
+
+        <TextView
+            android:id="@+id/mpFragConstTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/mpFragPartyName"
+            app:layout_constraintTop_toBottomOf="@+id/mpFragPartyName"
+            tools:text="Uusimaa" />
+
+        <TextView
+            android:id="@+id/mpFragSeatTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            tools:text="Seat 162"
+            app:layout_constraintStart_toStartOf="@+id/mpFragConstTv"
+            app:layout_constraintTop_toBottomOf="@+id/mpFragConstTv" />
+
+        <TextView
+            android:id="@+id/mpFragAgeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            tools:text="Age 55"
+            app:layout_constraintStart_toStartOf="@+id/mpFragSeatTv"
+            app:layout_constraintTop_toBottomOf="@+id/mpFragSeatTv" />
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="64dp"
+            android:text="@string/mpFragNextBtn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
