@@ -1,6 +1,12 @@
-package com.example.mpinspector.repository
+package com.example.mpinspector.repository.models
 
-data class MpModel (
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "mp")
+data class MemberOfParliamentModel (
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
     val personNumber: Int,
     val seatNumber: Int,
     val first: String,

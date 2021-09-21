@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.mpinspector"
-        minSdk 21
+        minSdk 26
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -59,4 +59,9 @@ dependencies {
     // Retrofit & MoshiConverter
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+
+    // Room db
+    def room_version = "2.3.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 }

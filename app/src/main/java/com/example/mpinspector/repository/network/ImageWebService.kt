@@ -1,4 +1,4 @@
-package com.example.mpinspector.repository
+package com.example.mpinspector.repository.network
 
 import okhttp3.ResponseBody
 import retrofit2.http.GET
