@@ -3,11 +3,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/mpFragment">
+    app:startDestination="@id/mpListItemFragment">
 
     <fragment
         android:id="@+id/mpFragment"
         android:name="com.example.mpinspector.mpFrag.MpFragment"
         android:label="MpFragment"
         tools:layout="@layout/fragment_mp"/>
+    <fragment
+        android:id="@+id/mpListItemFragment"
+        android:name="com.example.mpinspector.MpListItemFragment"
+        android:label="fragment_item_list"
+        tools:layout="@layout/fragment_item_list" >
+        <action
+            android:id="@+id/action_mpListItemFragment_to_mpFragment"
+            app:destination="@id/mpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.mpinspector.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_mpListItemFragment"
+            app:destination="@id/mpListItemFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_partiesFragment"
+            app:destination="@id/partiesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/partiesFragment"
+        android:name="com.example.mpinspector.PartiesFragment"
+        android:label="fragment_parties"
+        tools:layout="@layout/fragment_parties" >
+        <action
+            android:id="@+id/action_partiesFragment_to_partyFragment"
+            app:destination="@id/partyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/partyFragment"
+        android:name="com.example.mpinspector.PartyFragment"
+        android:label="fragment_party"
+        tools:layout="@layout/fragment_party" />
 </navigation>

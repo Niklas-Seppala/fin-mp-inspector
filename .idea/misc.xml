@@ -3,8 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2640625" />
         <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/layout/activity_main.xml" value="0.259963768115942" />
+        <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/layout/fragment_home.xml" value="0.24791666666666667" />
+        <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/layout/fragment_item.xml" value="0.22" />
+        <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/layout/fragment_item_list.xml" value="0.25" />
+        <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/layout/fragment_member_of_parliament_item_list.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/layout/fragment_member_of_parliament_list.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/layout/fragment_member_of_parliament_list_list.xml" value="0.35260416666666666" />
         <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/layout/fragment_mp.xml" value="0.5474339035769828" />
+        <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/layout/fragment_parties.xml" value="0.23385416666666667" />
+        <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/layout/fragment_party.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>
