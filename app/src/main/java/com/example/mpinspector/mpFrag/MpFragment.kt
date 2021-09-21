@@ -8,15 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.mpinspector.MemberOfParliament
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentMpBinding
-import com.example.mpinspector.repository.Repository
 import com.example.mpinspector.utils.PartyMapper
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
 import java.util.*
 
 class MpFragment : Fragment() {
@@ -36,16 +31,6 @@ class MpFragment : Fragment() {
 
         binding.button.setOnClickListener { viewModel.next() }
         viewModel.currentMp.observe(viewLifecycleOwner, { update(it) })
-
-//        lifecycleScope.launch {
-//            val mps = this.async {
-//                Repository.instance.getMps()
-//            }
-//            val img = this.async {
-//                Repository.instance.getImage(activity, 1467)
-//            }
-//            awaitAll(mps, img)
-//        }
     }
 
     private fun update(mp: MemberOfParliament) {
