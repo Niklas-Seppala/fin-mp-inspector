@@ -1,23 +1,22 @@
 package com.example.mpinspector.repository.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.mpinspector.repository.models.MemberOfParliamentModel
 
 @Dao
 interface MpDao {
     @Query("SELECT * FROM mp")
-    fun getAll(): LiveData<List<MemberOfParliamentModel>>
+    suspend fun getAll(): List<MemberOfParliamentModel>
 
-    @Query("SELECT * FROM mp WHERE mp.id IS (:id)")
-    fun queryById(id: Int): LiveData<MemberOfParliamentModel>
+    @Query("SELECT picture FROM mp WHERE mp.personNumber IS (:id)")
+    suspend fun queryPicEndpoint(id: Int): String
+
+    @Query("SELECT * FROM mp WHERE mp.personNumber IS (:id)")
+    suspend fun queryById(id: Int): MemberOfParliamentModel
 
     @Query("SELECT * FROM mp WHERE mp.party IS (:party)")
-    fun queryByParty(party: String): LiveData<List<MemberOfParliamentModel>>
+    suspend fun queryByParty(party: String): List<MemberOfParliamentModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrUpdate(vararg mps: MemberOfParliamentModel)
-
-    @Delete
-    fun delete(user: MemberOfParliamentModel)
 }

@@ -1,12 +1,10 @@
 package com.example.mpinspector.repository
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.mpinspector.ParliamentMembersData
+import com.example.mpinspector.MyApp
 import com.example.mpinspector.repository.db.MpDatabase
 import com.example.mpinspector.repository.models.MemberOfParliamentModel
 import com.example.mpinspector.repository.network.ImageWebService
@@ -16,64 +14,62 @@ import com.example.mpinspector.utils.BitmapUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.lang.RuntimeException
 
 class Repository {
     private val imageCache = ImageCache()
+    private var pmSesCache: List<MemberOfParliamentModel>? = null
+
     private val mpWebService = Network.mpClient.create(MpWebService::class.java)
     private val imgWebService = Network.imageClient.create(ImageWebService::class.java)
 
-    suspend fun getMps(): LiveData<List<MemberOfParliamentModel>> {
+    suspend fun getMembersOfParliament(): LiveData<List<MemberOfParliamentModel>> {
+        if (pmSesCache != null) {
+            return MutableLiveData(pmSesCache)
+        }
 
-        // PASKAA
-//        val dao = MpDatabase.getInstance().mpDao()
-//        val fromDb = dao.getAll()
-//        Log.d("TAG", fromDb.value!!.size.toString())
-//
-//        if ((fromDb.value?.size ?: 0) == 0) {
-//            val fromNetwork = mpWebService.getMps()
-//            for (mp in fromNetwork) {
-//                dao.insertOrUpdate(mp)
-//            }
-//            return MutableLiveData(fromNetwork)
-//        }
-//        return fromDb
-        TODO()
+        return withContext(Dispatchers.IO) {
+            val dao = MpDatabase.getInstance().mpDao()
+            var values = dao.getAll()
+            if (values.isEmpty()) {
+                values = mpWebService.getMps()
+                for (mp in values) {
+                    dao.insertOrUpdate(mp)
+                }
+            }
+            pmSesCache = values
+            MutableLiveData(values)
+        }
     }
 
-    @Throws(IllegalArgumentException::class)
-    suspend fun getImage(context: Context?, id: Int): Bitmap { // Quality of life nullability
-        context ?: throw IllegalArgumentException("Context can not be null")
-
-        imageCache.load(context)
-
+    suspend fun getImage(id: Int): Bitmap {
+        imageCache.load()
         val image = if (imageCache.containsKey(id))
             imageCache.fetch(id)
         else
-            networkFetch(context, id)
-
+            networkFetch(id)
         return BitmapUtil.roundCorners(image)
     }
 
-    private suspend fun networkFetch(context: Context, id: Int): Bitmap {
-        val picEndPoint = ParliamentMembersData.members.find { it.personNumber == id }?.picture
-            ?: throw RuntimeException("No mp with specified id: \"$id\" exists.")
-
-        val resp = imgWebService.getImage(picEndPoint)
+    private suspend fun networkFetch(id: Int, endpoint: String): Bitmap {
+        val resp = imgWebService.getImage(endpoint)
         val bm = BitmapUtil.resizeBitmap(BitmapFactory.decodeStream(resp.byteStream()), 500)
-        withContext(Dispatchers.IO) {
-            val out = File(context.cacheDir, "img/$id.jpg")
-            bm.compress(Bitmap.CompressFormat.JPEG, 70, out.outputStream())
-            imageCache.insert(id, out)
-        }
+        val out = File(MyApp.appContext.cacheDir, "img/$id.jpg")
+        bm.compress(Bitmap.CompressFormat.JPEG, 70, out.outputStream())
+        imageCache.insert(id, out)
+        return bm
+    }
+
+    private suspend fun networkFetch(id: Int): Bitmap {
+        val endP = MpDatabase.getInstance().mpDao().queryPicEndpoint(id)
+        val resp = imgWebService.getImage(endP)
+        val bm = BitmapUtil.resizeBitmap(BitmapFactory.decodeStream(resp.byteStream()), 500)
+        val out = File(MyApp.appContext.cacheDir, "img/$id.jpg")
+        bm.compress(Bitmap.CompressFormat.JPEG, 70, out.outputStream())
+        imageCache.insert(id, out)
         return bm
     }
 
     companion object Instance {
-        var instance: Repository
-            private set
-        init {
-            instance = Repository()
-        }
+        val instance = Repository()
     }
 }

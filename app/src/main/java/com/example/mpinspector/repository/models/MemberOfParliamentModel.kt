@@ -5,8 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "mp")
 data class MemberOfParliamentModel (
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
     val personNumber: Int,
     val seatNumber: Int,
     val first: String,
@@ -14,7 +13,7 @@ data class MemberOfParliamentModel (
     val party: String,
     val minister: Boolean,
     val picture: String,
-    val twitter: String?,
+    val twitter: String = "",
     val bornYear: Int,
     val constituency: String
 )

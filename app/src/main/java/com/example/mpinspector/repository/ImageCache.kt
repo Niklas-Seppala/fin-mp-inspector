@@ -3,6 +3,7 @@ package com.example.mpinspector.repository
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import com.example.mpinspector.MyApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -14,10 +15,10 @@ class ImageCache() {
     private var cache = mutableMapOf<Int, File>()
     private var cacheInitFlag = false
 
-    fun load(context: Context) {
+    fun load() {
         if (cacheInitFlag) return
 
-        val imgCacheDir = File("${context.cacheDir}/img")
+        val imgCacheDir = File("${MyApp.appContext.cacheDir}/img")
         if (!imgCacheDir.exists()) imgCacheDir.mkdir()
 
         val files = imgCacheDir.listFiles()

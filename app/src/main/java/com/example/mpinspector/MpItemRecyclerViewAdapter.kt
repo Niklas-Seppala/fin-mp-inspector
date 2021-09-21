@@ -3,13 +3,15 @@ package com.example.mpinspector
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
+import androidx.navigation.findNavController
 
 import com.example.mpinspector.databinding.FragmentItemBinding
+import com.example.mpinspector.repository.models.MemberOfParliamentModel
 import com.example.mpinspector.utils.PartyMapper
 
-class MpItemRecyclerViewAdapter(private val values: List<MemberOfParliament>)
+class MpItemRecyclerViewAdapter(private val items: List<MemberOfParliamentModel>)
     : RecyclerView.Adapter<MpItemRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -19,17 +21,22 @@ class MpItemRecyclerViewAdapter(private val values: List<MemberOfParliament>)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = values[position]
-        holder.contentView.text = "${item.first} ${item.last}"
+        val item = items[position]
+        holder.contentView.text = holder.itemView.context.getString(R.string.mpFragFullName, item.first, item.last)
+        holder.partyLogoIv.setImageResource(PartyMapper.partyIcon(item.party))
 
         holder.itemView.setOnClickListener {
-            Toast.makeText(holder.itemView.context, PartyMapper.partyName(item.party), Toast.LENGTH_SHORT).show()
+            val action = MpListItemFragmentDirections
+                .actionMpListItemFragmentToMpFragment()
+            action.mpIndex = position
+            it.findNavController().navigate(action)
         }
     }
 
-    override fun getItemCount(): Int = values.size
+    override fun getItemCount(): Int = items.size
 
     inner class ViewHolder(binding: FragmentItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val contentView: TextView = binding.content
+        val partyLogoIv: ImageView = binding.partyLogoIv
     }
 }

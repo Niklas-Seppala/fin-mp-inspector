@@ -7,6 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
+import com.example.mpinspector.repository.Repository
+import kotlinx.coroutines.launch
 
 class MpListItemFragment : Fragment() {
     override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View? {
@@ -14,7 +17,12 @@ class MpListItemFragment : Fragment() {
 
         if (view is RecyclerView) {
             view.layoutManager = LinearLayoutManager(context)
-            view.adapter = MpItemRecyclerViewAdapter(ParliamentMembersData.members)
+
+            lifecycleScope.launch {
+                val mps = Repository.instance.getMembersOfParliament().value
+                if (mps != null)
+                    view.adapter = MpItemRecyclerViewAdapter(mps)
+            }
         }
         return view
     }

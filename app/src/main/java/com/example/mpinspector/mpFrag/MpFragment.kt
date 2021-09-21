@@ -1,21 +1,23 @@
 package com.example.mpinspector.mpFrag
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.example.mpinspector.MemberOfParliament
+import androidx.lifecycle.lifecycleScope
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentMpBinding
+import com.example.mpinspector.repository.Repository
+import com.example.mpinspector.repository.models.MemberOfParliamentModel
 import com.example.mpinspector.utils.PartyMapper
+import kotlinx.coroutines.launch
 import java.util.*
 
 class MpFragment : Fragment() {
-    private val logTag = "MP_FRAG"
     private lateinit var binding: FragmentMpBinding
     private lateinit var viewModel: MpViewModel
 
@@ -27,21 +29,20 @@ class MpFragment : Fragment() {
     override fun onViewCreated(view: View, sInstState: Bundle?) {
         super.onViewCreated(view, sInstState)
         viewModel = ViewModelProvider(this).get(MpViewModel::class.java)
-        viewModel.next()
 
-        binding.button.setOnClickListener { viewModel.next() }
+        if (arguments != null) {
+            val atPos = arguments?.get("mpIndex") as Int
+            viewModel.load(atPos)
+        }
         viewModel.currentMp.observe(viewLifecycleOwner, { update(it) })
     }
 
-    private fun update(mp: MemberOfParliament) {
-        // Try to get party name and icon resources.
+    private fun update(mp: MemberOfParliamentModel) {
+
         val (iconRes, pNameRes) = runCatching<Pair<Int, Int>> {
-            val icon = PartyMapper.partyIcon(mp.party)
-            val name = PartyMapper.partyName(mp.party)
-            icon to name
+            PartyMapper.partyIcon(mp.party) to PartyMapper.partyName(mp.party)
         }.fold(onSuccess = { it }, onFailure = {
-            Log.e(logTag, "Update fails: ${it.message}")
-            return // Abort update. TODO: inform UI about the failure
+            return
         })
 
         binding.mpFragNameTv.text = getString(R.string.mpFragFullName, mp.first, mp.last)

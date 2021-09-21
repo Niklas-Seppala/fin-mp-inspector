@@ -9,7 +9,13 @@
         android:id="@+id/mpFragment"
         android:name="com.example.mpinspector.mpFrag.MpFragment"
         android:label="MpFragment"
-        tools:layout="@layout/fragment_mp"/>
+        tools:layout="@layout/fragment_mp">
+        <argument
+            android:name="mpIndex"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
+
     <fragment
         android:id="@+id/mpListItemFragment"
         android:name="com.example.mpinspector.MpListItemFragment"
@@ -17,8 +23,10 @@
         tools:layout="@layout/fragment_item_list" >
         <action
             android:id="@+id/action_mpListItemFragment_to_mpFragment"
-            app:destination="@id/mpFragment" />
+            app:destination="@id/mpFragment" >
+        </action>
     </fragment>
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.mpinspector.HomeFragment"
