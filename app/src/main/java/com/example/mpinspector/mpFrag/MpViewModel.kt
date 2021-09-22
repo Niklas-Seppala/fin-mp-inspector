@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.mpinspector.MemberOfParliament
-import com.example.mpinspector.ParliamentMembersData
 import com.example.mpinspector.repository.Repository
 import com.example.mpinspector.repository.models.MemberOfParliamentModel
 import kotlinx.coroutines.launch

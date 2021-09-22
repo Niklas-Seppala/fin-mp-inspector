@@ -35,7 +35,8 @@ class MpItemRecyclerViewAdapter(private val items: List<MemberOfParliamentModel>
 
     override fun getItemCount(): Int = items.size
 
-    inner class ViewHolder(binding: FragmentItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(binding: FragmentItemBinding)
+        : RecyclerView.ViewHolder(binding.root) {
         val contentView: TextView = binding.content
         val partyLogoIv: ImageView = binding.partyLogoIv
     }
