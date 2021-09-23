@@ -1,4 +1,4 @@
-package com.example.mpinspector
+package com.example.mpinspector.ui.mplist
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.findNavController
-
+import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentItemBinding
+
 import com.example.mpinspector.repository.models.MemberOfParliamentModel
 import com.example.mpinspector.utils.PartyMapper
 
@@ -26,8 +27,7 @@ class MpItemRecyclerViewAdapter(private val items: List<MemberOfParliamentModel>
         holder.partyLogoIv.setImageResource(PartyMapper.partyIcon(item.party))
 
         holder.itemView.setOnClickListener {
-            val action = MpListItemFragmentDirections
-                .actionMpListItemFragmentToMpFragment()
+            val action = MpListItemFragmentDirections.actionMpListItemFragmentToMpFragment()
             action.mpIndex = position
             it.findNavController().navigate(action)
         }

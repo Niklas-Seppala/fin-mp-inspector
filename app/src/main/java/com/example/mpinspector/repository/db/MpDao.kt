@@ -1,6 +1,7 @@
 package com.example.mpinspector.repository.db
 
 import androidx.room.*
+import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.repository.models.MemberOfParliamentModel
 
 @Dao
@@ -19,4 +20,13 @@ interface MpDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrUpdate(vararg mps: MemberOfParliamentModel)
+}
+
+@Dao
+interface CommentDao {
+    @Query("SELECT * FROM mp_comments WHERE mpId IS (:id)")
+    suspend fun getAllForMp(id: Int): MutableList<CommentModel>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertOfUpdate(vararg comment: CommentModel)
 }

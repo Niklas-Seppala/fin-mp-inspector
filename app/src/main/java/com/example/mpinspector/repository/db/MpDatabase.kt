@@ -11,6 +11,7 @@ import com.example.mpinspector.repository.models.MemberOfParliamentModel
           exportSchema = false)
 abstract class MpDatabase : RoomDatabase() {
     abstract fun mpDao(): MpDao
+    abstract fun commentDao(): CommentDao
 
     companion object {
         @Volatile

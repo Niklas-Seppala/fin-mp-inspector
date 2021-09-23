@@ -1,4 +1,4 @@
-package com.example.mpinspector
+package com.example.mpinspector.ui.mplist
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.example.mpinspector.R
 import com.example.mpinspector.repository.Repository
 import kotlinx.coroutines.launch
 
@@ -17,11 +18,9 @@ class MpListItemFragment : Fragment() {
 
         if (view is RecyclerView) {
             view.layoutManager = LinearLayoutManager(context)
-
             lifecycleScope.launch {
-                val mps = Repository.instance.getMembersOfParliament().value
-                if (mps != null)
-                    view.adapter = MpItemRecyclerViewAdapter(mps)
+                val mps = Repository.instance.getMembersOfParliament()
+                view.adapter = MpItemRecyclerViewAdapter(mps)
             }
         }
         return view

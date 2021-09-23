@@ -1,12 +1,17 @@
 package com.example.mpinspector.repository.models
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "mp_comments")
+@Entity(tableName = "mp_comments",  foreignKeys = [ForeignKey(entity = MemberOfParliamentModel::class,
+                                                              parentColumns = ["personNumber"],
+                                                              childColumns = ["mpId"],
+                                                              onDelete = ForeignKey.CASCADE)])
 data class CommentModel (
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
+    val mpId: Int,
     val content: String,
-    val timestamp: Int
+    val timestamp: Long
 )

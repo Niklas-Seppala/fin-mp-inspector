@@ -8,84 +8,88 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/mpFragNameTv"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/card"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:textSize="28sp"
-            android:textStyle="bold"
+            android:background="@drawable/mp_card_bg"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Sale Ninistöö" />
+            android:visibility="invisible"
+            tools:visibility="visible">
 
-        <ImageView
-            android:id="@+id/mpFragPartyIv"
-            android:layout_width="130dp"
-            android:layout_height="101dp"
-            app:layout_constraintStart_toEndOf="@+id/mpFragProfileIv"
-            app:layout_constraintTop_toBottomOf="@+id/mpFragNameTv"
-            tools:src="@mipmap/ic_party_kok" />
+            <TextView
+                android:id="@+id/mpFragNameTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Sale Ninistöö" />
 
-        <TextView
-            android:id="@+id/mpFragPartyName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:textSize="@dimen/text_small"
-            app:layout_constraintStart_toStartOf="@+id/mpFragPartyIv"
-            app:layout_constraintTop_toBottomOf="@+id/mpFragPartyIv"
-            tools:text="Kokoomus" />
+            <ImageView
+                android:id="@+id/mpFragPartyIv"
+                android:layout_width="130dp"
+                android:layout_height="101dp"
+                app:layout_constraintStart_toEndOf="@+id/mpFragProfileIv"
+                app:layout_constraintTop_toBottomOf="@+id/mpFragNameTv"
+                tools:src="@mipmap/ic_party_kok" />
 
-        <TextView
-            android:id="@+id/mpFragMinisterTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textSize="@dimen/text_small"
-            app:layout_constraintBaseline_toBaselineOf="@+id/mpFragNameTv"
-            app:layout_constraintStart_toEndOf="@+id/mpFragNameTv"
-            tools:text="Minister" />
+            <TextView
+                android:id="@+id/mpFragMinisterTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textSize="@dimen/text_small"
+                app:layout_constraintBaseline_toBaselineOf="@+id/mpFragNameTv"
+                app:layout_constraintStart_toEndOf="@+id/mpFragNameTv"
+                tools:text="Minister" />
 
-        <TextView
-            android:id="@+id/mpFragConstTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="@dimen/text_small"
-            app:layout_constraintStart_toStartOf="@+id/mpFragPartyName"
-            app:layout_constraintTop_toBottomOf="@+id/mpFragPartyName"
-            tools:text="Uusimaa" />
+            <TextView
+                android:id="@+id/mpFragConstTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textSize="@dimen/text_small"
+                app:layout_constraintStart_toStartOf="@+id/mpFragPartyIv"
+                app:layout_constraintTop_toBottomOf="@+id/mpFragPartyIv"
+                tools:text="Uusimaa" />
 
-        <TextView
-            android:id="@+id/mpFragSeatTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="@dimen/text_small"
-            app:layout_constraintStart_toStartOf="@+id/mpFragConstTv"
-            app:layout_constraintTop_toBottomOf="@+id/mpFragConstTv"
-            tools:text="Seat 162" />
+            <TextView
+                android:id="@+id/mpFragAgeTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_small"
+                app:layout_constraintStart_toStartOf="@+id/mpFragConstTv"
+                app:layout_constraintTop_toBottomOf="@+id/mpFragConstTv"
+                tools:text="Age 55" />
 
-        <TextView
-            android:id="@+id/mpFragAgeTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="@dimen/text_small"
-            app:layout_constraintStart_toStartOf="@+id/mpFragSeatTv"
-            app:layout_constraintTop_toBottomOf="@+id/mpFragSeatTv"
-            tools:text="Age 55" />
+            <ImageView
+                android:id="@+id/mpFragProfileIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@+id/mpFragNameTv"
+                app:layout_constraintTop_toBottomOf="@+id/mpFragNameTv"
+                tools:srcCompat="@tools:sample/avatars" />
 
-        <ImageView
-            android:id="@+id/mpFragProfileIv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="@+id/mpFragNameTv"
-            app:layout_constraintTop_toBottomOf="@+id/mpFragNameTv"
-            tools:srcCompat="@tools:sample/avatars" />
+            <Button
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="Leave a Comment"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mpFragProfileIv" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -103,15 +107,14 @@
             android:id="@+id/mpFragCommentView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="32dp"
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mpFragProfileIv"
-            tools:listitem="@layout/fragment_comment" />
-
+            app:layout_constraintTop_toBottomOf="@+id/card"
+            app:layout_constraintVertical_bias="0.0"
+            tools:listitem="@layout/fragment_comment"></androidx.recyclerview.widget.RecyclerView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
