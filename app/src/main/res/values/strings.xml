@@ -28,5 +28,8 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="leave_a_comment">Leave a Comment</string>
+    <string name="mp_party_icon_desc">MP Party Icon</string>
+    <string name="mp_image_desc">MP image</string>
 
 </resources>

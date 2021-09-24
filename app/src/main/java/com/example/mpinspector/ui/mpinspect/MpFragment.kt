@@ -65,7 +65,6 @@ class MpFragment : Fragment() {
     private suspend fun updateMpCard(mp: MemberOfParliamentModel) {
         val (img, iconRes) = acquireRes(mp) ?: return                              // FAIL POINT
 
-
         binding.mpFragCommentView.layoutManager = LinearLayoutManager(context)
 
         binding.mpFragCommentView.adapter =
