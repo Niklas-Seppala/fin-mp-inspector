@@ -1,6 +1,5 @@
 package com.example.mpinspector.repository
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.example.mpinspector.MyApp
@@ -35,7 +34,7 @@ class ImageCache() {
         return withContext<Bitmap>(Dispatchers.IO) {
             val file = cache[id] ?: throw InvalidCacheReadException(
                 "No requested \"$id\" cached image exists.")
-            return@withContext BitmapFactory.decodeStream(file.inputStream())
+            BitmapFactory.decodeStream(file.inputStream())
         }
     }
 

@@ -19,7 +19,9 @@ import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.repository.models.MemberOfParliamentModel
 import com.example.mpinspector.utils.MyTime
 import com.example.mpinspector.utils.PartyMapper
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import java.lang.NullPointerException
 import java.util.*
 
 class MpFragment : Fragment() {
@@ -46,49 +48,28 @@ class MpFragment : Fragment() {
         super.onViewCreated(view, sInstState)
         viewModel = ViewModelProvider(this).get(MpViewModel::class.java)
 
-        val atPos = arguments?.getInt("mpIndex") ?: -1 // Crash and burn
-        viewModel.load(atPos)
-
-
-        viewModel.currentMp.observe(viewLifecycleOwner, {
-            lifecycleScope.launch {
-                updateMpCard(it)
-            }
-        })
-
-        viewModel.currentMp.observe(viewLifecycleOwner, {
-            val adapter = binding.mpFragCommentView.adapter ?: return@observe
-            adapter.notifyItemChanged(adapter.itemCount-1)
-        })
+        val atPos = arguments?.getInt("mpIndex")
+        lifecycleScope.launch {
+            viewModel.load(atPos)
+            updateMpCard(viewModel.currentMp.value ?: throw NullPointerException("Mp was null"))
+        }
     }
 
-    private suspend fun updateMpCard(mp: MemberOfParliamentModel) {
-        val (img, iconRes) = acquireRes(mp) ?: return                              // FAIL POINT
+    private fun updateMpCard(mp: MemberOfParliamentModel) {
 
         binding.mpFragCommentView.layoutManager = LinearLayoutManager(context)
-
         binding.mpFragCommentView.adapter =
-            CommentRecyclerViewAdapter(viewModel.comments ?: return)        // FAIL POINT
+            CommentRecyclerViewAdapter(viewModel.comments.value ?: return)   // FAIL POINT
 
         binding.mpFragNameTv.text = getString(R.string.mpFragFullName, mp.first, mp.last)
         binding.mpFragMinisterTv.text = if (mp.minister) getString( R.string.mpFragIsMinister) else ""
         binding.mpFragConstTv.text = mp.constituency
         binding.mpFragAgeTv.text = getString(R.string.mpFragAge, viewModel.mpAge)
 
-        binding.mpFragPartyIv.setImageResource(iconRes)
-        binding.mpFragProfileIv.setImageBitmap(img)
+        binding.mpFragPartyIv.setImageResource(viewModel.partyIcon)
+        binding.mpFragProfileIv.setImageBitmap(viewModel.image)
         binding.progressBar.visibility = View.GONE
         binding.card.visibility = View.VISIBLE
-    }
-
-    private suspend fun acquireRes(mp: MemberOfParliamentModel): Pair<Bitmap, Int>? {
-        val img = Repository.instance.getImage(mp.personNumber)
-        val iconRes = runCatching<Int> {
-            PartyMapper.partyIcon(mp.party)
-        }.fold(onSuccess = { it }, onFailure = {
-            return null
-        })
-        return img to iconRes
     }
 
     private fun createCommentDialog(view: View) : AlertDialog {

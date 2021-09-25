@@ -26,4 +26,11 @@ object Network {
             }
             return  retrofitImages as Retrofit
         }
+
+    private val retrofitTwitter = Retrofit.Builder()
+        .baseUrl("https://api.twitter.com/2/")
+        .addConverterFactory(MoshiConverterFactory.create())
+        .build()
+
+    val twitterClient: Retrofit = retrofitTwitter
 }

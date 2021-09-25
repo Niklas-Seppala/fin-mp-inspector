@@ -19,7 +19,7 @@ class MpListItemFragment : Fragment() {
         if (view is RecyclerView) {
             view.layoutManager = LinearLayoutManager(context)
             lifecycleScope.launch {
-                val mps = Repository.instance.getMembersOfParliament()
+                val mps = Repository.instance.mps.getMembersOfParliament()
                 view.adapter = MpItemRecyclerViewAdapter(mps)
             }
         }

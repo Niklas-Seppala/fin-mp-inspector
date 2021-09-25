@@ -3,8 +3,11 @@ package com.example.mpinspector.utils
 import android.graphics.*
 
 object MyTime {
-    val timestampLong: Long = System.currentTimeMillis()
-    val timestampInt: Int = (System.currentTimeMillis() / 1000L).toInt()
+    val timestampLong: Long
+        get() = System.currentTimeMillis()
+
+    val timestampInt: Int
+        get() = (System.currentTimeMillis() / 1000L).toInt()
 }
 
 

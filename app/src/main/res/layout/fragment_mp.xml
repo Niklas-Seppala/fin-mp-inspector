@@ -19,6 +19,20 @@
             android:visibility="invisible"
             tools:visibility="visible">
 
+            <ImageView
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/ic_star"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mpFragProfileIv"
+                app:layout_constraintVertical_bias="0.0"
+                tools:srcCompat="@drawable/ic_star" />
+
             <TextView
                 android:id="@+id/mpFragNameTv"
                 android:layout_width="wrap_content"
@@ -83,14 +97,14 @@
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:src="@drawable/ic_note"
-                android:text="@string/leave_a_comment"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/mpFragProfileIv" />
+                app:layout_constraintStart_toEndOf="@+id/button2"
+                app:layout_constraintTop_toBottomOf="@+id/mpFragProfileIv"
+                tools:srcCompat="@drawable/ic_note" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
