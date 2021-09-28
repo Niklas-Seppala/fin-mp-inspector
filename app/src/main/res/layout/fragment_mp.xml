@@ -20,7 +20,7 @@
             tools:visibility="visible">
 
             <ImageView
-                android:id="@+id/button2"
+                android:id="@+id/favButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -94,7 +94,7 @@
                 android:contentDescription="@string/mp_image_desc"/>
 
             <ImageView
-                android:id="@+id/button"
+                android:id="@+id/noteButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -102,7 +102,7 @@
                 android:layout_marginBottom="16dp"
                 android:src="@drawable/ic_note"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/button2"
+                app:layout_constraintStart_toEndOf="@+id/favButton"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragProfileIv"
                 tools:srcCompat="@drawable/ic_note" />
 

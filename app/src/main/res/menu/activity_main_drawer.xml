@@ -3,18 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/main_grp"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
             android:title="Home" />
         <item
-            android:id="@+id/nav_mp_list"
-            android:icon="@drawable/ic_mp_search"
-            android:title="MP List" />
+            android:icon="@drawable/ic_logo_white"
+            android:title="Twitter Feed" />
+    </group>
+
+    <group
+        android:id="@+id/mp_browse_grp"
+        android:checkableBehavior="single">
+
         <item
-            android:id="@+id/nav_parties"
-            android:icon="@drawable/ic_list"
-            android:title="Parties" />
+            android:id="@+id/subtitle"
+            android:title="Browse">
+
+            <menu>
+                <item
+                    android:id="@+id/nav_mp_list"
+                    android:icon="@drawable/ic_mp_search"
+                    android:title="MP List" />
+                <item
+                    android:id="@+id/nav_parties"
+                    android:icon="@drawable/ic_list"
+                    android:title="Parties" />
+
+                <item
+                    android:id="@+id/nav_fav_mps"
+                    android:icon="@drawable/ic_star"
+                    android:title="Favorites" />
+            </menu>
+
+        </item>
+
     </group>
 </menu>

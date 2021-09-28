@@ -1,4 +1,4 @@
-package com.example.mpinspector.repository
+package com.example.mpinspector.repository.mps
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "mp")
-data class MemberOfParliamentModel (
+data class MpModel (
     @PrimaryKey
     val personNumber: Int,
     val seatNumber: Int,

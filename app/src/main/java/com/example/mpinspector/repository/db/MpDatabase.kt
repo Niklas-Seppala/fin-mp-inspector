@@ -5,9 +5,10 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.mpinspector.MyApp
 import com.example.mpinspector.repository.models.CommentModel
-import com.example.mpinspector.repository.models.MemberOfParliamentModel
+import com.example.mpinspector.repository.models.FavoriteModel
+import com.example.mpinspector.repository.models.MpModel
 
-@Database(version = 1, entities = [MemberOfParliamentModel::class, CommentModel::class],
+@Database(version = 1, entities = [MpModel::class, CommentModel::class, FavoriteModel::class],
           exportSchema = false)
 abstract class MpDatabase : RoomDatabase() {
     abstract fun mpDao(): MpDao
@@ -15,18 +16,17 @@ abstract class MpDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var INSTANCE: MpDatabase? = null
-        fun getInstance(): MpDatabase {
-            synchronized(this) {
-                var instance = INSTANCE
-                if(instance == null) {
-                    instance = Room.databaseBuilder(MyApp.appContext,
-                                                    MpDatabase::class.java, "mp-db")
-                        .fallbackToDestructiveMigration().build()
-                    INSTANCE = instance
+        private var mInstance: MpDatabase? = null
+        val instance: MpDatabase
+            get() {
+                synchronized(this) {
+                    mInstance = mInstance ?: Room
+                        .databaseBuilder(MyApp.appContext, MpDatabase::class.java, "mp-db")
+                        .fallbackToDestructiveMigration()
+                        .build()
+                    return mInstance as MpDatabase
+
                 }
-                return instance
             }
-        }
     }
 }

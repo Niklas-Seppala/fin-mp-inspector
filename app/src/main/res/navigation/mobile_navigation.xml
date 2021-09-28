@@ -16,7 +16,7 @@
         android:name="com.example.mpinspector.ui.mpinspect.MpFragment"
         android:label="Inspect">
         <argument
-            android:name="mpIndex"
+            android:name="mpId"
             android:defaultValue="0"
             app:argType="integer" />
     </fragment>
@@ -31,6 +31,14 @@
         tools:layout="@layout/fragment_item_list">
         <action
             android:id="@+id/action_mpListItemFragment_to_mpFragment"
+            app:destination="@id/nav_mp_inspect" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_fav_mps"
+        android:name="com.example.mpinspector.ui.mplist.FavoriteMpListFragment"
+        android:label="Favorite MPs" >
+        <action
+            android:id="@+id/action_nav_fav_mps_to_nav_mp_inspect"
             app:destination="@id/nav_mp_inspect" />
     </fragment>
 </navigation>
