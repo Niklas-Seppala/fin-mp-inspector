@@ -8,7 +8,10 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.mpinspector.databinding.ActivityMainBinding
+import com.example.mpinspector.repository.Repository
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +25,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         MyApp.initApp(applicationContext)
+
+        lifecycleScope.launch {
+            Repository.mps.loadFromWeb()
+        }
 
         setSupportActionBar(binding.appBarMain.toolbar)
 

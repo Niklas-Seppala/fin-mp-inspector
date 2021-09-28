@@ -13,13 +13,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentMpBinding
 import com.example.mpinspector.repository.models.CommentModel
-import com.example.mpinspector.repository.models.FavoriteModel
 import com.example.mpinspector.utils.MyTime
 import java.util.*
 import com.example.mpinspector.ui.anim.AppAnimations
 import com.example.mpinspector.utils.PartyMapper
 import java.lang.RuntimeException
-
 
 class MpFragment : Fragment() {
     private lateinit var binding: FragmentMpBinding

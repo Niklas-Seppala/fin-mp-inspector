@@ -9,16 +9,17 @@ import com.example.mpinspector.repository.models.MpModel
 
 interface MpDataProvider {
     suspend fun getMpImage(id: Int): Bitmap
-    suspend fun getMembersOfParliament(): List<MpModel>
-    suspend fun getFavoriteMembersOfParliament(): List<MpModel>
-    suspend fun getFavorites(): List<FavoriteModel>
-
-
     suspend fun insertMpComment(comment: CommentModel)
-    suspend fun addFavMp(favorite: FavoriteModel)
-    suspend fun removeFavMp(favorite: FavoriteModel)
+    suspend fun addFavoriteMp(favorite: FavoriteModel)
+    suspend fun deleteFavoriteMp(favorite: FavoriteModel)
+//    suspend fun getFavorites(): List<FavoriteModel>
+
+    suspend fun loadFromWeb()
+
+    suspend fun isMpInFavorites(mpId: Int) : Boolean
 
     fun getMpComments(id: Int): LiveData<MutableList<CommentModel>>
     fun getMp(id: Int): LiveData<MpModel>
-
+    fun getMps(): LiveData<List<MpModel>>
+    fun getFavoriteMps(): LiveData<List<MpModel>>
 }

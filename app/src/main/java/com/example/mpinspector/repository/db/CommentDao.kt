@@ -7,11 +7,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.mpinspector.repository.models.CommentModel
 
-@Dao
-interface CommentDao {
-    @Query("SELECT * FROM mp_comments WHERE mpId IS (:id)")
-    fun getAllForMp(id: Int): LiveData<MutableList<CommentModel>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(comment: CommentModel)
+@Dao
+abstract class CommentDao : BaseDao<CommentModel>() {
+    @Query("SELECT * FROM mp_comments WHERE mpId IS (:id)")
+    abstract fun selectForMpId(id: Int): LiveData<MutableList<CommentModel>>
 }

@@ -10,6 +10,9 @@ import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentItemListBinding
@@ -19,10 +22,15 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.launch
 
+class MpListViewModel: ViewModel() {
+    val mps: LiveData<List<MpModel>> = Repository.mps.getMps()
+}
+
 class MpListItemFragment : Fragment() {
     private lateinit var binding: FragmentItemListBinding
     private lateinit var checkedParties: MutableList<String>
-    private lateinit var listAdapter: MpRVAdapter
+    private lateinit var listAdapter: MpAdapter
+    private lateinit var viewModel: MpListViewModel
 
     private val partyMap = mapOf(
         R.id.chipKok    to "kok",
@@ -40,32 +48,41 @@ class MpListItemFragment : Fragment() {
         binding = DataBindingUtil.inflate(infl, R.layout.fragment_item_list, cont, false)
         binding.list.layoutManager = LinearLayoutManager(context)
 
+        viewModel = ViewModelProvider(this).get(MpListViewModel::class.java)
+        listAdapter = MpAdapter(listOf())
+        binding.list.adapter = listAdapter
+
+
+        viewModel.mps.observe(viewLifecycleOwner, {
+            listAdapter.loadItems(it)
+            binding.progressBar2.visibility = View.GONE
+        })
+
         mapCheckedChipsToParties(binding.chips)
 
-        lifecycleScope.launch {
-            val mps = Repository.mps.getMembersOfParliament()
-            listAdapter = MpRVAdapter(mps)
-            binding.list.adapter = listAdapter
-            binding.editTextTextPersonName.doAfterTextChanged {
-                listAdapter.setFiltered(filteredMps(mps, checkedParties, it))
-            }
-
-            for (child in binding.chips.children) {
-                (child as Chip).setOnCheckedChangeListener { view, checked ->
-                    val text = binding.editTextTextPersonName.text
-                    val party = partyMap[view.id] ?: return@setOnCheckedChangeListener
-                    if (checked) {
-                        checkedParties.add(party)
-                    } else {
-                        checkedParties.remove(party)
-                    }
-                    listAdapter.setFiltered(filteredMps(mps, checkedParties, text))
-                }
-            }
-            binding.progressBar2.visibility = View.GONE
+        binding.editTextTextPersonName.doAfterTextChanged {
+            val mps = viewModel.mps.value ?: return@doAfterTextChanged
+            listAdapter.setFiltered(filteredMps(mps, checkedParties, it))
         }
 
+        setupFiltering()
         return binding.root
+    }
+
+    private fun setupFiltering() {
+        for (child in binding.chips.children) {
+            (child as Chip).setOnCheckedChangeListener { view, checked ->
+                val mps = viewModel.mps.value ?: return@setOnCheckedChangeListener
+                val text = binding.editTextTextPersonName.text
+                val party = partyMap[view.id] ?: return@setOnCheckedChangeListener
+                if (checked) {
+                    checkedParties.add(party)
+                } else {
+                    checkedParties.remove(party)
+                }
+                listAdapter.setFiltered(filteredMps(mps, checkedParties, text))
+            }
+        }
     }
 
     private fun mapCheckedChipsToParties(group: ChipGroup) {

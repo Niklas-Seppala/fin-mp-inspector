@@ -1,35 +1,24 @@
 package com.example.mpinspector.repository.db
 
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
-import androidx.room.*
-import com.example.mpinspector.repository.models.FavoriteModel
+import androidx.room.Dao
+import androidx.room.Query
 import com.example.mpinspector.repository.models.MpModel
 
-@WorkerThread
+
 @Dao
-interface MpDao {
-    @Query("SELECT * FROM mp")
-    suspend fun getAllMps(): List<MpModel>
-
-    @Query("SELECT * FROM favorites ORDER BY timestamp ASC")
-    suspend fun getAllFavorites(): List<FavoriteModel>
-
-    @Query("SELECT * FROM mp WHERE personNumber IN (:favIds)")
-    suspend fun getAllFavMps(favIds: Array<Int>): List<MpModel>
+abstract class MpDao : BaseDao<MpModel>() {
 
     @Query("SELECT picture FROM mp WHERE mp.personNumber IS (:id)")
-    suspend fun getMpPicById(id: Int): String
+    abstract suspend fun selectPicture(id: Int): String
 
     @Query("SELECT * FROM mp WHERE mp.personNumber IS (:id)")
-    fun getMpById(id: Int): LiveData<MpModel>
+    abstract fun selectById(id: Int): LiveData<MpModel>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOrUpdate(vararg mps: MpModel)
+    @Query("SELECT * FROM mp")
+    abstract fun selectAll(): LiveData<List<MpModel>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertFavorite(mp: FavoriteModel)
-
-    @Delete
-    suspend fun deleteFavorite(mp: FavoriteModel)
+    @Query("SELECT * FROM mp WHERE personNumber IN (SELECT mpId FROM favorites)")
+    abstract fun getAllFavoriteMps(): LiveData<List<MpModel>>
 }
+

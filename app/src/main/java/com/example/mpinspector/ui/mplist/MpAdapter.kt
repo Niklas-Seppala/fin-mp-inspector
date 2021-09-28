@@ -14,8 +14,8 @@ import com.example.mpinspector.databinding.FragmentItemBinding
 import com.example.mpinspector.repository.models.MpModel
 import com.example.mpinspector.utils.PartyMapper
 
-class MpRVAdapter(private var items: List<MpModel>)
-    : RecyclerView.Adapter<MpRVAdapter.ViewHolder>() {
+class MpAdapter(private var items: List<MpModel>)
+    : RecyclerView.Adapter<MpAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -35,6 +35,11 @@ class MpRVAdapter(private var items: List<MpModel>)
                 R.id.nav_mp_list -> navigateToFromAll(item, nav)
             }
         }
+    }
+
+    fun loadItems(mps: List<MpModel>) {
+        items = mps
+        notifyItemChanged(mps.size-1)
     }
 
     override fun getItemCount(): Int = items.size

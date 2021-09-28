@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
 import com.example.mpinspector.MyApp
-import com.example.mpinspector.repository.Repository
 import com.example.mpinspector.repository.db.MpDatabase
 import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.repository.models.FavoriteModel
@@ -20,10 +19,7 @@ import java.io.File
 class MpData : MpDataProvider {
     private val mpWebService = Network.mpClient.create(MpWebService::class.java)
     private val imgWebService = Network.imageClient.create(ImageWebService::class.java)
-
     private val imageCache = ImageCache()
-    private var mpSesCache: List<MpModel> = listOf()
-    private var mpFavSesCache: MutableList<FavoriteModel> = mutableListOf()
 
     override suspend fun getMpImage(id: Int): Bitmap {
         imageCache.load()
@@ -34,81 +30,58 @@ class MpData : MpDataProvider {
         return BitmapUtil.roundCorners(image)
     }
 
-    override suspend fun getMembersOfParliament(): List<MpModel> {
-        if (mpSesCache.isNotEmpty())
-            return mpSesCache
-
-        validateMpCache()
-        return mpSesCache
-    }
-
-    override suspend fun getFavoriteMembersOfParliament(): List<MpModel> {
-        validateFavCache()
-        validateMpCache()
-        val ord = mpFavSesCache.withIndex().associate { it.value.mpId to it.index }
-        return mpSesCache.filter { m -> mpFavSesCache.any { it.mpId == m.personNumber } }
-            .sortedBy { ord[it.personNumber] }
-    }
-
-    override suspend fun getFavorites(): List<FavoriteModel> {
-        return MpDatabase.instance.mpDao().getAllFavorites()
-    }
+//    override suspend fun getFavorites(): List<FavoriteModel>  {
+//        return MpDatabase.instance.mpDao().getAllFavorites()
+//    }
 
     override fun getMp(id: Int): LiveData<MpModel> {
-        return MpDatabase.instance.mpDao().getMpById(id)
+        return MpDatabase.instance.mpDao().selectById(id)
+    }
+
+    override fun getMps(): LiveData<List<MpModel>> {
+        return MpDatabase.instance.mpDao().selectAll()
+    }
+
+    override fun getFavoriteMps(): LiveData<List<MpModel>> {
+        return MpDatabase.instance.mpDao().getAllFavoriteMps()
     }
 
     override fun getMpComments(id: Int): LiveData<MutableList<CommentModel>> {
-        return MpDatabase.instance.commentDao().getAllForMp(id)
+        return MpDatabase.instance.commentDao().selectForMpId(id)
     }
 
     override suspend fun insertMpComment(comment: CommentModel) {
         withContext(Dispatchers.IO) {
-            MpDatabase.instance.commentDao().insert(comment)
+            MpDatabase.instance.commentDao().insertOrUpdate(comment)
         }
     }
 
-    override suspend fun addFavMp(favorite: FavoriteModel) {
+    override suspend fun addFavoriteMp(favorite: FavoriteModel) {
         withContext(Dispatchers.IO) {
-            MpDatabase.instance.mpDao().insertFavorite(favorite)
-            if (mpFavSesCache.any { it.mpId == favorite.mpId }) {
-                return@withContext
-            }
-
-            validateFavCache()
-            mpFavSesCache.add(favorite)
+            MpDatabase.instance.favoriteDao().insert(favorite)
         }
     }
 
-    override suspend fun removeFavMp(favorite: FavoriteModel) {
+    override suspend fun deleteFavoriteMp(favorite: FavoriteModel) {
         withContext(Dispatchers.IO) {
-            MpDatabase.instance.mpDao().deleteFavorite(favorite)
-            mpFavSesCache.removeIf { it.mpId == favorite.mpId }
+            MpDatabase.instance.favoriteDao().delete(favorite)
         }
     }
 
-    private suspend fun validateFavCache() {
-        if (mpFavSesCache.isEmpty())
-            mpFavSesCache = MpDatabase.instance.mpDao().getAllFavorites().toMutableList()
+    override suspend fun loadFromWeb() {
+        withContext(Dispatchers.IO) {
+            MpDatabase.instance.mpDao().insertOrUpdate(mpWebService.getMps())
+        }
     }
 
-    private suspend fun validateMpCache() {
-        if (mpSesCache.isEmpty()) {
-            mpSesCache = withContext(Dispatchers.IO) {
-                val dao = MpDatabase.instance.mpDao()
-                var values = dao.getAllMps()
-                if (values.isEmpty()) {
-                    values = mpWebService.getMps()
-                    for (mp in values)
-                        dao.insertOrUpdate(mp)
-                }
-                values
-            }
+    override suspend fun isMpInFavorites(mpId: Int): Boolean {
+        return withContext(Dispatchers.IO) {
+            MpDatabase.instance.favoriteDao().existsById(mpId)
         }
     }
 
     private suspend fun networkFetch(id: Int): Bitmap {
-        val endP = MpDatabase.instance.mpDao().getMpPicById(id)
+        val endP = MpDatabase.instance.mpDao().selectPicture(id)
         val resp = imgWebService.getImage(endP)
         val bm = BitmapUtil.resizeBitmap(BitmapFactory.decodeStream(resp.byteStream()), 300)
         val out = File(MyApp.appContext.cacheDir, "img/$id.jpg")

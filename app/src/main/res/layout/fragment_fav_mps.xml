@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
 <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,3 +14,5 @@
     app:layoutManager="LinearLayoutManager"
     tools:context=".ui.mplist.MpListItemFragment"
     tools:listitem="@layout/fragment_item" />
+
+</layout>

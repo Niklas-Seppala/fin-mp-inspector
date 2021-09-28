@@ -1,6 +1,5 @@
 package com.example.mpinspector.ui.mpinspect
 
-import android.text.Editable
 import androidx.lifecycle.*
 import com.example.mpinspector.R
 import com.example.mpinspector.repository.Repository
@@ -17,6 +16,7 @@ class MpViewModel(var mpId: Int) : ViewModel() {
     val mp = Repository.mps.getMp(mpId)
     val comments = Repository.mps.getMpComments(mpId)
     val image = liveData { emit(Repository.mps.getMpImage(mpId)) }
+
     private val _favBtnImg = MutableLiveData<Int>()
     val favoriteButtonImage: LiveData<Int>
         get() = _favBtnImg
@@ -26,7 +26,7 @@ class MpViewModel(var mpId: Int) : ViewModel() {
 
     init {
         viewModelScope.launch {
-            _isFavorite = Repository.mps.getFavorites().any { it.mpId == mpId }
+            _isFavorite = Repository.mps.isMpInFavorites(mpId)
             _favBtnImg.value =
                 if (_isFavorite) R.drawable.ic_star
                 else R.drawable.ic_star_outline
@@ -62,9 +62,9 @@ class MpViewModel(var mpId: Int) : ViewModel() {
         viewModelScope.launch {
             val fav = FavoriteModel(mpId, MyTime.timestampLong)
             if (isFavorite) {
-                Repository.mps.removeFavMp(fav)
+                Repository.mps.deleteFavoriteMp(fav)
             } else {
-                Repository.mps.addFavMp(fav)
+                Repository.mps.addFavoriteMp(fav)
             }
         }
         _isFavorite = !_isFavorite

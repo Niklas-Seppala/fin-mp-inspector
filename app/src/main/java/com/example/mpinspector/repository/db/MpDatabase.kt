@@ -13,6 +13,7 @@ import com.example.mpinspector.repository.models.MpModel
 abstract class MpDatabase : RoomDatabase() {
     abstract fun mpDao(): MpDao
     abstract fun commentDao(): CommentDao
+    abstract fun favoriteDao(): FavoriteDao
 
     companion object {
         @Volatile
