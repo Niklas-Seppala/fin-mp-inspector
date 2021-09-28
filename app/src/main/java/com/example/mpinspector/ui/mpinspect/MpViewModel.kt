@@ -64,7 +64,7 @@ class MpViewModel(var mpId: Int) : ViewModel() {
             if (isFavorite) {
                 Repository.mps.deleteFavoriteMp(fav)
             } else {
-                Repository.mps.addFavoriteMp(fav)
+                Repository.mps.insertFavoriteMp(fav)
             }
         }
         _isFavorite = !_isFavorite

@@ -5,9 +5,8 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.example.mpinspector.repository.models.MpModel
 
-
 @Dao
-abstract class MpDao : BaseDao<MpModel>() {
+abstract class MpDao : GenericDao<MpModel>() {
 
     @Query("SELECT picture FROM mp WHERE mp.personNumber IS (:id)")
     abstract suspend fun selectPicture(id: Int): String

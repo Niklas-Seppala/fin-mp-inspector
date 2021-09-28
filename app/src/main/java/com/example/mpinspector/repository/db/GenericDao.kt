@@ -3,7 +3,7 @@ package com.example.mpinspector.repository.db
 import androidx.room.*
 
 @Dao
-abstract class BaseDao<T> {
+abstract class GenericDao<T> {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun insert(item: T): Long
 

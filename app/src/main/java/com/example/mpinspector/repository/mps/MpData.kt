@@ -30,10 +30,6 @@ class MpData : MpDataProvider {
         return BitmapUtil.roundCorners(image)
     }
 
-//    override suspend fun getFavorites(): List<FavoriteModel>  {
-//        return MpDatabase.instance.mpDao().getAllFavorites()
-//    }
-
     override fun getMp(id: Int): LiveData<MpModel> {
         return MpDatabase.instance.mpDao().selectById(id)
     }
@@ -56,7 +52,7 @@ class MpData : MpDataProvider {
         }
     }
 
-    override suspend fun addFavoriteMp(favorite: FavoriteModel) {
+    override suspend fun insertFavoriteMp(favorite: FavoriteModel) {
         withContext(Dispatchers.IO) {
             MpDatabase.instance.favoriteDao().insert(favorite)
         }
