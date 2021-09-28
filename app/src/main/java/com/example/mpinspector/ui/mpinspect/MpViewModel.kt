@@ -1,80 +1,75 @@
 package com.example.mpinspector.ui.mpinspect
 
-import android.graphics.Bitmap
+import android.text.Editable
 import androidx.lifecycle.*
 import com.example.mpinspector.R
 import com.example.mpinspector.repository.Repository
 import com.example.mpinspector.repository.models.CommentModel
-import com.example.mpinspector.repository.models.MpModel
-import com.example.mpinspector.utils.PartyMapper
-import kotlinx.coroutines.*
-import java.lang.IllegalArgumentException
+import com.example.mpinspector.repository.models.FavoriteModel
+import com.example.mpinspector.utils.MyTime
+import kotlinx.coroutines.launch
 import java.util.*
 
-class MpViewModel() : ViewModel() {
+class MpViewModel(var mpId: Int) : ViewModel() {
     private companion object {
         private val year = Calendar.getInstance().get(Calendar.YEAR)
     }
-
-    private var _image: Bitmap? = null
-    val image: Bitmap?
-        get() = _image
-
-    private var _partyIcon: Int = -1
-    val partyIcon
-        get() = _partyIcon
-
-    private var _isFavorite = false
+    val mp = Repository.mps.getMp(mpId)
+    val comments = Repository.mps.getMpComments(mpId)
+    val image = liveData { emit(Repository.mps.getMpImage(mpId)) }
+    private val _favBtnImg = MutableLiveData<Int>()
+    val favoriteButtonImage: LiveData<Int>
+        get() = _favBtnImg
+    private var _isFavorite: Boolean = false
     val isFavorite: Boolean
         get() = _isFavorite
 
-    private var _favBtnImg = MutableLiveData<Int>()
-    val favBtnImg: LiveData<Int>
-        get() = _favBtnImg
-
-    private var _comments = MutableLiveData<MutableList<CommentModel>>()
-    val comments: LiveData<MutableList<CommentModel>>
-        get() = _comments
-
-    private val _mp = MutableLiveData<MpModel>()
-    val currentMp: LiveData<MpModel>
-        get() = _mp
-
-    val mpAge: Int
-        get() = year - (_mp.value?.bornYear ?: 0)
-
-    fun addComment(comment: CommentModel) {
-        _comments.value?.apply {
-            viewModelScope.launch { Repository.mps.insertMpComment(comment) }
-            add(comment)
+    init {
+        viewModelScope.launch {
+            _isFavorite = Repository.mps.getFavorites().any { it.mpId == mpId }
+            _favBtnImg.value =
+                if (_isFavorite) R.drawable.ic_star
+                else R.drawable.ic_star_outline
         }
     }
 
-    fun favBtnPressed() {
-        _isFavorite = !_isFavorite
-        toggleFavIcon()
+    val loadComplete = MutableLiveData(false)
+    var mpLoaded = false
+        set(value) {
+            field = value
+            loadComplete.value = mpLoaded && imageLoaded
+        }
+    var imageLoaded = false
+        set(value) {
+            field = value
+            loadComplete.value = mpLoaded && imageLoaded
+        }
+
+    val mpAge: Int
+        get() = year - (mp.value?.bornYear ?: 0)
+
+    val fullName: String
+        get() = "${mp.value?.first} ${mp.value?.last}"
+
+
+    fun addComment(note: CommentModel) {
+        viewModelScope.launch {
+            Repository.mps.insertMpComment(note)
+        }
     }
 
-    private fun toggleFavIcon() {
+    fun favoriteButtonClick() {
+        viewModelScope.launch {
+            val fav = FavoriteModel(mpId, MyTime.timestampLong)
+            if (isFavorite) {
+                Repository.mps.removeFavMp(fav)
+            } else {
+                Repository.mps.addFavMp(fav)
+            }
+        }
+        _isFavorite = !_isFavorite
         _favBtnImg.value =
             if (_isFavorite) R.drawable.ic_star
             else R.drawable.ic_star_outline
-    }
-
-    fun load(mpId: Int?) {
-        mpId ?: throw IllegalArgumentException("Id cant be null")
-        viewModelScope.launch {
-            val mp = Repository.mps.getMemberOfParliament(mpId)
-            val image = Repository.mps.getMpImage(mpId)
-            val isFav = Repository.mps.getFavorites().any { it.mpId == mp.personNumber }
-            val comments = Repository.mps.getMpComments(mp.personNumber)  // FAIL POINT
-
-            _image = image
-            _partyIcon = PartyMapper.partyIcon((mp.party))
-            _isFavorite = isFav
-            toggleFavIcon()
-            _comments.value = comments
-            _mp.value = mp
-        }
     }
 }

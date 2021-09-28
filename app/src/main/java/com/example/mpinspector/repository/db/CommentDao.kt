@@ -10,7 +10,7 @@ import com.example.mpinspector.repository.models.CommentModel
 @Dao
 interface CommentDao {
     @Query("SELECT * FROM mp_comments WHERE mpId IS (:id)")
-    suspend fun getAllForMp(id: Int): MutableList<CommentModel>
+    fun getAllForMp(id: Int): LiveData<MutableList<CommentModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(comment: CommentModel)

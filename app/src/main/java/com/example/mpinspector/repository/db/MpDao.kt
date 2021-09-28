@@ -1,6 +1,7 @@
 package com.example.mpinspector.repository.db
 
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.mpinspector.repository.models.FavoriteModel
 import com.example.mpinspector.repository.models.MpModel
@@ -21,10 +22,7 @@ interface MpDao {
     suspend fun getMpPicById(id: Int): String
 
     @Query("SELECT * FROM mp WHERE mp.personNumber IS (:id)")
-    suspend fun getMpById(id: Int): MpModel
-
-    @Query("SELECT * FROM mp WHERE mp.party IS (:party)")
-    suspend fun getMpsByParty(party: String): List<MpModel>
+    fun getMpById(id: Int): LiveData<MpModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertOrUpdate(vararg mps: MpModel)

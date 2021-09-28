@@ -12,9 +12,13 @@ interface MpDataProvider {
     suspend fun getMembersOfParliament(): List<MpModel>
     suspend fun getFavoriteMembersOfParliament(): List<MpModel>
     suspend fun getFavorites(): List<FavoriteModel>
-    suspend fun getMemberOfParliament(id: Int): MpModel
-    suspend fun getMpComments(id: Int): MutableList<CommentModel>
+
+
     suspend fun insertMpComment(comment: CommentModel)
     suspend fun addFavMp(favorite: FavoriteModel)
     suspend fun removeFavMp(favorite: FavoriteModel)
+
+    fun getMpComments(id: Int): LiveData<MutableList<CommentModel>>
+    fun getMp(id: Int): LiveData<MpModel>
+
 }

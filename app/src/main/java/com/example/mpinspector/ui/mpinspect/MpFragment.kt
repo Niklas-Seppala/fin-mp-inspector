@@ -10,18 +10,15 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentMpBinding
-import com.example.mpinspector.repository.Repository
 import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.repository.models.FavoriteModel
-import com.example.mpinspector.repository.models.MpModel
 import com.example.mpinspector.utils.MyTime
-import kotlinx.coroutines.launch
 import java.util.*
 import com.example.mpinspector.ui.anim.AppAnimations
+import com.example.mpinspector.utils.PartyMapper
+import java.lang.RuntimeException
 
 
 class MpFragment : Fragment() {
@@ -29,6 +26,8 @@ class MpFragment : Fragment() {
     private lateinit var viewModel: MpViewModel
     private lateinit var commentDialog: AlertDialog
     private lateinit var commentEditText: EditText
+
+    private var mpId = -1
 
     override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View {
         binding = DataBindingUtil.inflate(infl, R.layout.fragment_mp, cont, false)
@@ -40,81 +39,68 @@ class MpFragment : Fragment() {
         binding.noteButton.setOnClickListener { noteBtnClick(it) }
         binding.favButton.setOnClickListener { favoriteBtnClick(it) }
 
+        binding.mpFragCommentView.adapter = CommentAdapter(listOf())
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, sInstState: Bundle?) {
         super.onViewCreated(view, sInstState)
-        viewModel = ViewModelProvider(this).get(MpViewModel::class.java)
-        val mpId = arguments?.getInt("mpId")
+        mpId = arguments?.getInt("mpId") ?: throw RuntimeException()
 
-        viewModel.currentMp.observe(viewLifecycleOwner, { setMpCard(it) })
-        viewModel.favBtnImg.observe(viewLifecycleOwner, { updateFavButton(it) })
+        viewModel = ViewModelProvider(this, MpViewModelFactory(mpId)).get(MpViewModel::class.java)
 
-        viewModel.load(mpId)
-    }
+        viewModel.comments.observe(viewLifecycleOwner, {
+            (binding.mpFragCommentView.adapter as CommentAdapter).setItems(it)
+        })
 
-    private fun setMpCard(mp: MpModel) {
-        binding.mpFragCommentView.layoutManager = LinearLayoutManager(context)
+        viewModel.mp.observe(viewLifecycleOwner, {
+            binding.mpFragNameTv.text = getString(R.string.mpFragFullName, it.first, it.last)
+            binding.mpFragMinisterTv.text = if (it.minister) getString(R.string.mpFragIsMinister) else ""
+            binding.mpFragConstTv.text = it.constituency
+            binding.mpFragAgeTv.text = getString(R.string.mpFragAge, viewModel.mpAge)
+            binding.mpFragPartyIv.setImageResource(PartyMapper.partyIcon(it.party))
+            viewModel.mpLoaded = true
+        })
 
-        viewModel.comments.value?.let {
-            binding.mpFragCommentView.adapter =
-                CommentRecyclerViewAdapter(viewModel.comments.value ?: return)   // FAIL POINT
-        }
+        viewModel.image.observe(viewLifecycleOwner, {
+            binding.mpFragProfileIv.setImageBitmap(it)
+            viewModel.imageLoaded = true
+        })
 
-        binding.mpFragNameTv.text = getString(R.string.mpFragFullName, mp.first, mp.last)
-        binding.mpFragMinisterTv.text = if (mp.minister) getString( R.string.mpFragIsMinister) else ""
-        binding.mpFragConstTv.text = mp.constituency
-        binding.mpFragAgeTv.text = getString(R.string.mpFragAge, viewModel.mpAge)
+        viewModel.loadComplete.observe(viewLifecycleOwner, {
+            if (it) {
+                binding.progressBar.visibility = View.GONE
+                binding.card.visibility = View.VISIBLE
+            }
+        })
 
-        binding.mpFragPartyIv.setImageResource(viewModel.partyIcon)
-        binding.mpFragProfileIv.setImageBitmap(viewModel.image)
-        binding.progressBar.visibility = View.GONE
-        binding.card.visibility = View.VISIBLE
-
-        viewModel.favBtnImg.value?.let {
-            updateFavButton(it)
-        }
+        viewModel.favoriteButtonImage.observe(viewLifecycleOwner, {
+            binding.favButton.setImageResource(it)
+        })
     }
 
     private fun createCommentDialog(view: View) : AlertDialog {
-        val builder = AlertDialog.Builder(context)
-        builder.setView(view)
-        builder.setNegativeButton("Back") { dialog, _ -> dialog.cancel() }
-        builder.setPositiveButton("Ok") { _, _ ->
-            val mp = viewModel.currentMp.value ?: return@setPositiveButton         // FAIL POINT
-
-            val content = if (commentEditText.text.isNotEmpty())
-                commentEditText.text.toString()
-            else return@setPositiveButton                                          // FAIL POINT
-
-            val comm = CommentModel(0, mp.personNumber, content, MyTime.timestampLong)
-            viewModel.addComment(comm)
-        }
-        return builder.create()
-    }
-
-    private fun updateFavButton(iconRes: Int) {
-        binding.favButton.setImageResource(iconRes)
+        return AlertDialog.Builder(context)
+            .setView(view)
+            .setNegativeButton("Back") { dialog, _ -> dialog.cancel() }
+            .setPositiveButton("Ok") { _, _ ->
+                val mp = viewModel.mp.value ?: return@setPositiveButton
+                val content = if (commentEditText.text.isNotEmpty())
+                    commentEditText.text.toString()
+                else return@setPositiveButton
+                val comm = CommentModel(0, mp.personNumber, content, MyTime.timestampLong)
+                viewModel.addComment(comm)
+            }.create()
     }
 
     private fun favoriteBtnClick(view: View) {
-        val mpId = viewModel.currentMp.value?.personNumber ?: return
-        val name = "${viewModel.currentMp.value?.first} ${viewModel.currentMp.value?.last}"
-
-        lifecycleScope.launch {
-            view.startAnimation(AppAnimations.iconClickAnimation)
-            val favModel = FavoriteModel(mpId, MyTime.timestampLong)
-            val toastMsg = if (viewModel.isFavorite) {
-                Repository.mps.removeFavMp(favModel)
-                "$name removed from favorites."
-            } else {
-                Repository.mps.addFavMp(favModel)
-                "$name added to favorites."
-            }
-            viewModel.favBtnPressed()
-            Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show()
-        }
+        view.startAnimation(AppAnimations.iconClickAnimation)
+        val toastMsg =
+            if (viewModel.isFavorite) "${viewModel.fullName} removed from favorites."
+            else "${viewModel.fullName} added to favorites."
+        Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show()
+        viewModel.favoriteButtonClick()
     }
 
     private fun noteBtnClick(view: View) {

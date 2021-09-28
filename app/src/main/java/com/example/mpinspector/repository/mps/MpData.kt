@@ -3,8 +3,8 @@ package com.example.mpinspector.repository.mps
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.mpinspector.MyApp
+import com.example.mpinspector.repository.Repository
 import com.example.mpinspector.repository.db.MpDatabase
 import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.repository.models.FavoriteModel
@@ -16,7 +16,6 @@ import com.example.mpinspector.utils.BitmapUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.security.InvalidParameterException
 
 class MpData : MpDataProvider {
     private val mpWebService = Network.mpClient.create(MpWebService::class.java)
@@ -55,19 +54,12 @@ class MpData : MpDataProvider {
         return MpDatabase.instance.mpDao().getAllFavorites()
     }
 
-    override suspend fun getMemberOfParliament(id: Int): MpModel {
-        val mp = mpSesCache.find { it.personNumber == id }
-        if (mp != null) return mp
-
-        validateMpCache()
-        return mpSesCache.find { it.personNumber == id }
-            ?: throw InvalidParameterException("No such pm exists")
+    override fun getMp(id: Int): LiveData<MpModel> {
+        return MpDatabase.instance.mpDao().getMpById(id)
     }
 
-    override suspend fun getMpComments(id: Int): MutableList<CommentModel> {
-        return withContext(Dispatchers.IO) {
-            MpDatabase.instance.commentDao().getAllForMp(id)
-        }
+    override fun getMpComments(id: Int): LiveData<MutableList<CommentModel>> {
+        return MpDatabase.instance.commentDao().getAllForMp(id)
     }
 
     override suspend fun insertMpComment(comment: CommentModel) {

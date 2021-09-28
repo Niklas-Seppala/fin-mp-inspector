@@ -1,12 +1,9 @@
 package com.example.mpinspector.ui.mpinspect
 
-import android.content.res.Resources
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentCommentBinding
@@ -14,13 +11,18 @@ import com.example.mpinspector.repository.models.CommentModel
 import java.text.DateFormat
 import java.util.*
 
-class CommentRecyclerViewAdapter(private val items: List<CommentModel>)
-    : RecyclerView.Adapter<CommentRecyclerViewAdapter.ViewHolder>() {
+class CommentAdapter(private var comments: List<CommentModel>)
+    : RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
 
     private var lightColor: Int = 0
     private var darkColor: Int = 0
 
-    override fun getItemCount() = items.size
+    fun setItems(items: List<CommentModel>) {
+        comments = items
+        notifyDataSetChanged()
+    }
+
+    override fun getItemCount() = comments.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -33,7 +35,7 @@ class CommentRecyclerViewAdapter(private val items: List<CommentModel>)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = items[position]
+        val item = comments[position]
         holder.comment.text = item.content
         holder.date.text = DateFormat.getInstance().format(Date(item.timestamp))
         holder.root.setBackgroundColor(if (position % 2 == 0 ) darkColor else lightColor)
