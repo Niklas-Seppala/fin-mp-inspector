@@ -42,17 +42,21 @@ class MpData : MpDataProvider {
         return MpDatabase.instance.mpDao().getAllFavoriteMps()
     }
 
+    override fun isMpInFavorites(mpId: Int): LiveData<Boolean> {
+        return MpDatabase.instance.favoriteDao().existsById_LIVE_DATA(mpId)
+    }
+
     override fun getMpComments(id: Int): LiveData<MutableList<CommentModel>> {
         return MpDatabase.instance.commentDao().selectForMpId(id)
     }
 
-    override suspend fun insertMpComment(comment: CommentModel) {
+    override suspend fun storeMpComment(comment: CommentModel) {
         withContext(Dispatchers.IO) {
             MpDatabase.instance.commentDao().insertOrUpdate(comment)
         }
     }
 
-    override suspend fun insertFavoriteMp(favorite: FavoriteModel) {
+    override suspend fun storeFavoriteMp(favorite: FavoriteModel) {
         withContext(Dispatchers.IO) {
             MpDatabase.instance.favoriteDao().insert(favorite)
         }
@@ -67,12 +71,6 @@ class MpData : MpDataProvider {
     override suspend fun loadFromWeb() {
         withContext(Dispatchers.IO) {
             MpDatabase.instance.mpDao().insertOrUpdate(mpWebService.getMps())
-        }
-    }
-
-    override suspend fun isMpInFavorites(mpId: Int): Boolean {
-        return withContext(Dispatchers.IO) {
-            MpDatabase.instance.favoriteDao().existsById(mpId)
         }
     }
 

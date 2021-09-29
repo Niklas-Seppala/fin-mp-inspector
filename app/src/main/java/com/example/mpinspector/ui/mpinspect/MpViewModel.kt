@@ -13,25 +13,15 @@ class MpViewModel(var mpId: Int) : ViewModel() {
     private companion object {
         private val year = Calendar.getInstance().get(Calendar.YEAR)
     }
-    val mp = Repository.mps.getMp(mpId)
-    val comments = Repository.mps.getMpComments(mpId)
-    val image = liveData { emit(Repository.mps.getMpImage(mpId)) }
-
-    private val _favBtnImg = MutableLiveData<Int>()
-    val favoriteButtonImage: LiveData<Int>
-        get() = _favBtnImg
-    private var _isFavorite: Boolean = false
-    val isFavorite: Boolean
-        get() = _isFavorite
-
-    init {
-        viewModelScope.launch {
-            _isFavorite = Repository.mps.isMpInFavorites(mpId)
-            _favBtnImg.value =
-                if (_isFavorite) R.drawable.ic_star
-                else R.drawable.ic_star_outline
-        }
+    val mpLiveData = Repository.mps.getMp(mpId)
+    val commentsLiveData = Repository.mps.getMpComments(mpId)
+    val imageLiveData = liveData { emit(Repository.mps.getMpImage(mpId)) }
+    val isFavLiveData = Repository.mps.isMpInFavorites(mpId)
+    val iconLiveData: LiveData<Int> = Transformations.map(isFavLiveData) {
+        if (it) R.drawable.ic_star
+        else R.drawable.ic_star_outline
     }
+    val favoriteToast = MutableLiveData<String>()
 
     val loadComplete = MutableLiveData(false)
     var mpLoaded = false
@@ -46,30 +36,29 @@ class MpViewModel(var mpId: Int) : ViewModel() {
         }
 
     val mpAge: Int
-        get() = year - (mp.value?.bornYear ?: 0)
+        get() = year - (mpLiveData.value?.bornYear ?: 0)
 
     val fullName: String
-        get() = "${mp.value?.first} ${mp.value?.last}"
+        get() = "${mpLiveData.value?.first} ${mpLiveData.value?.last}"
 
 
-    fun addComment(note: CommentModel) {
-        viewModelScope.launch {
-            Repository.mps.insertMpComment(note)
+    fun commentOkButtonClick (commentText: String) {
+        mpLiveData.value?.let {
+            val comment = CommentModel(0, it.personNumber, commentText, MyTime.timestampLong)
+            viewModelScope.launch { Repository.mps.storeMpComment(comment) }
         }
     }
 
     fun favoriteButtonClick() {
         viewModelScope.launch {
             val fav = FavoriteModel(mpId, MyTime.timestampLong)
-            if (isFavorite) {
+            if (isFavLiveData.value == true) {
                 Repository.mps.deleteFavoriteMp(fav)
+                favoriteToast.value = "$fullName removed from favorites."
             } else {
-                Repository.mps.insertFavoriteMp(fav)
+                Repository.mps.storeFavoriteMp(fav)
+                favoriteToast.value = "$fullName added to favorites."
             }
         }
-        _isFavorite = !_isFavorite
-        _favBtnImg.value =
-            if (_isFavorite) R.drawable.ic_star
-            else R.drawable.ic_star_outline
     }
 }
