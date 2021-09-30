@@ -42,7 +42,6 @@ object Binders {
         view.setImageBitmap(image)
     }
 
-
     @JvmStatic
     @BindingAdapter("setMinisterIcon")
     fun setMinisterIcon(view: ImageView, isMinister: Boolean) {

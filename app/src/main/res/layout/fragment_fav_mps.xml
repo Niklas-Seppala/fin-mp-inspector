@@ -12,7 +12,7 @@
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.mplist.MpListItemFragment"
-    tools:listitem="@layout/fragment_item" />
+    tools:context=".ui.mplist.MpListFragment"
+    tools:listitem="@layout/fragment_list_mp_item" />
 
 </layout>

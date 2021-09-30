@@ -15,7 +15,7 @@ class MpViewModel(var mpId: Int) : ViewModel() {
         private val year = Calendar.getInstance().get(Calendar.YEAR)
     }
     val mpLiveData = Repository.mps.getMp(mpId)
-    val AgeLiveData: LiveData<Int> = Transformations.map(mpLiveData) { year - it.bornYear }
+    val ageLiveData: LiveData<Int> = Transformations.map(mpLiveData) { year - it.bornYear }
     val commentsLiveData = Repository.mps.getMpComments(mpId)
     val imageLiveData = liveData { emit(Repository.mps.getMpImage(mpId)) }
     val isFavLiveData = Repository.mps.isMpInFavorites(mpId)

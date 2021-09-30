@@ -1,30 +1,52 @@
 package com.example.mpinspector.ui.mplist
 
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.children
+import androidx.core.widget.doAfterTextChanged
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpinspector.R
-import com.example.mpinspector.ui.NavActions
-import com.example.mpinspector.ui.adapters.GenericAdapter
+import com.example.mpinspector.databinding.FragmentItemListBinding
+import com.example.mpinspector.ui.adapters.MpAdapter
+import com.google.android.material.chip.Chip
 
-abstract class MpListFragment : Fragment(), GenericAdapter.OnMyItemClick {
-    protected lateinit var adapter: MpAdapter // MAJOR FOOT GUN :D
+class MpListFragment : MpRecycleViewFragment() {
+    private lateinit var binding: FragmentItemListBinding
+    private lateinit var viewModel: MpListViewModel
 
-    override fun onItemClick(pos: Int) {
-        val mps = adapter.currentItems2
-        val mp = mps[pos]
-        val nav = findNavController()
-        when (nav.currentDestination?.id ?: -1) {
-            R.id.nav_fav_mps -> {
-                val action = NavActions.fromFavToInspect
-                action.mpId = mp.personNumber
-                nav.navigate(action)
-            }
-            R.id.nav_mp_list -> {
-                val action = NavActions.fromMpListToInspect
-                action.mpId = mp.personNumber
-                nav.navigate(action)
+    override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View {
+        binding = DataBindingUtil.inflate(infl, R.layout.fragment_item_list, cont, false)
+        binding.list.layoutManager = LinearLayoutManager(context)
+
+        viewModel = ViewModelProvider(this).get(MpListViewModel::class.java)
+
+        viewModel.mps.observe(viewLifecycleOwner, {
+            adapter = MpAdapter(it, this)
+            binding.list.adapter = adapter
+            binding.loadingSpinner.visibility = View.GONE
+            viewModel.partyFilter.observe(viewLifecycleOwner, { parties ->
+                adapter.filter(parties, binding.personName.text.toString())
+            })
+        })
+
+        binding.personName.doAfterTextChanged {
+            adapter.filter(
+                viewModel.partyFilter.value
+                    ?: MpListViewModel.Party.map.values.toSet(),
+                it.toString()
+            )
+        }
+
+        binding.chips.children.filterIsInstance<Chip>().forEach {
+            it.setOnCheckedChangeListener { view, checked ->
+                viewModel.partyChipClicked(view.id, checked)
             }
         }
-    }
 
+        return binding.root
+    }
 }

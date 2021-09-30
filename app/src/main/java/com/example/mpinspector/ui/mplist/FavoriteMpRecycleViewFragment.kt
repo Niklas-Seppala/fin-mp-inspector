@@ -8,8 +8,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentFavMpsBinding
+import com.example.mpinspector.ui.adapters.MpAdapter
 
-class FavoriteMpListFragment : MpListFragment() {
+class FavoriteMpRecycleViewFragment : MpRecycleViewFragment() {
     private lateinit var viewModel: FavoriteMpListViewModel
     private lateinit var binding: FragmentFavMpsBinding
 

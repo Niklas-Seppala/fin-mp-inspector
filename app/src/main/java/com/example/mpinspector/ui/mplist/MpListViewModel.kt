@@ -9,8 +9,8 @@ import com.example.mpinspector.repository.models.MpModel
 import java.security.InvalidParameterException
 
 class MpListViewModel: ViewModel() {
-    companion object {
-        private val partyMap = mapOf(
+    companion object Party {
+        val map = mapOf(
             R.id.chipKok to "kok",
             R.id.chipKesk to "kesk",
             R.id.chipKd to "kd",
@@ -22,14 +22,15 @@ class MpListViewModel: ViewModel() {
             R.id.chipR to "r"
         )
     }
+
     val mps: LiveData<List<MpModel>> = Repository.mps.getMps()
 
-    private val _partyFilter = MutableLiveData(partyMap.map { it.value }.toMutableSet())
+    private val _partyFilter = MutableLiveData(Party.map.map { it.value }.toMutableSet())
     val partyFilter: LiveData<MutableSet<String>>
         get() = _partyFilter
 
     fun partyChipClicked(resId: Int, checked: Boolean) {
-        val party = partyMap[resId]
+        val party = Party.map[resId]
             ?: throw InvalidParameterException("Chip id not mapped to party.")
 
         _partyFilter.value?.let {

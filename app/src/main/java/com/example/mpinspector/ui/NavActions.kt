@@ -1,9 +1,9 @@
 package com.example.mpinspector.ui
 
-import com.example.mpinspector.ui.mplist.FavoriteMpListFragmentDirections
-import com.example.mpinspector.ui.mplist.MpListItemFragmentDirections
+import com.example.mpinspector.ui.mplist.MpListFragmentDirections
+import com.example.mpinspector.ui.mplist.FavoriteMpRecycleViewFragmentDirections
 
 object NavActions {
-    val fromFavToInspect = FavoriteMpListFragmentDirections.actionNavFavMpsToNavMpInspect()
-    val fromMpListToInspect = MpListItemFragmentDirections.actionMpListItemFragmentToMpFragment()
+    val fromFavToInspect = FavoriteMpRecycleViewFragmentDirections.actionNavFavMpsToNavMpInspect()
+    val fromMpListToInspect = MpListFragmentDirections.actionMpListItemFragmentToMpFragment()
 }

@@ -1,18 +1,20 @@
 package com.example.mpinspector.ui.adapters
 
 import android.view.View
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 
-class ClickableViewHolder(binding: ViewBinding, val listener: GenericAdapter.OnMyItemClick) : ViewHolder(binding), View.OnClickListener {
+open class ViewHolder<TBinding : ViewDataBinding>(val binding: TBinding) : RecyclerView.ViewHolder(binding.root)
 
-    init {
-        itemView.setOnClickListener(this)
-    }
-
-    override fun onClick(p0: View?) {
-        listener.onItemClick(absoluteAdapterPosition)
-    }
-}
-
-open class ViewHolder(val binding: ViewBinding) : RecyclerView.ViewHolder(binding.root)
+//class ViewHolder<B : ViewDataBinding>(
+//    val binding: B,
+//    private val listener: OnRecycleViewItemClick? = null
+//) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+//    init {
+//        itemView.setOnClickListener(this)
+//    }
+//
+//    override fun onClick(p0: View?) {
+//        listener?.onItemClick(absoluteAdapterPosition)
+//    }
+//}

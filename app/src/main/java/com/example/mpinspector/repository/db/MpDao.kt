@@ -17,7 +17,8 @@ abstract class MpDao : GenericDao<MpModel>() {
     @Query("SELECT * FROM mp")
     abstract fun selectAll(): LiveData<List<MpModel>>
 
-    @Query("SELECT * FROM mp WHERE personNumber IN (SELECT mpId FROM favorites)")
-    abstract fun getAllFavoriteMps(): LiveData<List<MpModel>>
+//    @Query("SELECT * FROM mp WHERE personNumber IN (SELECT mpId FROM favorites)")
+//    abstract fun getAllFavoriteMps(): LiveData<List<MpModel>>
+
 }
 

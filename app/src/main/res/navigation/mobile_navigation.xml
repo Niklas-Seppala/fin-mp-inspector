@@ -26,7 +26,7 @@
         android:label="Parties" />
     <fragment
         android:id="@+id/nav_mp_list"
-        android:name="com.example.mpinspector.ui.mplist.MpListItemFragment"
+        android:name="com.example.mpinspector.ui.mplist.MpListFragment"
         android:label="MP list"
         tools:layout="@layout/fragment_item_list">
         <action
@@ -35,7 +35,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_fav_mps"
-        android:name="com.example.mpinspector.ui.mplist.FavoriteMpListFragment"
+        android:name="com.example.mpinspector.ui.mplist.FavoriteMpRecycleViewFragment"
         android:label="Favorite MPs" >
         <action
             android:id="@+id/action_nav_fav_mps_to_nav_mp_inspect"

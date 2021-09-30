@@ -39,11 +39,11 @@ class MpData : MpDataProvider {
     }
 
     override fun getFavoriteMps(): LiveData<List<MpModel>> {
-        return MpDatabase.instance.mpDao().getAllFavoriteMps()
+        return MpDatabase.instance.favoriteDao().getAllSorted()
     }
 
     override fun isMpInFavorites(mpId: Int): LiveData<Boolean> {
-        return MpDatabase.instance.favoriteDao().existsById_LIVE_DATA(mpId)
+        return MpDatabase.instance.favoriteDao().existsById(mpId)
     }
 
     override fun getMpComments(id: Int): LiveData<MutableList<CommentModel>> {
