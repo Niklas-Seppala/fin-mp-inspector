@@ -11,6 +11,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.mpinspector.R
+import com.example.mpinspector.databinding.FragmentItemBinding
 import com.example.mpinspector.databinding.FragmentItemListBinding
 import com.google.android.material.chip.Chip
 
@@ -25,17 +26,20 @@ class MpListItemFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(MpListViewModel::class.java)
 
+
         viewModel.mps.observe(viewLifecycleOwner, {
             listAdapter = MpAdapter(it)
+
+
             binding.list.adapter = listAdapter
             binding.progressBar2.visibility = View.GONE
             viewModel.partyFilter.observe(viewLifecycleOwner, { parties ->
-                listAdapter.performFiltering(parties, binding.personName.text.toString())
+                listAdapter.filter(parties, binding.personName.text.toString())
             })
         })
 
         binding.personName.doAfterTextChanged {
-            listAdapter.performFiltering(viewModel.partyFilter.value
+            listAdapter.filter(viewModel.partyFilter.value
                 ?: return@doAfterTextChanged, it.toString())
         }
 

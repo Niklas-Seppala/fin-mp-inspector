@@ -1,11 +1,13 @@
 package com.example.mpinspector.ui.mpinspect
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.CommentDialogBinding
@@ -19,6 +21,7 @@ class CommentDialogFragment: DialogFragment() {
     override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View {
         dialogBinding = DataBindingUtil.inflate(infl, R.layout.comment_dialog, cont, false)
         dialogViewModel = ViewModelProvider(this).get(CommentDialogViewModel::class.java)
+
 
         dialogViewModel.isDislikeActive.observe(viewLifecycleOwner, {
             if (it) dialogBinding.dislikeButton.startAnimation(AppAnimations.iconClickGrow)
@@ -36,6 +39,7 @@ class CommentDialogFragment: DialogFragment() {
         dialogBinding.cancelButton.setOnClickListener { dialog?.cancel() }
         dialogBinding.submitButton.setOnClickListener {
             onSubmitCb?.invoke(dialogBinding.commentEt.text.toString())
+            dialogBinding.commentEt.text.clear()
             dismiss()
         }
 

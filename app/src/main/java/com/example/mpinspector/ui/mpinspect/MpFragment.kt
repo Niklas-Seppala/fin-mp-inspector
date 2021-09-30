@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.mpinspector.R
-import com.example.mpinspector.databinding.CommentDialogBinding
 import com.example.mpinspector.databinding.FragmentMpBinding
 import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.repository.models.MpModel
@@ -22,31 +21,21 @@ class MpFragment : Fragment() {
     private lateinit var binding: FragmentMpBinding
     private lateinit var viewModel: MpViewModel
     private lateinit var commentDialog: CommentDialogFragment
-    private lateinit var commentAdapter: CommentAdapter
-    private lateinit var dialogBinding: CommentDialogBinding
-
-    private var mpId = -1
 
     override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View {
         binding = DataBindingUtil.inflate(infl, R.layout.fragment_mp, cont, false)
-        dialogBinding = DataBindingUtil.inflate(layoutInflater, R.layout.comment_dialog, cont, false)
         commentDialog = CommentDialogFragment()
-        commentDialog.setOnSubmit {
-            if (it.isNotBlank()) viewModel.commentOkButtonClick(it)
-        }
+        commentDialog.setOnSubmit { if (it.isNotBlank()) viewModel.commentOkButtonClick(it) }
 
         binding.noteButton.setOnClickListener { noteBtnClick(it) }
         binding.favButton.setOnClickListener { favoriteBtnClick(it) }
-
-        commentAdapter = CommentAdapter(listOf())
-        binding.mpFragCommentView.adapter = commentAdapter
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, sInstState: Bundle?) {
         super.onViewCreated(view, sInstState)
-        mpId = arguments?.getInt("mpId") ?: throw RuntimeException()
+        val mpId = arguments?.getInt("mpId") ?: throw RuntimeException()
         viewModel = ViewModelProvider(this, MpViewModelFactory(mpId)).get(MpViewModel::class.java)
 
         viewModel.commentsLiveData.observe(viewLifecycleOwner, { updateCommentsView(it) })
@@ -58,8 +47,12 @@ class MpFragment : Fragment() {
     }
 
     private fun updateCommentsView(comments: List<CommentModel>) {
-        val adapter = binding.mpFragCommentView.adapter as CommentAdapter
-        adapter.setItems(comments)
+        if (binding.mpFragCommentView.adapter != null) {
+            val adapter = binding.mpFragCommentView.adapter as CommentAdapter
+            adapter.updateItems(comments)
+        } else {
+            binding.mpFragCommentView.adapter = CommentAdapter(comments)
+        }
     }
 
     private fun updateMpProfileView(image: Bitmap) {
@@ -97,6 +90,5 @@ class MpFragment : Fragment() {
     private fun noteBtnClick(view: View) {
         view.startAnimation(AppAnimations.iconClickAnimation)
         commentDialog.show(childFragmentManager, "")
-        dialogBinding.commentEt.text.clear()
     }
 }
