@@ -168,7 +168,7 @@
         tools:listitem="@layout/fragment_item" />
 
     <ProgressBar
-        android:id="@+id/progressBar2"
+        android:id="@+id/loadingSpinner"
         style="?android:attr/progressBarStyle"
         android:layout_width="128dp"
         android:layout_height="128dp"

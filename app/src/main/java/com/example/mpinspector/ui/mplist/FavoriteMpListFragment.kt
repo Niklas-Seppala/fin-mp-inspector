@@ -5,13 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentFavMpsBinding
 
-class FavoriteMpListFragment : Fragment() {
-    private lateinit var adapter: MpAdapter
+class FavoriteMpListFragment : MpListFragment() {
     private lateinit var viewModel: FavoriteMpListViewModel
     private lateinit var binding: FragmentFavMpsBinding
 
@@ -20,10 +18,9 @@ class FavoriteMpListFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(FavoriteMpListViewModel::class.java)
 
         viewModel.mps.observe(viewLifecycleOwner, {
-            adapter = MpAdapter(it)
+            adapter = MpAdapter(it, this)
             binding.list.adapter = adapter
         })
-
         return binding.root
     }
 }

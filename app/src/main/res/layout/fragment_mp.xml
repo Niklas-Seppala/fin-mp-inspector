@@ -4,6 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.mpinspector.ui.mpinspect.MpViewModel" />
+    </data>
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -26,6 +33,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
+                setImageRes="@{viewModel.iconLiveData}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragProfileIv"
@@ -42,7 +50,9 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:text="@{@string/mpFragFullName(viewModel.mpLiveData.first, viewModel.mpLiveData.last) }"
                 tools:text="Sale Ninistöö" />
+
 
             <ImageView
                 android:id="@+id/mpFragPartyIv"
@@ -50,6 +60,8 @@
                 android:layout_height="101dp"
                 app:layout_constraintStart_toEndOf="@+id/mpFragProfileIv"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragNameTv"
+
+                setPartyIcon="@{viewModel.mpLiveData.party}"
                 tools:src="@mipmap/ic_party_kok"
                 android:contentDescription="@string/mp_party_icon_desc"/>
 
@@ -59,6 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:textSize="@dimen/text_small"
+                setMinisterStatus="@{viewModel.mpLiveData.minister}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/mpFragNameTv"
                 app:layout_constraintStart_toEndOf="@+id/mpFragNameTv"
                 tools:text="Minister" />
@@ -69,6 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:textSize="@dimen/text_small"
+                android:text="@{viewModel.mpLiveData.constituency}"
                 app:layout_constraintStart_toStartOf="@+id/mpFragPartyIv"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragPartyIv"
                 tools:text="Uusimaa" />
@@ -78,6 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_small"
+                android:text="@{viewModel.ageLiveData.toString()}"
                 app:layout_constraintStart_toStartOf="@+id/mpFragConstTv"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragConstTv"
                 tools:text="Age 55" />
@@ -87,6 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                setProfileImage="@{viewModel.imageLiveData}"
                 app:layout_constraintStart_toStartOf="@+id/mpFragNameTv"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragNameTv"
                 tools:srcCompat="@tools:sample/avatars"

@@ -1,6 +1,7 @@
 package com.example.mpinspector.ui.mplist
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -10,14 +11,17 @@ import androidx.core.view.children
 import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.mpinspector.R
-import com.example.mpinspector.databinding.FragmentItemBinding
 import com.example.mpinspector.databinding.FragmentItemListBinding
+import com.example.mpinspector.ui.NavActions
+import com.example.mpinspector.ui.adapters.GenericAdapter
 import com.google.android.material.chip.Chip
 
-class MpListItemFragment : Fragment() {
+class MpListItemFragment : MpListFragment() {
     private lateinit var binding: FragmentItemListBinding
-    private lateinit var listAdapter: MpAdapter
     private lateinit var viewModel: MpListViewModel
 
     override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View {
@@ -26,20 +30,17 @@ class MpListItemFragment : Fragment() {
 
         viewModel = ViewModelProvider(this).get(MpListViewModel::class.java)
 
-
         viewModel.mps.observe(viewLifecycleOwner, {
-            listAdapter = MpAdapter(it)
-
-
-            binding.list.adapter = listAdapter
-            binding.progressBar2.visibility = View.GONE
+            adapter = MpAdapter(it, this)
+            binding.list.adapter = adapter
+            binding.loadingSpinner.visibility = View.GONE
             viewModel.partyFilter.observe(viewLifecycleOwner, { parties ->
-                listAdapter.filter(parties, binding.personName.text.toString())
+                adapter.filter(parties, binding.personName.text.toString())
             })
         })
 
         binding.personName.doAfterTextChanged {
-            listAdapter.filter(viewModel.partyFilter.value
+            adapter.filter(viewModel.partyFilter.value
                 ?: return@doAfterTextChanged, it.toString())
         }
 

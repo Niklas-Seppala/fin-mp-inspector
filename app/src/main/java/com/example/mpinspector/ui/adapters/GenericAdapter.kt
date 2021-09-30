@@ -10,24 +10,27 @@ import androidx.viewbinding.ViewBinding
 import com.example.mpinspector.MyApp
 import com.example.mpinspector.R
 
-abstract class GenericAdapter<T, B : ViewBinding>(protected val items: List<T>)
-    : RecyclerView.Adapter<ViewHolder>() {
+abstract class GenericAdapter<T, B : ViewBinding>(protected val items: List<T>,
+                                                  protected val listener: OnMyItemClick)
+    : RecyclerView.Adapter<ClickableViewHolder>() {
 
     protected val currentItems = items.toMutableList()
+    val currentItems2: List<T>
+        get() = currentItems
 
     protected abstract fun createBinding(parent: ViewGroup): B
-
     override fun getItemCount(): Int = currentItems.size
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ClickableViewHolder, position: Int) {
         holder.binding.root.setBackgroundColor(
             if (position % 2 == 0 ) darkColor
             else lightColor
         )
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(createBinding(parent))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ClickableViewHolder {
+        val binding = createBinding(parent)
+        return ClickableViewHolder(binding, listener)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -45,5 +48,9 @@ abstract class GenericAdapter<T, B : ViewBinding>(protected val items: List<T>)
     protected open fun <N: NavDirections>navigateTo(nav: NavController, action: N, setArg: (N) -> Unit) {
         setArg(action)
         nav.navigate(action)
+    }
+
+    interface OnMyItemClick {
+        fun onItemClick(pos: Int)
     }
 }
