@@ -11,10 +11,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentItemListBinding
+import com.example.mpinspector.repository.models.MpModel
 import com.example.mpinspector.ui.adapters.MpAdapter
 import com.google.android.material.chip.Chip
 
+/**
+ *
+ * @property adapter MpAdapter
+ * @property binding FragmentItemListBinding
+ * @property viewModel MpListViewModel
+ */
 class MpListFragment : MpRecycleViewFragment() {
+    private lateinit var adapter: MpAdapter
     private lateinit var binding: FragmentItemListBinding
     private lateinit var viewModel: MpListViewModel
 
@@ -23,16 +31,30 @@ class MpListFragment : MpRecycleViewFragment() {
         binding.list.layoutManager = LinearLayoutManager(context)
 
         viewModel = ViewModelProvider(this).get(MpListViewModel::class.java)
-
         viewModel.mps.observe(viewLifecycleOwner, {
-            adapter = MpAdapter(it, this)
-            binding.list.adapter = adapter
+            createAdapter(it)
+            startToObservePartyChips()
             binding.loadingSpinner.visibility = View.GONE
-            viewModel.partyFilter.observe(viewLifecycleOwner, { parties ->
-                adapter.filter(parties, binding.personName.text.toString())
-            })
         })
 
+        setSearchListener()
+        setChipCheckListeners()
+
+        return binding.root
+    }
+
+    private fun startToObservePartyChips() {
+        viewModel.partyFilter.observe(viewLifecycleOwner, { parties ->
+            adapter.filter(parties, binding.personName.text.toString())
+        })
+    }
+
+    private fun createAdapter(mps: List<MpModel>) {
+        adapter = MpAdapter(mps, this)
+        binding.list.adapter = adapter
+    }
+
+    private fun setSearchListener() {
         binding.personName.doAfterTextChanged {
             adapter.filter(
                 viewModel.partyFilter.value
@@ -40,13 +62,13 @@ class MpListFragment : MpRecycleViewFragment() {
                 it.toString()
             )
         }
+    }
 
+    private fun setChipCheckListeners() {
         binding.chips.children.filterIsInstance<Chip>().forEach {
             it.setOnCheckedChangeListener { view, checked ->
                 viewModel.partyChipClicked(view.id, checked)
             }
         }
-
-        return binding.root
     }
 }

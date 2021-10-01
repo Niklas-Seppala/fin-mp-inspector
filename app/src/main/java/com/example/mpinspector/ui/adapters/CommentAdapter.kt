@@ -6,15 +6,14 @@ import com.example.mpinspector.utils.CommentBinding
 import java.text.DateFormat
 import java.util.*
 
+/**
+ * RecycleView Adapter for comments.
+ */
 class CommentAdapter(items: List<CommentModel>) :
-    GenericAdapter<CommentModel, CommentBinding, ViewHolder<CommentBinding>>(items, R.layout.fragment_comment) {
+    GenericAdapter<CommentModel, CommentBinding>(items, R.layout.fragment_comment) {
 
-    override fun createViewHolder(binding: CommentBinding): ViewHolder<CommentBinding> {
-        return ViewHolder(binding)
-    }
-
-    override fun bind(binding: CommentBinding, item: CommentModel) {
-        binding.contentTv.text = item.content
-        binding.commentDateTv.text = DateFormat.getInstance().format(Date(item.timestamp))
+    override fun hookUpItemWithView(binding: CommentBinding, item: CommentModel) {
+        binding.comment.text = item.content
+        binding.commentDate.text = DateFormat.getInstance().format(Date(item.timestamp))
     }
 }

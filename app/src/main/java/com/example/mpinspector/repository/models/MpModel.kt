@@ -15,5 +15,5 @@ data class MpModel (
     val picture: String,
     val twitter: String = "",
     val bornYear: Int,
-    val constituency: String
+    val constituency: String,
 )

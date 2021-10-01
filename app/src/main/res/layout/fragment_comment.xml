@@ -8,7 +8,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/contentTv"
+        android:id="@+id/comment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -24,12 +24,12 @@
         tools:text="This is a comment" />
 
     <TextView
-        android:id="@+id/commentDateTv"
+        android:id="@+id/commentDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@+id/contentTv"
-        app:layout_constraintTop_toBottomOf="@+id/contentTv" />
+        app:layout_constraintEnd_toEndOf="@+id/comment"
+        app:layout_constraintTop_toBottomOf="@+id/comment" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
