@@ -1,10 +1,10 @@
 package com.example.mpinspector.ui.mpinspect
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -13,6 +13,7 @@ import com.example.mpinspector.databinding.FragmentMpBinding
 import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.ui.adapters.CommentAdapter
 import com.example.mpinspector.ui.anim.AppAnimations
+import com.example.mpinspector.utils.Toaster
 
 class MpFragment : Fragment() {
     private lateinit var binding: FragmentMpBinding
@@ -22,10 +23,16 @@ class MpFragment : Fragment() {
     override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View {
         binding = DataBindingUtil.inflate(infl, R.layout.fragment_mp, cont, false)
         commentDialog = CommentDialogFragment()
-        commentDialog.setOnSubmit { if (it.isNotBlank()) viewModel.commentOkButtonClick(it) }
+        commentDialog.setOnSubmit { text, like ->
+            if (text.isNotBlank()) viewModel.commentOkButtonClick(text, like)
+        }
 
         binding.noteButton.setOnClickListener { noteBtnClick(it) }
         binding.favButton.setOnClickListener { favoriteBtnClick(it) }
+        binding.twitterButton.setOnClickListener {
+            it.startAnimation(AppAnimations.iconClickAnimation)
+            viewModel.twitterButtonClicked()
+        }
 
         return binding.root
     }
@@ -41,7 +48,7 @@ class MpFragment : Fragment() {
         viewModel.mpLiveData.observe(viewLifecycleOwner, { viewModel.mpLoaded = true })
         viewModel.imageLiveData.observe(viewLifecycleOwner, { viewModel.imageLoaded = true })
         viewModel.loadComplete.observe(viewLifecycleOwner, { if (it) updateLoadViews() })
-        viewModel.favoriteToast.observe(viewLifecycleOwner, { updateFavoriteToast(it) })
+        viewModel.toastMessage.observe(viewLifecycleOwner, { updateFavoriteToast(it) })
     }
 
     private fun updateCommentsView(comments: List<CommentModel>) {
@@ -59,7 +66,7 @@ class MpFragment : Fragment() {
     }
 
     private fun updateFavoriteToast(msg: String) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        Toaster.make(context, msg)
     }
 
     private fun favoriteBtnClick(view: View) {

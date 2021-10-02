@@ -9,19 +9,6 @@ import com.example.mpinspector.repository.models.MpModel
 import java.security.InvalidParameterException
 
 class MpListViewModel: ViewModel() {
-    companion object Party {
-        val map = mapOf(
-            R.id.chipKok to "kok",
-            R.id.chipKesk to "kesk",
-            R.id.chipKd to "kd",
-            R.id.chipLiik to "liik",
-            R.id.chipPs to "ps",
-            R.id.chipSd to "sd",
-            R.id.chipVas to "vas",
-            R.id.chipVihr to "vihr",
-            R.id.chipR to "r"
-        )
-    }
 
     val mps: LiveData<List<MpModel>> = Repository.mps.getMps()
 
@@ -39,5 +26,19 @@ class MpListViewModel: ViewModel() {
             newSet.addAll(it)
             _partyFilter.value = newSet // Invoke onChange CB.
         }
+    }
+
+    companion object Party {
+        val map = mapOf(
+            R.id.chipKok to "kok",
+            R.id.chipKesk to "kesk",
+            R.id.chipKd to "kd",
+            R.id.chipLiik to "liik",
+            R.id.chipPs to "ps",
+            R.id.chipSd to "sd",
+            R.id.chipVas to "vas",
+            R.id.chipVihr to "vihr",
+            R.id.chipR to "r"
+        )
     }
 }

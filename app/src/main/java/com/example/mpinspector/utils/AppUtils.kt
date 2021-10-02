@@ -1,6 +1,9 @@
 package com.example.mpinspector.utils
 
+import android.content.Context
 import android.graphics.*
+import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentCommentBinding
 import com.example.mpinspector.databinding.FragmentListMpItemBinding
@@ -16,6 +19,23 @@ object MyTime {
         get() = (System.currentTimeMillis() / 1000L).toInt()
 }
 
+object Toaster {
+    /**
+     * Since custom toast views are deprecated, this evil,
+     * ugly hack manages to set the font color.
+     * @param context Context?
+     * @param text String
+     */
+    fun make(context: Context?, text: String) {
+        context?.let {
+            val color = it.resources.getColor(R.color.purple_700)
+            Toast.makeText(context,
+                HtmlCompat.fromHtml("<font color='$color'>$text</font>", HtmlCompat.FROM_HTML_MODE_LEGACY),
+                Toast.LENGTH_SHORT)
+                .show()
+        }
+    }
+}
 
 object DataStructs {
     inline fun <T> findDiffIndexes(
@@ -33,7 +53,6 @@ object DataStructs {
             .toSet()
     }
 }
-
 
 object BitmapUtil {
 

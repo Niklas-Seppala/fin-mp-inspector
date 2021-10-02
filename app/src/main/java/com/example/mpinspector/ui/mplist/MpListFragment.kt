@@ -15,12 +15,6 @@ import com.example.mpinspector.repository.models.MpModel
 import com.example.mpinspector.ui.adapters.MpAdapter
 import com.google.android.material.chip.Chip
 
-/**
- *
- * @property adapter MpAdapter
- * @property binding FragmentItemListBinding
- * @property viewModel MpListViewModel
- */
 class MpListFragment : MpRecycleViewFragment() {
     private lateinit var adapter: MpAdapter
     private lateinit var binding: FragmentItemListBinding

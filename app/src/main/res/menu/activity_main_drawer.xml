@@ -27,10 +27,6 @@
                     android:id="@+id/nav_mp_list"
                     android:icon="@drawable/ic_mp_search"
                     android:title="MP List" />
-                <item
-                    android:id="@+id/nav_parties"
-                    android:icon="@drawable/ic_list"
-                    android:title="Parties" />
 
                 <item
                     android:id="@+id/nav_fav_mps"

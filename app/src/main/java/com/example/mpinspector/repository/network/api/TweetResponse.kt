@@ -1,4 +1,4 @@
-package com.example.mpinspector.repository.api
+package com.example.mpinspector.repository.network.api
 
 import com.example.mpinspector.repository.models.TweetModel
 

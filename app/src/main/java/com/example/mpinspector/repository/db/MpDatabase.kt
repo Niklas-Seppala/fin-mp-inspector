@@ -4,16 +4,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.mpinspector.MyApp
-import com.example.mpinspector.repository.models.CommentModel
-import com.example.mpinspector.repository.models.FavoriteModel
-import com.example.mpinspector.repository.models.MpModel
+import com.example.mpinspector.repository.models.*
 
-@Database(version = 1, entities = [MpModel::class, CommentModel::class, FavoriteModel::class],
-          exportSchema = false)
+@Database(version = 1,
+    entities = [MpModel::class, CommentModel::class, FavoriteModel::class,
+        TwitterFeedModel::class, MpTwitterIdModel::class],
+    exportSchema = false)
 abstract class MpDatabase : RoomDatabase() {
     abstract fun mpDao(): MpDao
     abstract fun commentDao(): CommentDao
     abstract fun favoriteDao(): FavoriteDao
+    abstract fun twitterDao(): TwitterDao
+    abstract fun mpTwitterDao(): MpTwitterDao
 
     companion object {
         @Volatile

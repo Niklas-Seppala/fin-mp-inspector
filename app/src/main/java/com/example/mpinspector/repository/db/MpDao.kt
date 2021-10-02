@@ -7,7 +7,6 @@ import com.example.mpinspector.repository.models.MpModel
 
 @Dao
 abstract class MpDao : GenericDao<MpModel>() {
-
     @Query("SELECT picture FROM mp WHERE mp.personNumber IS (:id)")
     abstract suspend fun selectPicture(id: Int): String
 
@@ -16,9 +15,5 @@ abstract class MpDao : GenericDao<MpModel>() {
 
     @Query("SELECT * FROM mp")
     abstract fun selectAll(): LiveData<List<MpModel>>
-
-//    @Query("SELECT * FROM mp WHERE personNumber IN (SELECT mpId FROM favorites)")
-//    abstract fun getAllFavoriteMps(): LiveData<List<MpModel>>
-
 }
 

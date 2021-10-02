@@ -1,6 +1,6 @@
 package com.example.mpinspector.repository.network
 
-import com.example.mpinspector.repository.api.TweetResponse
+import com.example.mpinspector.repository.network.api.TweetResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path

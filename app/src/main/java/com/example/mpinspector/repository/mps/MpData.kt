@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import androidx.lifecycle.LiveData
 import com.example.mpinspector.MyApp
 import com.example.mpinspector.repository.db.MpDatabase
+import com.example.mpinspector.repository.models.MpTwitterModel
 import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.repository.models.FavoriteModel
 import com.example.mpinspector.repository.models.MpModel
@@ -46,6 +47,10 @@ class MpData : MpDataProvider {
         return MpDatabase.instance.favoriteDao().existsById(mpId)
     }
 
+    override fun getMpsFromTwitterFeed(): LiveData<List<MpTwitterModel>> {
+        return MpDatabase.instance.mpTwitterDao().getMps()
+    }
+
     override fun getMpComments(id: Int): LiveData<MutableList<CommentModel>> {
         return MpDatabase.instance.commentDao().selectForMpId(id)
     }
@@ -71,6 +76,7 @@ class MpData : MpDataProvider {
     override suspend fun loadFromWeb() {
         withContext(Dispatchers.IO) {
             MpDatabase.instance.mpDao().insertOrUpdate(mpWebService.getMps())
+            MpDatabase.instance.mpTwitterDao().insertOrUpdate(mpWebService.getMpTwitterIds())
         }
     }
 

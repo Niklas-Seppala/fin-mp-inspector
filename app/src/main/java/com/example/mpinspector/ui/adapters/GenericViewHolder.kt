@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 class GenericViewHolder<TData, TBinding : ViewDataBinding>(
     val binding: TBinding,
     private val items: List<TData>,
-    private val listener: OnRecycleViewItemClick<TData>? = null)
-    : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
+    private val listener: OnRecycleViewItemClick<TData>? = null
+) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
     init {
         itemView.setOnClickListener(this)

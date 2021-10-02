@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@id/nav_mp_list">
 
     <fragment
         android:id="@+id/nav_home"
@@ -20,10 +20,6 @@
             android:defaultValue="0"
             app:argType="integer" />
     </fragment>
-    <fragment
-        android:id="@+id/nav_parties"
-        android:name="com.example.mpinspector.ui.parties.PartiesFragment"
-        android:label="Parties" />
     <fragment
         android:id="@+id/nav_mp_list"
         android:name="com.example.mpinspector.ui.mplist.MpListFragment"

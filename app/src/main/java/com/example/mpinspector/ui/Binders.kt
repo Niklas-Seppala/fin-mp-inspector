@@ -27,6 +27,13 @@ object Binders {
     }
 
     @JvmStatic
+    @BindingAdapter("setImageResCollapseOnZero")
+    fun setImageResCollapseOnZero(view: ImageView, resId: Int) {
+        view.visibility = if (resId == 0) View.GONE else View.VISIBLE
+        view.setImageResource(resId)
+    }
+
+    @JvmStatic
     @BindingAdapter("setMinisterStatus")
     fun setMinister(view: TextView, isMinister: Boolean) {
         view.text = if (isMinister) "Minister" else ""

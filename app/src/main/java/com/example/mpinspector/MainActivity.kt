@@ -20,11 +20,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MyApp.initApp(applicationContext)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        MyApp.initApp(applicationContext)
 
         lifecycleScope.launch {
             Repository.mps.loadFromWeb()
@@ -36,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(setOf(
             R.id.nav_home,
             R.id.nav_mp_list,
-            R.id.nav_parties,
             R.id.nav_fav_mps),
             binding.drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)

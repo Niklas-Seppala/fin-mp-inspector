@@ -9,7 +9,7 @@
         android:layout_height="match_parent">
 
         <EditText
-            android:id="@+id/commentEt"
+            android:id="@+id/note"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
-            app:layout_constraintEnd_toEndOf="@+id/commentEt"
+            app:layout_constraintEnd_toEndOf="@+id/note"
             app:layout_constraintTop_toTopOf="@+id/submitButton" />
 
         <ImageView
@@ -48,8 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="@+id/commentEt"
-            app:layout_constraintTop_toBottomOf="@+id/commentEt"
+            app:layout_constraintStart_toStartOf="@+id/note"
+            app:layout_constraintTop_toBottomOf="@+id/note"
             app:srcCompat="@drawable/ic_like" />
 
         <ImageView
@@ -68,7 +68,7 @@
             android:layout_marginTop="32dp"
             android:text="Leave a Note"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="@+id/commentEt"
+            app:layout_constraintStart_toStartOf="@+id/note"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

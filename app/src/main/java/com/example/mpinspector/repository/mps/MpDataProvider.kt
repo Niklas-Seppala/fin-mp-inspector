@@ -2,7 +2,7 @@ package com.example.mpinspector.repository.mps
 
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.example.mpinspector.repository.models.MpTwitterModel
 import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.repository.models.FavoriteModel
 import com.example.mpinspector.repository.models.MpModel
@@ -82,4 +82,9 @@ interface MpDataProvider {
      * @return LiveData<Boolean> True if mp is currently in favorites.
      */
     fun isMpInFavorites(mpId: Int): LiveData<Boolean>
+
+
+
+
+    fun getMpsFromTwitterFeed(): LiveData<List<MpTwitterModel>>
 }
