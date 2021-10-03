@@ -37,4 +37,8 @@
             android:id="@+id/action_nav_fav_mps_to_nav_mp_inspect"
             app:destination="@id/nav_mp_inspect" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_twitter_feed"
+        android:name="com.example.mpinspector.ui.twitter.TwitterFeedFragment"
+        android:label="Twitter Feed" />
 </navigation>

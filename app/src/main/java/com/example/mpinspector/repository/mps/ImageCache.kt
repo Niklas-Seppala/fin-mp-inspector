@@ -11,7 +11,7 @@ import java.lang.Exception
 class InvalidCacheReadException(msg: String) : Exception(msg)
 
 class ImageCache() {
-    private var cache = mutableMapOf<Int, File>()
+    private var cache = mutableMapOf<String, File>()
     private var cacheInitFlag = false
 
     fun load() {
@@ -22,7 +22,7 @@ class ImageCache() {
 
         val files = imgCacheDir.listFiles()
             ?.filter { it.extension == "jpg" }
-            ?.map { it.nameWithoutExtension.toInt() to it }
+            ?.map { it.nameWithoutExtension to it }
         if (files != null) {
             cache.putAll(files)
         }
@@ -30,14 +30,23 @@ class ImageCache() {
     }
 
     @Throws(InvalidCacheReadException::class)
-    suspend fun fetch(id: Int): Bitmap {
+    suspend fun fetch(id: Int, size: ImageSize): Bitmap {
+
+        val cacheId = when (size) {
+            ImageSize.SMALL -> "${id}_small"
+            ImageSize.NORMAL -> "$id"
+        }
+
         return withContext<Bitmap>(Dispatchers.IO) {
-            val file = cache[id] ?: throw InvalidCacheReadException(
-                "No requested \"$id\" cached image exists.")
+            val file = cache[cacheId] ?: throw InvalidCacheReadException(
+                "No requested \"$cacheId\" cached image exists.")
             BitmapFactory.decodeStream(file.inputStream())
         }
     }
 
-    fun containsKey(key: Int) = cache.containsKey(key)
-    fun insert(key: Int, file: File) { cache[key] = file }
+    fun containsKey(key: String) = cache.containsKey(key)
+
+    fun insert(key: String, file: File) {
+        cache[key] = file
+    }
 }

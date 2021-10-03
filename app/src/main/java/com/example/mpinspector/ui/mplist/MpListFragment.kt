@@ -22,7 +22,7 @@ class MpListFragment : MpRecycleViewFragment() {
 
     override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View {
         binding = DataBindingUtil.inflate(infl, R.layout.fragment_item_list, cont, false)
-        binding.list.layoutManager = LinearLayoutManager(context)
+        binding.mpList.layoutManager = LinearLayoutManager(context)
 
         viewModel = ViewModelProvider(this).get(MpListViewModel::class.java)
         viewModel.mps.observe(viewLifecycleOwner, {
@@ -45,7 +45,7 @@ class MpListFragment : MpRecycleViewFragment() {
 
     private fun createAdapter(mps: List<MpModel>) {
         adapter = MpAdapter(mps, this)
-        binding.list.adapter = adapter
+        binding.mpList.adapter = adapter
     }
 
     private fun setSearchListener() {

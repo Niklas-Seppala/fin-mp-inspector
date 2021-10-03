@@ -21,7 +21,7 @@ class FavoriteMpRecycleViewFragment : MpRecycleViewFragment() {
 
         viewModel.mps.observe(viewLifecycleOwner, {
             adapter = MpAdapter(it, this)
-            binding.list.adapter = adapter
+            binding.mpList.adapter = adapter
         })
         return binding.root
     }

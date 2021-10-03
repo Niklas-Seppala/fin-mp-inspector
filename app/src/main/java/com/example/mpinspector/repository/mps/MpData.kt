@@ -17,18 +17,25 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
+enum class ImageSize {
+    NORMAL,
+    SMALL
+}
+
 class MpData : MpDataProvider {
     private val mpWebService = Network.mpClient.create(MpWebService::class.java)
     private val imgWebService = Network.imageClient.create(ImageWebService::class.java)
     private val imageCache = ImageCache()
 
-    override suspend fun getMpImage(id: Int): Bitmap {
+    override suspend fun getMpImage(id: Int, size: ImageSize, roundCorner: Int): Bitmap {
         imageCache.load()
-        val image = if (imageCache.containsKey(id))
-            imageCache.fetch(id)
+
+        val image = if (imageCache.containsKey(id.toString()))
+            imageCache.fetch(id, size)
         else
-            networkFetch(id)
-        return BitmapUtil.roundCorners(image)
+            networkFetch(id, size)
+
+        return BitmapUtil.roundCorners(image, roundCorner)
     }
 
     override fun getMp(id: Int): LiveData<MpModel> {
@@ -80,13 +87,22 @@ class MpData : MpDataProvider {
         }
     }
 
-    private suspend fun networkFetch(id: Int): Bitmap {
+    private suspend fun networkFetch(id: Int, size: ImageSize): Bitmap {
         val endP = MpDatabase.instance.mpDao().selectPicture(id)
         val resp = imgWebService.getImage(endP)
-        val bm = BitmapUtil.resizeBitmap(BitmapFactory.decodeStream(resp.byteStream()), 300)
+        val normalSizeBm = BitmapUtil.resizeBitmap(BitmapFactory.decodeStream(resp.byteStream()), 300)
         val out = File(MyApp.appContext.cacheDir, "img/$id.jpg")
-        bm.compress(Bitmap.CompressFormat.JPEG, 70, out.outputStream())
-        imageCache.insert(id, out)
-        return bm
+        val outSmall = File(MyApp.appContext.cacheDir, "img/${id}_small.jpg")
+        normalSizeBm.compress(Bitmap.CompressFormat.JPEG, 70, out.outputStream())
+
+        val smallSizeBm = BitmapUtil.resizeBitmap(normalSizeBm, 175)
+        smallSizeBm.compress(Bitmap.CompressFormat.JPEG, 70, outSmall.outputStream())
+        imageCache.insert("$id", out)
+        imageCache.insert("${id}_small", outSmall)
+
+        return when (size) {
+            ImageSize.SMALL -> smallSizeBm
+            ImageSize.NORMAL -> normalSizeBm
+        }
     }
 }

@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(setOf(
             R.id.nav_home,
+            R.id.nav_twitter_feed,
             R.id.nav_mp_list,
             R.id.nav_fav_mps),
             binding.drawerLayout)

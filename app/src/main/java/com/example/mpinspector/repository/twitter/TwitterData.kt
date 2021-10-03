@@ -2,7 +2,6 @@ package com.example.mpinspector.repository.twitter
 
 import androidx.lifecycle.LiveData
 import com.example.mpinspector.MyApp
-import com.example.mpinspector.repository.network.api.TweetResponse
 import com.example.mpinspector.repository.db.MpDatabase
 import com.example.mpinspector.repository.models.TweetModel
 import com.example.mpinspector.repository.models.TwitterFeedModel
@@ -17,6 +16,18 @@ class TwitterData : TwitterDataProvider {
 
     override fun isMpInTwitterFeed(mpId: Int): LiveData<Boolean> {
         return MpDatabase.instance.twitterDao().existsById(mpId)
+    }
+
+    override suspend fun getTweets(twitterId: String): List<TweetModel> {
+        val responseObj = twitterWebService.getTweets(twitterId,
+            count = "10",
+            header = MyApp.TWITTER_AUTH,
+            fields = TwitterQueries.join(arrayOf(
+                TwitterQueries.TweetFields.AUTHOR_ID,
+                TwitterQueries.TweetFields.CREATED_AT)
+            )
+        )
+        return responseObj.data
     }
 
     override suspend fun addMpToTwitterFeed(feed: TwitterFeedModel) {
@@ -35,14 +46,14 @@ class TwitterData : TwitterDataProvider {
         return MpDatabase.instance.mpTwitterDao().mpHasTwitter(mpId)
     }
 
-    override suspend fun getTweet(id: String): TweetModel {
-        return twitterWebService.getTweet(id, TwitterQueries.join(
-            arrayOf(
-                TwitterQueries.TweetFields.AUTHOR_ID,
-                TwitterQueries.TweetFields.CREATED_AT
-            )
-        ),
-            MyApp.TWITTER_AUTH
-        ).data
-    }
+//    suspend fun getTweet(id: String): TweetModel {
+//        return twitterWebService.getTweet(id, TwitterQueries.join(
+//            arrayOf(
+//                TwitterQueries.TweetFields.AUTHOR_ID,
+//                TwitterQueries.TweetFields.CREATED_AT
+//            )
+//        ),
+//            MyApp.TWITTER_AUTH
+//        ).data
+//    }
 }

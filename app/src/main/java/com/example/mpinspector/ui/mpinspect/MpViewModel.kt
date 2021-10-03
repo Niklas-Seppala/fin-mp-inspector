@@ -6,6 +6,7 @@ import com.example.mpinspector.repository.Repository
 import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.repository.models.FavoriteModel
 import com.example.mpinspector.repository.models.TwitterFeedModel
+import com.example.mpinspector.repository.mps.ImageSize
 import com.example.mpinspector.utils.MyTime
 import kotlinx.coroutines.launch
 import java.util.*
@@ -15,7 +16,7 @@ class MpViewModel(var mpId: Int) : ViewModel() {
     val mpLiveData = Repository.mps.getMp(mpId)
     val ageLiveData: LiveData<Int> = Transformations.map(mpLiveData) { year - it.bornYear }
     val commentsLiveData = Repository.mps.getMpComments(mpId)
-    val imageLiveData = liveData { emit(Repository.mps.getMpImage(mpId)) }
+    val imageLiveData = liveData { emit(Repository.mps.getMpImage(mpId, ImageSize.NORMAL)) }
 
     private val isFavLiveData = Repository.mps.isMpInFavorites(mpId)
     val iconLiveData: LiveData<Int> = Transformations.map(isFavLiveData) {

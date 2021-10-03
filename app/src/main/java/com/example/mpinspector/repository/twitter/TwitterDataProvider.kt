@@ -9,7 +9,8 @@ import com.example.mpinspector.repository.models.TwitterFeedModel
  * related Twitter data.
  */
 interface TwitterDataProvider {
-    suspend fun getTweet(id: String): TweetModel
+
+    suspend fun getTweets(twitterId: String): List<TweetModel>
 
     /**
      *

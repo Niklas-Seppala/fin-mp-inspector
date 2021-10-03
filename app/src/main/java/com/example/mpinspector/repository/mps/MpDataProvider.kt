@@ -19,12 +19,7 @@ interface MpDataProvider {
      */
     suspend fun loadFromWeb()
 
-    /**
-     * Gets the profile picture related to specified id.
-     * @param id Int MP id.
-     * @return Bitmap MP profile picture.
-     */
-    suspend fun getMpImage(id: Int): Bitmap
+    suspend fun getMpImage(id: Int, size: ImageSize, roundCorner: Int = 30): Bitmap
 
     /**
      * Stores the specified comment object.
@@ -82,8 +77,6 @@ interface MpDataProvider {
      * @return LiveData<Boolean> True if mp is currently in favorites.
      */
     fun isMpInFavorites(mpId: Int): LiveData<Boolean>
-
-
 
 
     fun getMpsFromTwitterFeed(): LiveData<List<MpTwitterModel>>

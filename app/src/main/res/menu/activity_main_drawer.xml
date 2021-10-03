@@ -10,6 +10,7 @@
             android:icon="@drawable/ic_home"
             android:title="Home" />
         <item
+            android:id="@+id/nav_twitter_feed"
             android:icon="@drawable/ic_logo_white"
             android:title="Twitter Feed" />
     </group>

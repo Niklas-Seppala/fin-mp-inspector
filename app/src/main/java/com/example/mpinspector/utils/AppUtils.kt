@@ -62,6 +62,28 @@ object BitmapUtil {
         return Bitmap.createScaledBitmap(bitmap, destWidth, destHeight, false)
     }
 
+
+    fun circleCrop(bitmap: Bitmap, x: Int, y: Int, diameter: Int): Bitmap {
+
+        val rect = Rect(0, 0, diameter, diameter)
+
+        val out = Bitmap.createBitmap(diameter, diameter, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(out)
+
+        val paint = Paint()
+        paint.isAntiAlias = true
+        canvas.drawARGB(0, 0, 0, 0)
+        paint.color = 0xff000000.toInt()
+        canvas.drawCircle(x.toFloat(), y.toFloat(), diameter.toFloat() / 2, paint)
+
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        canvas.drawBitmap(bitmap, rect, rect, paint)
+
+        return out
+    }
+
+
+
     fun roundCorners(bm: Bitmap, px: Int = 30): Bitmap {
         val out = Bitmap.createBitmap(bm.width, bm.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(out)
