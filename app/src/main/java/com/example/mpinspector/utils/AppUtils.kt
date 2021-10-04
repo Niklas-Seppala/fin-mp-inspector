@@ -37,23 +37,6 @@ object Toaster {
     }
 }
 
-object DataStructs {
-    inline fun <T> findDiffIndexes(
-        old: List<T>, new: List<T>,
-        eq: (T, T) -> Boolean
-    ): Set<Int> {
-        val small = if (old.size < new.size) old else new
-        val large = if (old.size > new.size) old else new
-        val limit = small.size - 1
-
-        if (limit < 0) return large.indices.toSet()
-
-        return large.indices
-            .filter { it > limit || !eq(old[it], new[it]) }
-            .toSet()
-    }
-}
-
 object BitmapUtil {
 
     fun resizeBitmap(bitmap: Bitmap, destWidth: Int): Bitmap {

@@ -14,14 +14,14 @@
 
         <TextView
             android:id="@+id/tweetContent"
+            android:autoLink="web"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:text="TextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/tweetAuthor"
-            app:layout_constraintTop_toBottomOf="@+id/tweetAuthor" />
+            app:layout_constraintTop_toBottomOf="@+id/tweetClose" />
 
         <TextView
             android:id="@+id/createdAt"
@@ -51,6 +51,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
+
+        <ImageView
+            android:id="@+id/tweetClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close" />
+
+        <ImageView
+            android:id="@+id/tweetOpen"
+            android:layout_width="30dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/tweetClose"
+            app:layout_constraintTop_toTopOf="@+id/tweetClose"
+            app:srcCompat="@drawable/ic_twitter_filled" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

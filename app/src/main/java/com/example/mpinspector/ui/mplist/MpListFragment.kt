@@ -21,14 +21,19 @@ class MpListFragment : MpRecycleViewFragment() {
     private lateinit var viewModel: MpListViewModel
 
     override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View {
+        viewModel = ViewModelProvider(this).get(MpListViewModel::class.java)
         binding = DataBindingUtil.inflate(infl, R.layout.fragment_item_list, cont, false)
         binding.mpList.layoutManager = LinearLayoutManager(context)
 
-        viewModel = ViewModelProvider(this).get(MpListViewModel::class.java)
+        adapter = MpAdapter(listOf(), this)
+        binding.mpList.adapter = adapter
+
         viewModel.mps.observe(viewLifecycleOwner, {
-            createAdapter(it)
-            startToObservePartyChips()
+            adapter.setNewBaseItems(it)
             binding.loadingSpinner.visibility = View.GONE
+        })
+        viewModel.partyFilter.observe(viewLifecycleOwner, { parties ->
+            adapter.filter(parties, binding.personName.text.toString())
         })
 
         setSearchListener()
@@ -37,22 +42,11 @@ class MpListFragment : MpRecycleViewFragment() {
         return binding.root
     }
 
-    private fun startToObservePartyChips() {
-        viewModel.partyFilter.observe(viewLifecycleOwner, { parties ->
-            adapter.filter(parties, binding.personName.text.toString())
-        })
-    }
-
-    private fun createAdapter(mps: List<MpModel>) {
-        adapter = MpAdapter(mps, this)
-        binding.mpList.adapter = adapter
-    }
-
     private fun setSearchListener() {
         binding.personName.doAfterTextChanged {
             adapter.filter(
                 viewModel.partyFilter.value
-                    ?: MpListViewModel.Party.map.values.toSet(),
+                    ?: MpListViewModel.partyMap.values.toSet(),
                 it.toString()
             )
         }

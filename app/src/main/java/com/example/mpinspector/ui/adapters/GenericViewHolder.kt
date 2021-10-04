@@ -20,6 +20,8 @@ class GenericViewHolder<TData, TBinding : ViewDataBinding>(
     private val listener: OnRecycleViewItemClick<TData>? = null
 ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
+    fun itemAtCurrentPos(): TData = items[absoluteAdapterPosition]
+
     init {
         itemView.setOnClickListener(this)
     }
@@ -30,6 +32,6 @@ class GenericViewHolder<TData, TBinding : ViewDataBinding>(
      * @param view View Clicked view.
      */
     override fun onClick(view: View?) {
-        listener?.onItemClick(items[absoluteAdapterPosition])
+        listener?.onItemClick(itemAtCurrentPos())
     }
 }

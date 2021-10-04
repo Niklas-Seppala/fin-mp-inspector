@@ -2,6 +2,7 @@ package com.example.mpinspector.ui.mplist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.mpinspector.R
 import com.example.mpinspector.repository.Repository
@@ -12,12 +13,14 @@ class MpListViewModel: ViewModel() {
 
     val mps: LiveData<List<MpModel>> = Repository.mps.getMps()
 
-    private val _partyFilter = MutableLiveData(Party.map.map { it.value }.toMutableSet())
+    private val _partyFilter: MutableLiveData<MutableSet<String>> = Transformations.switchMap(mps) {
+        MutableLiveData(partyMap.map { it.value }.toMutableSet())
+    } as MutableLiveData<MutableSet<String>>
     val partyFilter: LiveData<MutableSet<String>>
         get() = _partyFilter
 
     fun partyChipClicked(resId: Int, checked: Boolean) {
-        val party = Party.map[resId]
+        val party = partyMap[resId]
             ?: throw InvalidParameterException("Chip id not mapped to party.")
 
         _partyFilter.value?.let {
@@ -29,7 +32,7 @@ class MpListViewModel: ViewModel() {
     }
 
     companion object Party {
-        val map = mapOf(
+        val partyMap = mapOf(
             R.id.chipKok to "kok",
             R.id.chipKesk to "kesk",
             R.id.chipKd to "kd",

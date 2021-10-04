@@ -23,24 +23,42 @@ import com.example.mpinspector.R
  * @property currentItems List<TData> Currently displayed items.
  */
 abstract class GenericAdapter<TData, TBinding : ViewDataBinding>(
-    protected val items: List<TData>,
+    protected var items: List<TData>,
     protected val itemLayoutRes: Int,
-    private val onItemClick: OnRecycleViewItemClick<TData>? = null
+    private val onItemClick: OnRecycleViewItemClick<TData>? = null,
+    private val otherListeners: Array<OnRecycleViewItemClick<TData>>? = null
 ) : RecyclerView.Adapter<GenericViewHolder<TData, TBinding>>() {
 
-    private val _currentItems = items.toMutableList()
+    protected val _currentItems = items.toMutableList()
     val currentItems: List<TData>
         get() = _currentItems
 
+    fun setNewBaseItems(new: List<TData>) {
+        items = new
+//        _currentItems.clear()
+//        _currentItems.addAll(items)
+    }
+
     override fun getItemCount(): Int = _currentItems.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GenericViewHolder<TData, TBinding> {
-        return GenericViewHolder(
+    protected open fun bindAdditionalListeners(otherListeners: Array<OnRecycleViewItemClick<TData>>?,
+                                               viewHolder: GenericViewHolder<TData, TBinding>) {
+    }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): GenericViewHolder<TData, TBinding> {
+        val holder: GenericViewHolder<TData, TBinding> = GenericViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
                 itemLayoutRes, parent, false
             ), _currentItems, onItemClick
         )
+
+        // Bind any additional click listeners to ViewHolder.
+        bindAdditionalListeners(otherListeners, holder)
+        return holder
     }
 
     override fun onBindViewHolder(holder: GenericViewHolder<TData, TBinding>, position: Int) {
@@ -72,6 +90,13 @@ abstract class GenericAdapter<TData, TBinding : ViewDataBinding>(
         _currentItems.clear()
         _currentItems.addAll(new)
         notifyDataSetChanged()
+    }
+
+    open fun delete(item: TData) {
+        val index = _currentItems.indexOf(item)
+        if (index >= 0)
+            _currentItems.removeAt(index)
+        notifyItemRemoved(index)
     }
 
     /**
