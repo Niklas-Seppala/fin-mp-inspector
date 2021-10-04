@@ -14,6 +14,8 @@ import com.example.mpinspector.repository.models.TweetModel
 import com.example.mpinspector.ui.adapters.OnRecycleViewItemClick
 import android.content.Intent
 import android.net.Uri
+import androidx.navigation.fragment.findNavController
+import com.example.mpinspector.ui.NavActions
 
 typealias TweetWithAuthor = Pair<MpTwitterModel, TweetModel>
 
@@ -26,11 +28,12 @@ class TwitterFeedFragment : Fragment() {
         binding = DataBindingUtil.inflate(infl, R.layout.fragment_twitter_feed, cont, false)
         viewModel = ViewModelProvider(this).get(TwitterFeedViewModel::class.java)
 
-        viewModel.tweets.observe(viewLifecycleOwner, {
-            adapter = TweetAdapter(it.mpTweets, it.imgMap, arrayOf(onTwitterBtnClick, onDeleteTweetBtnClick))
-            binding.tweetList.adapter = adapter
-            binding.twitterFeedSpinner.visibility = View.GONE
-        })
+        adapter = TweetAdapter(listOf(), mapOf(),
+            arrayOf(onTwitterBtnClick, onDeleteTweetBtnClick, onProfileClick))
+        binding.tweetList.adapter = adapter
+
+        viewModel.tweets.observe(viewLifecycleOwner,
+            { adapter.updateWithImages(it.mpTweets, it.imgMap) })
 
         return binding.root
     }
@@ -51,6 +54,18 @@ class TwitterFeedFragment : Fragment() {
     }
 
     /**
+     * Tweet profile click listener object. Navigates to MpInspect.
+     */
+    private val onProfileClick = object : OnRecycleViewItemClick<TweetWithAuthor> {
+        override fun onItemClick(itemData: TweetWithAuthor) {
+            val nav = findNavController()
+            val action = NavActions.fromTwitterFeedToInspect
+            action.mpId = itemData.first.personNumber
+            nav.navigate(action)
+        }
+    }
+
+    /**
      * Tweet delete button click listener object. Deletes clicked item from RecycleView,
      * and updates UI
      */
@@ -66,5 +81,6 @@ class TwitterFeedFragment : Fragment() {
     companion object {
         const val OPEN_IN_TWITTER_LISTENER = 0
         const val DELETE_TWEET_LISTENER = 1
+        const val INSPECT_PROFILE_LISTENER = 2
     }
 }

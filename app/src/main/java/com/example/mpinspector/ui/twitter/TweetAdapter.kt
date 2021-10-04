@@ -2,24 +2,30 @@ package com.example.mpinspector.ui.twitter
 
 import android.graphics.Bitmap
 import androidx.core.text.HtmlCompat
+import androidx.recyclerview.widget.DiffUtil
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentTweetBinding
-import com.example.mpinspector.ui.adapters.GenericAdapter
-import com.example.mpinspector.ui.adapters.GenericViewHolder
-import com.example.mpinspector.ui.adapters.OnRecycleViewItemClick
+import com.example.mpinspector.ui.adapters.*
 import com.example.mpinspector.ui.anim.AppAnimations
 import java.text.DateFormat
 import java.time.Instant
 
 
 class TweetAdapter(items: List<TweetWithAuthor>,
-                   private val images: Map<Int, Bitmap>,
+                   private var images: Map<Int, Bitmap>,
                    otherListeners: Array<OnRecycleViewItemClick<TweetWithAuthor>>) :
     GenericAdapter<TweetWithAuthor, FragmentTweetBinding>(
         items,
         R.layout.fragment_tweet,
         otherListeners = otherListeners
     ) {
+
+    override val diffComparator: DiffComparator<TweetWithAuthor> = { a, b -> a.second.id  == b.second.id }
+
+    fun updateWithImages(newItems: List<TweetWithAuthor>, newImages: Map<Int, Bitmap>) {
+        images = newImages
+        update(newItems)
+    }
 
     override fun bindAdditionalListeners(
         otherListeners: Array<OnRecycleViewItemClick<TweetWithAuthor>>?,
@@ -29,6 +35,7 @@ class TweetAdapter(items: List<TweetWithAuthor>,
 
         val openInTwitter = otherListeners[TwitterFeedFragment.OPEN_IN_TWITTER_LISTENER]
         val deleteTweet = otherListeners[TwitterFeedFragment.DELETE_TWEET_LISTENER]
+        val moveToInspect = otherListeners[TwitterFeedFragment.INSPECT_PROFILE_LISTENER]
 
         viewHolder.binding.tweetOpen.setOnClickListener {
             openInTwitter.onItemClick(viewHolder.itemAtCurrentPos())
@@ -38,6 +45,13 @@ class TweetAdapter(items: List<TweetWithAuthor>,
         viewHolder.binding.tweetClose.setOnClickListener {
             deleteTweet.onItemClick(viewHolder.itemAtCurrentPos())
             viewHolder.binding.tweetClose.startAnimation(AppAnimations.iconClickAnimation)
+        }
+
+        viewHolder.binding.tweetProfilePic.setOnClickListener {
+            moveToInspect.onItemClick(viewHolder.itemAtCurrentPos())
+        }
+        viewHolder.binding.tweetAuthor.setOnClickListener {
+            moveToInspect.onItemClick(viewHolder.itemAtCurrentPos())
         }
     }
 

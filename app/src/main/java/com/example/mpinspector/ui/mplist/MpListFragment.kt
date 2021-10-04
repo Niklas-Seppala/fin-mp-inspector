@@ -11,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentItemListBinding
-import com.example.mpinspector.repository.models.MpModel
 import com.example.mpinspector.ui.adapters.MpAdapter
 import com.google.android.material.chip.Chip
 
@@ -25,38 +24,20 @@ class MpListFragment : MpRecycleViewFragment() {
         binding = DataBindingUtil.inflate(infl, R.layout.fragment_item_list, cont, false)
         binding.mpList.layoutManager = LinearLayoutManager(context)
 
-        adapter = MpAdapter(listOf(), this)
-        binding.mpList.adapter = adapter
-
         viewModel.mps.observe(viewLifecycleOwner, {
-            adapter.setNewBaseItems(it)
+            adapter = MpAdapter(it, this)
+            binding.mpList.adapter = adapter
             binding.loadingSpinner.visibility = View.GONE
         })
-        viewModel.partyFilter.observe(viewLifecycleOwner, { parties ->
-            adapter.filter(parties, binding.personName.text.toString())
-        })
+        viewModel.activeMps.observe(viewLifecycleOwner, { adapter.update(it) })
 
-        setSearchListener()
-        setChipCheckListeners()
-
-        return binding.root
-    }
-
-    private fun setSearchListener() {
-        binding.personName.doAfterTextChanged {
-            adapter.filter(
-                viewModel.partyFilter.value
-                    ?: MpListViewModel.partyMap.values.toSet(),
-                it.toString()
-            )
-        }
-    }
-
-    private fun setChipCheckListeners() {
+        binding.personName.doAfterTextChanged { viewModel.searchTextChanged(it.toString()) }
         binding.chips.children.filterIsInstance<Chip>().forEach {
             it.setOnCheckedChangeListener { view, checked ->
                 viewModel.partyChipClicked(view.id, checked)
             }
         }
+
+        return binding.root
     }
 }

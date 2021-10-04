@@ -1,5 +1,6 @@
 package com.example.mpinspector.ui.adapters
 
+import androidx.recyclerview.widget.DiffUtil
 import com.example.mpinspector.R
 import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.utils.CommentBinding
@@ -15,4 +16,6 @@ class CommentAdapter(items: List<CommentModel>) : GenericAdapter<CommentModel, C
         binding.commentDate.text = DateFormat.getInstance().format(Date(item.timestamp))
         binding.likeIcon.setImageResource(if (item.like) R.drawable.ic_like else R.drawable.ic_dislike)
     }
+
+    override val diffComparator: DiffComparator<CommentModel> = { a, b -> a.id == b.id }
 }

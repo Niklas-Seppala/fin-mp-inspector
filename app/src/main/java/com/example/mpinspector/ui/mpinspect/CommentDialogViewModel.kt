@@ -24,6 +24,9 @@ class CommentDialogViewModel : ViewModel() {
         }
     }
 
+    fun oneOfLikeButtonsIsActive(): Boolean {
+        return (likedLiveData.value ?: false) || (dislikedLiveData.value ?: false)
+    }
 
     var likePrevState = false
     private val likedLiveData = MutableLiveData(false)

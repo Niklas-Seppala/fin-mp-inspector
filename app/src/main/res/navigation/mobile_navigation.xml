@@ -40,5 +40,9 @@
     <fragment
         android:id="@+id/nav_twitter_feed"
         android:name="com.example.mpinspector.ui.twitter.TwitterFeedFragment"
-        android:label="Twitter Feed" />
+        android:label="Twitter Feed" >
+        <action
+            android:id="@+id/action_nav_twitter_feed_to_nav_mp_inspect"
+            app:destination="@id/nav_mp_inspect" />
+    </fragment>
 </navigation>

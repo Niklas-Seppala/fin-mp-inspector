@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -19,11 +20,6 @@ class CommentDialogFragment: DialogFragment() {
     override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View {
         binding = DataBindingUtil.inflate(infl, R.layout.comment_dialog, cont, false)
         viewModel = ViewModelProvider(this).get(CommentDialogViewModel::class.java)
-
-//        viewModel.isDislikeActive.observe(viewLifecycleOwner, {
-//            if (it) binding.dislikeButton.startAnimation(AppAnimations.iconClickGrow)
-//            else    binding.dislikeButton.startAnimation(AppAnimations.iconClickToNormal)
-//        })
 
         viewModel.isDislikeActive.observe(viewLifecycleOwner, { dislike ->
             if (dislike) {
@@ -52,16 +48,24 @@ class CommentDialogFragment: DialogFragment() {
                 binding.likeButton.startAnimation(AppAnimations.iconClickToNormal)
             }
         })
-
         
         binding.likeButton.setOnClickListener { viewModel.likeClicked() }
         binding.dislikeButton.setOnClickListener { viewModel.dislikeClicked() }
         binding.cancelButton.setOnClickListener { dialog?.cancel() }
         binding.submitButton.setOnClickListener {
-
             viewModel.isLikeActive.value?.let {
-                onSubmitCb?.invoke(binding.note.text.toString(),
-                    it)
+
+                if (binding.note.text.isBlank()) {
+                    binding.note.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.shake))
+                    return@setOnClickListener
+                }
+
+                if (!viewModel.oneOfLikeButtonsIsActive()) {
+                    binding.likeButton.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.shake_medium))
+                    binding.dislikeButton.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.shake_medium))
+                    return@setOnClickListener
+                }
+                onSubmitCb?.invoke(binding.note.text.toString(), it)
             }
             binding.note.text.clear()
             dismiss()

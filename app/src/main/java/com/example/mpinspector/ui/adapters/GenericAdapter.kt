@@ -5,9 +5,16 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mpinspector.MyApp
 import com.example.mpinspector.R
+import java.lang.NullPointerException
+
+/**
+ *
+ */
+typealias DiffComparator<TData> = (TData, TData) -> Boolean
 
 /**
  * Jack of all trades RecycleViewAdapter base class with generic data and binding.
@@ -35,8 +42,6 @@ abstract class GenericAdapter<TData, TBinding : ViewDataBinding>(
 
     fun setNewBaseItems(new: List<TData>) {
         items = new
-//        _currentItems.clear()
-//        _currentItems.addAll(items)
     }
 
     override fun getItemCount(): Int = _currentItems.size
@@ -78,19 +83,16 @@ abstract class GenericAdapter<TData, TBinding : ViewDataBinding>(
      */
     protected abstract fun hookUpItemWithView(binding: TBinding, item: TData)
 
-    /**
-     * Replace current items with new items.
-     * NOTE: notifyDataSetChanged() invoked.
-     *      If you are diligent enough to make better version
-     *      of this func, feel free to do so.
-     *
-     * @param new List<TData> New data set.
-     */
-    open fun updateItems(new: List<TData>) {
+    open val diffComparator: DiffComparator<TData>? = null
+
+    open fun update(new: List<TData>) {
+        val res = DiffUtil.calculateDiff(GenericDiffUtilCB(_currentItems, new, diffComparator
+                ?: throw NullPointerException("Override diffComparator before calling update()")))
         _currentItems.clear()
         _currentItems.addAll(new)
-        notifyDataSetChanged()
+        res.dispatchUpdatesTo(this)
     }
+
 
     open fun delete(item: TData) {
         val index = _currentItems.indexOf(item)

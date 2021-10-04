@@ -13,15 +13,25 @@ class MpListViewModel: ViewModel() {
 
     val mps: LiveData<List<MpModel>> = Repository.mps.getMps()
 
-    private val _partyFilter: MutableLiveData<MutableSet<String>> = Transformations.switchMap(mps) {
+    private val searchText = MutableLiveData("")
+    private val _partyFilter = Transformations.switchMap(mps) {
         MutableLiveData(partyMap.map { it.value }.toMutableSet())
     } as MutableLiveData<MutableSet<String>>
-    val partyFilter: LiveData<MutableSet<String>>
-        get() = _partyFilter
+
+    val activeMps = Transformations.map(_partyFilter) { pFilter ->
+        searchText.value?.let { search ->
+            mps.value?.let { mps ->
+                mps.filter { mp ->
+                    mp.party in pFilter && "${mp.first} ${mp.last}".contains(search)
+                }
+            } as List<MpModel>
+        }
+    }
+
+    fun searchTextChanged(new: String) { searchText.value = new }
 
     fun partyChipClicked(resId: Int, checked: Boolean) {
-        val party = partyMap[resId]
-            ?: throw InvalidParameterException("Chip id not mapped to party.")
+        val party = partyMap[resId] ?: throw InvalidParameterException("Chip id not mapped to party.")
 
         _partyFilter.value?.let {
             if (checked) it.add(party) else it.remove(party)
