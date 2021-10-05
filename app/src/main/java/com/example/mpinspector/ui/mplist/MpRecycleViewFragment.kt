@@ -1,11 +1,12 @@
 package com.example.mpinspector.ui.mplist
 
+import android.app.Activity
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.mpinspector.R
 import com.example.mpinspector.repository.models.MpModel
 import com.example.mpinspector.ui.NavActions
-import com.example.mpinspector.ui.adapters.MpAdapter
 import com.example.mpinspector.ui.adapters.OnRecycleViewItemClick
 
 /**
@@ -32,5 +33,10 @@ abstract class MpRecycleViewFragment : Fragment(), OnRecycleViewItemClick<MpMode
                 nav.navigate(action)
             }
         }
+
+        // Hide keyboard, if open.
+        val imm = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val view = activity?.currentFocus ?: return
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

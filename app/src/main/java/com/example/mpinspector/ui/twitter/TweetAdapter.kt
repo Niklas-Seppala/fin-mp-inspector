@@ -7,6 +7,7 @@ import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentTweetBinding
 import com.example.mpinspector.ui.adapters.*
 import com.example.mpinspector.ui.anim.AppAnimations
+import com.example.mpinspector.utils.PartyMapper
 import java.text.DateFormat
 import java.time.Instant
 
@@ -68,6 +69,7 @@ class TweetAdapter(items: List<TweetWithAuthor>,
 
         val colored = tweet.content.replace(hashtagRegex) { "<font color=#004143><b>${it.value}</b></font>" }
         binding.tweetContent.text = HtmlCompat.fromHtml(colored, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        binding.TweetPartyIcon.setImageResource(PartyMapper.partyIcon(author.party))
 
         binding.createdAt.text = DateFormat.getInstance()
             .format(Instant.parse(tweet.createdAt).epochSecond * 1000)

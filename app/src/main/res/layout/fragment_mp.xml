@@ -51,7 +51,6 @@
                 android:text="@{@string/mpFragFullName(viewModel.mpLiveData.first, viewModel.mpLiveData.last) }"
                 tools:text="Sale Ninistöö" />
 
-
             <ImageView
                 android:id="@+id/mpFragPartyIv"
                 android:layout_width="130dp"

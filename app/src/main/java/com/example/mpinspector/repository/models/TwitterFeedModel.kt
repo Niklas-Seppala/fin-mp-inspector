@@ -16,3 +16,10 @@ data class TwitterFeedModel(
     val mpId: Int
 )
 
+@Entity(tableName = "read_tweet")
+data class ReadTweet(
+    @PrimaryKey
+    val tweetId: String,
+    val owner: Int
+)
+

@@ -79,6 +79,7 @@ class MpViewModel(var mpId: Int) : ViewModel() {
             val fav = TwitterFeedModel(mpId)
             if (isTwitterLiveData.value == true) {
                 Repository.twitter.removeMpFromFeed(fav)
+                Repository.twitter.deleteAllReadByOwner(mpId)
                 toastMessage.value = "$fullName removed from your Twitter feed."
             } else {
                 Repository.twitter.addMpToTwitterFeed(fav)

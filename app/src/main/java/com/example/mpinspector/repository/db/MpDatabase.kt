@@ -8,7 +8,7 @@ import com.example.mpinspector.repository.models.*
 
 @Database(version = 1,
     entities = [MpModel::class, CommentModel::class, FavoriteModel::class,
-        TwitterFeedModel::class, MpTwitterIdModel::class],
+        TwitterFeedModel::class, MpTwitterIdModel::class, ReadTweet::class],
     exportSchema = false)
 abstract class MpDatabase : RoomDatabase() {
     abstract fun mpDao(): MpDao
@@ -16,6 +16,7 @@ abstract class MpDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao
     abstract fun twitterDao(): TwitterDao
     abstract fun mpTwitterDao(): MpTwitterDao
+    abstract fun ReadTweetDao(): ReadTweetDao
 
     companion object {
         @Volatile

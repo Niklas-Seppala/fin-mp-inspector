@@ -14,8 +14,12 @@ import com.example.mpinspector.repository.models.TweetModel
 import com.example.mpinspector.ui.adapters.OnRecycleViewItemClick
 import android.content.Intent
 import android.net.Uri
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.mpinspector.repository.Repository
+import com.example.mpinspector.repository.models.ReadTweet
 import com.example.mpinspector.ui.NavActions
+import kotlinx.coroutines.launch
 
 typealias TweetWithAuthor = Pair<MpTwitterModel, TweetModel>
 
@@ -32,8 +36,10 @@ class TwitterFeedFragment : Fragment() {
             arrayOf(onTwitterBtnClick, onDeleteTweetBtnClick, onProfileClick))
         binding.tweetList.adapter = adapter
 
-        viewModel.tweets.observe(viewLifecycleOwner,
-            { adapter.updateWithImages(it.mpTweets, it.imgMap) })
+        viewModel.tweets.observe(viewLifecycleOwner, {
+            binding.progressBar2.visibility = View.GONE
+            adapter.updateWithImages(it.mpTweets, it.imgMap)
+        })
 
         return binding.root
     }
@@ -72,6 +78,9 @@ class TwitterFeedFragment : Fragment() {
     private val onDeleteTweetBtnClick = object : OnRecycleViewItemClick<TweetWithAuthor> {
         override fun onItemClick(itemData: TweetWithAuthor) {
             adapter.delete(itemData)
+            lifecycleScope.launch {
+                Repository.twitter.insertReadTweetId(ReadTweet(itemData.second.id, itemData.first.personNumber))
+            }
         }
     }
 

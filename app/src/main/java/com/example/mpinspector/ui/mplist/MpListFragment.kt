@@ -27,9 +27,10 @@ class MpListFragment : MpRecycleViewFragment() {
         viewModel.mps.observe(viewLifecycleOwner, {
             adapter = MpAdapter(it, this)
             binding.mpList.adapter = adapter
-            binding.loadingSpinner.visibility = View.GONE
+//            binding.loadingSpinner.visibility = View.GONE
         })
-        viewModel.activeMps.observe(viewLifecycleOwner, { adapter.update(it) })
+
+        viewModel.active.observe(viewLifecycleOwner, { adapter.update(it) })
 
         binding.personName.doAfterTextChanged { viewModel.searchTextChanged(it.toString()) }
         binding.chips.children.filterIsInstance<Chip>().forEach {
