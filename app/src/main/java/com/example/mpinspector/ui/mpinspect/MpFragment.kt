@@ -1,6 +1,7 @@
 package com.example.mpinspector.ui.mpinspect
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +46,12 @@ class MpFragment : Fragment() {
 
         adapter = CommentAdapter(listOf())
         binding.mpFragCommentView.adapter = adapter
+
+
+        viewModel.mpInspectBundle.observe(viewLifecycleOwner, {
+
+        })
+
 
         viewModel.commentsLiveData.observe(viewLifecycleOwner, { adapter.update(it) })
         viewModel.mpLiveData.observe(viewLifecycleOwner, { viewModel.mpLoaded = true })

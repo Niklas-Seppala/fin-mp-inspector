@@ -34,6 +34,6 @@ abstract class GenericDao<T> {
             if (insertResult[i] == -1L) updateList.add(items[i])
         }
 
-        if (!updateList.isEmpty()) update(updateList)
+        if (updateList.isNotEmpty()) update(updateList)
     }
 }

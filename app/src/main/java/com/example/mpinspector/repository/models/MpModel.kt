@@ -1,7 +1,9 @@
 package com.example.mpinspector.repository.models
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 
 @Entity(tableName = "mp")
 data class MpModel (
@@ -16,4 +18,11 @@ data class MpModel (
     val twitter: String = "",
     val bornYear: Int,
     val constituency: String,
+)
+
+data class MpWithComments(
+    @Embedded
+    val mp: MpModel,
+    @Relation(parentColumn = "personNumber", entityColumn = "mpId",)
+    val comments: List<CommentModel>
 )

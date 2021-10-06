@@ -2,10 +2,7 @@ package com.example.mpinspector.repository.mps
 
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
-import com.example.mpinspector.repository.models.MpTwitterModel
-import com.example.mpinspector.repository.models.CommentModel
-import com.example.mpinspector.repository.models.FavoriteModel
-import com.example.mpinspector.repository.models.MpModel
+import com.example.mpinspector.repository.models.*
 
 /**
  * Interface that provides the repository with application
@@ -78,6 +75,5 @@ interface MpDataProvider {
      */
     fun isMpInFavorites(mpId: Int): LiveData<Boolean>
 
-
-    fun getMpsFromTwitterFeed(): LiveData<List<MpTwitterModel>>
+    fun getMpWithComments(id: Int): LiveData<MpWithComments>
 }

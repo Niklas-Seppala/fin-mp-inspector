@@ -27,7 +27,6 @@ class MpListFragment : MpRecycleViewFragment() {
         viewModel.mps.observe(viewLifecycleOwner, {
             adapter = MpAdapter(it, this)
             binding.mpList.adapter = adapter
-//            binding.loadingSpinner.visibility = View.GONE
         })
 
         viewModel.active.observe(viewLifecycleOwner, { adapter.update(it) })

@@ -1,17 +1,30 @@
 package com.example.mpinspector.ui.mpinspect
 
+import android.graphics.Bitmap
 import androidx.lifecycle.*
 import com.example.mpinspector.R
 import com.example.mpinspector.repository.Repository
 import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.repository.models.FavoriteModel
+import com.example.mpinspector.repository.models.MpWithComments
 import com.example.mpinspector.repository.models.TwitterFeedModel
 import com.example.mpinspector.repository.mps.ImageSize
 import com.example.mpinspector.utils.MyTime
 import kotlinx.coroutines.launch
 import java.util.*
 
+data class MpInspectBundle(val mpWithComments: MpWithComments, val image: Bitmap)
+
 class MpViewModel(var mpId: Int) : ViewModel() {
+    private val mpWithComments = Repository.mps.getMpWithComments(mpId)
+    val mpInspectBundle = Transformations.switchMap(mpWithComments) {
+        liveData {
+            val image = Repository.mps.getMpImage(it.mp.personNumber, ImageSize.NORMAL)
+            emit(MpInspectBundle(it, image))
+        }
+    }
+
+
     val toastMessage = MutableLiveData<String>()
     val mpLiveData = Repository.mps.getMp(mpId)
     val ageLiveData: LiveData<Int> = Transformations.map(mpLiveData) { year - it.bornYear }
@@ -79,7 +92,6 @@ class MpViewModel(var mpId: Int) : ViewModel() {
             val fav = TwitterFeedModel(mpId)
             if (isTwitterLiveData.value == true) {
                 Repository.twitter.removeMpFromFeed(fav)
-                Repository.twitter.deleteAllReadByOwner(mpId)
                 toastMessage.value = "$fullName removed from your Twitter feed."
             } else {
                 Repository.twitter.addMpToTwitterFeed(fav)

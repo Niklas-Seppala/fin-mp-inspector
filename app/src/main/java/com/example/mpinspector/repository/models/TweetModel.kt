@@ -1,16 +1,46 @@
 package com.example.mpinspector.repository.models
 
+import androidx.lifecycle.LiveData
+import androidx.room.*
+import com.example.mpinspector.repository.db.GenericDao
 import com.squareup.moshi.Json
+import java.time.Instant
 
-data class TweetModel(
+
+
+@Entity(tableName = "tweet_complete")
+data class TweetModelComplete(
+    @PrimaryKey
     val id: String,
+
     @field:Json(name = "author_id")
     val author: String,
+
     @field:Json(name = "created_at")
-    val createdAt: String,
+    var createdAt: String,
+
     @field:Json(name = "text")
-    val content: String
-)
+    val content: String,
+
+    var isRead: Boolean = false,
+
+    var authorId: Int,
+    var authorName: String,
+    var authorParty: String,
+    var timestamp: Long = 0,
+    var username: String
+) {
+    init {
+        timestamp = Instant.parse(createdAt).epochSecond
+    }
+
+    fun attachOwner(owner: MpTwitterModel) {
+        authorId = owner.personNumber
+        authorName = "${owner.first} ${owner.last}"
+        authorParty = owner.party
+        username = owner.username ?: return
+    }
+}
 
 data class TweetApiQueryMeta(
     @field:Json(name = "oldest_id")
@@ -30,6 +60,6 @@ data class TweetApiQueryMeta(
 )
 
 data class TweetApiQueryResult(
-    val data: List<TweetModel>,
+    val data: List<TweetModelComplete>,
     val meta: TweetApiQueryMeta,
 )

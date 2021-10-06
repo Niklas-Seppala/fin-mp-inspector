@@ -3,8 +3,7 @@ package com.example.mpinspector.repository.twitter
 import androidx.lifecycle.LiveData
 import com.example.mpinspector.MyApp
 import com.example.mpinspector.repository.db.MpDatabase
-import com.example.mpinspector.repository.models.ReadTweet
-import com.example.mpinspector.repository.models.TweetModel
+import com.example.mpinspector.repository.models.TweetModelComplete
 import com.example.mpinspector.repository.models.TwitterFeedModel
 import com.example.mpinspector.repository.network.Network
 import com.example.mpinspector.repository.network.TwitterQueries
@@ -19,42 +18,35 @@ class TwitterData : TwitterDataProvider {
         return MpDatabase.instance.twitterDao().existsById(mpId)
     }
 
-    val cache: MutableMap<String, List<TweetModel>> = mutableMapOf()
+    override fun getAllNotYetRead() : LiveData<List<TweetModelComplete>> {
+        return MpDatabase.instance.completeTweetDao().getNotYetRead()
+    }
 
-    override suspend fun insertReadTweetId(readTweet: ReadTweet) {
+    override suspend fun markTweetAsRead(tweet: TweetModelComplete) {
+        tweet.isRead = true
         withContext(Dispatchers.IO) {
-            MpDatabase.instance.ReadTweetDao().insert(readTweet)
+            MpDatabase.instance.completeTweetDao().update(tweet)
         }
     }
 
-    override fun getReadTweetIds(): LiveData<List<String>>  {
-        return MpDatabase.instance.ReadTweetDao().getReadTweetIds()
-    }
-
-    override suspend fun deleteAllReadByOwner(mpId: Int) {
+    override suspend fun getNewTweets() {
         withContext(Dispatchers.IO) {
-            MpDatabase.instance.ReadTweetDao().deleteAllBy(mpId)
+            for (mp in MpDatabase.instance.mpTwitterDao().getSubscribed()) {
+                val responseObj = twitterWebService.getTweets(mp.twitterId ?: continue,
+                    count = "10",
+                    header = MyApp.TWITTER_AUTH,
+                    fields = TwitterQueries.join(arrayOf(
+                        TwitterQueries.TweetFields.AUTHOR_ID,
+                        TwitterQueries.TweetFields.CREATED_AT)
+                    )
+                )
+                val tweets = responseObj.data
+                for (t in tweets) {
+                    t.attachOwner(mp)
+                    MpDatabase.instance.completeTweetDao().insert(t)
+                }
+            }
         }
-    }
-
-    override suspend fun getTweets(twitterId: String): List<TweetModel> {
-
-        val cached = cache[twitterId]
-        if (cached?.isNotEmpty() == true) {
-            return cached
-        }
-
-        val responseObj = twitterWebService.getTweets(twitterId,
-            count = "10",
-            header = MyApp.TWITTER_AUTH,
-            fields = TwitterQueries.join(arrayOf(
-                TwitterQueries.TweetFields.AUTHOR_ID,
-                TwitterQueries.TweetFields.CREATED_AT)
-            )
-        )
-
-        cache[twitterId] = responseObj.data
-        return responseObj.data
     }
 
     override suspend fun addMpToTwitterFeed(feed: TwitterFeedModel) {
