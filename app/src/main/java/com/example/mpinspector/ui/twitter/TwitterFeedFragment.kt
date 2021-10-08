@@ -38,6 +38,14 @@ class TwitterFeedFragment : Fragment() {
             binding.emptyListLabel.text = it
         })
 
+        binding.tweetSwipeRefresh.setOnRefreshListener {
+            viewModel.loadNewTweets()
+        }
+
+        viewModel.updating.observe(viewLifecycleOwner, {
+            binding.tweetSwipeRefresh.isRefreshing = it
+        })
+
         viewModel.tweetsWithImages.observe(viewLifecycleOwner, {
             val displayTweets = it.filter { item -> !item.tweet.isRead }
             adapter.update(displayTweets)

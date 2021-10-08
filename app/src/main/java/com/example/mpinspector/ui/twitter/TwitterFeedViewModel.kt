@@ -21,13 +21,18 @@ class TwitterFeedViewModel : ViewModel() {
         }
     }
 
+    val updating: MutableLiveData<Boolean> = MutableLiveData(false)
+
     init {
         loadNewTweets()
     }
 
-    private fun loadNewTweets() {
+
+    fun loadNewTweets() {
+        updating.value = true
         viewModelScope.launch {
             Repository.twitter.getNewTweets()
+            updating.postValue(false)
         }
     }
 }
