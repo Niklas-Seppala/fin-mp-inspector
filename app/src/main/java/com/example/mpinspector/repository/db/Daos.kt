@@ -57,6 +57,8 @@ abstract class MpTwitterDao : GenericDao<MpTwitterIdModel>() {
 """ SELECT * FROM mp AS m
     JOIN mp_twitter_data AS t
     ON m.personNumber IS t.mpId
+    JOIN twitter_feed AS asd
+    ON m.personNumber IS asd.mpId
     WHERE m.personNumber IN 
         (SELECT mpId FROM twitter_feed)""")
     abstract fun getSubscribed(): List<MpTwitterModel>

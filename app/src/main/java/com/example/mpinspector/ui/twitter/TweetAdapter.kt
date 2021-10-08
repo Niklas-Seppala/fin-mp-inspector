@@ -34,10 +34,10 @@ class TweetAdapter(private val context: Context,
             openInTwitter.onItemClick(viewHolder.itemAtCurrentPos())
             viewHolder.binding.tweetOpen.startAnimation(AnimationUtils.loadAnimation(context, R.anim.icon_click))
         }
-        viewHolder.binding.tweetClose.setOnClickListener {
-            deleteTweet.onItemClick(viewHolder.itemAtCurrentPos())
-            viewHolder.binding.tweetClose.startAnimation(AnimationUtils.loadAnimation(context, R.anim.icon_click))
-        }
+//        viewHolder.binding.tweetClose.setOnClickListener {
+//            deleteTweet.onItemClick(viewHolder.itemAtCurrentPos())
+//            viewHolder.binding.tweetClose.startAnimation(AnimationUtils.loadAnimation(context, R.anim.icon_click))
+//        }
         viewHolder.binding.tweetProfilePic.setOnClickListener {
             moveToInspect.onItemClick(viewHolder.itemAtCurrentPos())
         }

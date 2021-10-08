@@ -13,5 +13,6 @@ import androidx.room.PrimaryKey
     )])
 data class TwitterFeedModel(
     @PrimaryKey
-    val mpId: Int
+    val mpId: Int,
+    val newestId: String?
 )

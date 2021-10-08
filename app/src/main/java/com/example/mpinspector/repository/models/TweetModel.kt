@@ -62,6 +62,6 @@ data class TweetApiQueryMeta(
 )
 
 data class TweetApiQueryResult(
-    val data: List<TweetModel>,
-    val meta: TweetApiQueryMeta,
+    val data: List<TweetModel>?,
+    val meta: TweetApiQueryMeta?,
 )

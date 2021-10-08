@@ -7,5 +7,6 @@ data class MpTwitterModel(
     val party: String,
     val minister: Boolean,
     val twitterId: String?,
-    val username: String?
+    val username: String?,
+    val newestId: String?
 )

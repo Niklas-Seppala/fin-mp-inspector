@@ -3,6 +3,7 @@ package com.example.mpinspector.repository.twitter
 import androidx.lifecycle.LiveData
 import com.example.mpinspector.MyApp
 import com.example.mpinspector.repository.db.MpDatabase
+import com.example.mpinspector.repository.models.TweetApiQueryResult
 import com.example.mpinspector.repository.models.TweetModel
 import com.example.mpinspector.repository.models.TwitterFeedModel
 import com.example.mpinspector.repository.network.Network
@@ -20,7 +21,7 @@ class TwitterData : TwitterDataProvider {
     }
 
     override fun getAllNotYetRead() : LiveData<List<TweetModel>> {
-        return MpDatabase.instance.completeTweetDao().getNotYetRead()
+        return MpDatabase.instance.tweetDao().getNotYetRead()
     }
 
     override fun twitterFeedSize(): LiveData<Int> {
@@ -28,28 +29,29 @@ class TwitterData : TwitterDataProvider {
     }
 
     override suspend fun markTweetAsRead(tweet: TweetModel) {
-        tweet.isRead = true
         withContext(Dispatchers.IO) {
-            MpDatabase.instance.completeTweetDao().update(tweet)
+            tweet.isRead = true
+            MpDatabase.instance.tweetDao().update(tweet)
         }
     }
 
     override suspend fun getNewTweets() {
         withContext(Dispatchers.IO) {
             for (mp in MpDatabase.instance.mpTwitterDao().getSubscribed()) {
-                val responseObj = twitterWebService.getTweets(mp.twitterId ?: continue,
-                    count = "10",
-                    header = MyApp.TWITTER_AUTH,
-                    fields = TwitterQueries.join(arrayOf(
-                        TwitterQueries.TweetFields.AUTHOR_ID,
-                        TwitterQueries.TweetFields.CREATED_AT)
-                    )
-                )
-                val tweets = responseObj.data
+                mp.twitterId ?: continue // This should never happen, SQL guarantees it.
+                // Get tweets from API based on previous tweet id.
+                val resp = if (mp.newestId == null) getTweetsByUser(mp.twitterId)
+                    else getTweetsByUserSince(mp.twitterId, mp.newestId)
+
+                // This means no more recent tweets available.
+                val tweets = resp.data ?: continue
+                // Update newest tweet id for feed model.
+                MpDatabase.instance.twitterDao().update(TwitterFeedModel(mp.personNumber, resp.meta?.newestId))
+
                 for (t in tweets) {
                     t.attachOwner(mp)
                     t.timestamp = Instant.parse(t.createdAt).epochSecond
-                    MpDatabase.instance.completeTweetDao().insert(t)
+                    MpDatabase.instance.tweetDao().insert(t)
                 }
             }
         }
@@ -69,5 +71,28 @@ class TwitterData : TwitterDataProvider {
 
     override suspend fun mpHasTwitter(mpId: Int): Boolean  {
         return MpDatabase.instance.mpTwitterDao().mpHasTwitter(mpId)
+    }
+
+    private suspend fun getTweetsByUser(id: String): TweetApiQueryResult {
+        return twitterWebService.getTweets(id,
+            count = "10",
+            header = MyApp.TWITTER_AUTH,
+            fields = TwitterQueries.join(arrayOf(
+                TwitterQueries.TweetFields.AUTHOR_ID,
+                TwitterQueries.TweetFields.CREATED_AT)
+            )
+        )
+    }
+
+    private suspend fun getTweetsByUserSince(id: String, newestId: String): TweetApiQueryResult {
+        return twitterWebService.getTweets(id,
+            count = "10",
+            header = MyApp.TWITTER_AUTH,
+            sinceId = newestId,
+            fields = TwitterQueries.join(arrayOf(
+                TwitterQueries.TweetFields.AUTHOR_ID,
+                TwitterQueries.TweetFields.CREATED_AT)
+            )
+        )
     }
 }

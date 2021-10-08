@@ -14,6 +14,8 @@ import android.net.Uri
 import android.view.*
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mpinspector.repository.Repository
 import com.example.mpinspector.repository.models.TweetModel
 import com.example.mpinspector.ui.NavActions
@@ -44,12 +46,12 @@ class TwitterFeedFragment : Fragment() {
 
         viewModel.updating.observe(viewLifecycleOwner, {
             binding.tweetSwipeRefresh.isRefreshing = it
+            binding.tweetList.layoutManager?.scrollToPosition(0)
         })
 
         viewModel.tweetsWithImages.observe(viewLifecycleOwner, {
             val displayTweets = it.filter { item -> !item.tweet.isRead }
             adapter.update(displayTweets)
-            binding.tweetList.layoutManager?.scrollToPosition(0)
 
             if (displayTweets.isNotEmpty())
                 binding.emptyListLabel.visibility = View.GONE
@@ -57,7 +59,29 @@ class TwitterFeedFragment : Fragment() {
                 binding.emptyListLabel.visibility = View.VISIBLE
         })
 
+        ItemTouchHelper(asd).attachToRecyclerView(binding.tweetList)
+
         return binding.root
+    }
+
+    private val asd = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return false
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val pos = viewHolder.absoluteAdapterPosition
+            if (direction == ItemTouchHelper.LEFT) {
+                lifecycleScope.launch { Repository.twitter.markTweetAsRead(
+                    adapter.currentItems.get(pos).tweet) }
+//                adapter.delete(pos)
+            }
+        }
+
     }
 
     /**
@@ -90,7 +114,6 @@ class TwitterFeedFragment : Fragment() {
      */
     private val onDeleteTweetBtnClick = object : OnRecycleViewItemClick<TweetWithImage> {
         override fun onItemClick(itemData: TweetWithImage) {
-            adapter.delete(itemData)
             lifecycleScope.launch { Repository.twitter.markTweetAsRead(itemData.tweet) }
         }
     }

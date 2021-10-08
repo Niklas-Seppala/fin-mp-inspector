@@ -16,7 +16,7 @@ abstract class MpDatabase : RoomDatabase() {
     abstract fun favoriteDao(): FavoriteDao
     abstract fun twitterDao(): TwitterFeedDao
     abstract fun mpTwitterDao(): MpTwitterDao
-    abstract fun completeTweetDao(): TweetDao
+    abstract fun tweetDao(): TweetDao
 
     companion object {
         @Volatile

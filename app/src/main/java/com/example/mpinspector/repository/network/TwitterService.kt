@@ -19,7 +19,7 @@ interface TwitterService {
     suspend fun getTweets(@Path("id")id: String,
                           @Query("tweet.fields")fields: String,
                           @Query("max_results")count: String,
-                          @Query("pagination_token")pagination_token: String="",
+                          @Query("since_id")sinceId: String,
                           @Query("exclude")exclude: String="retweets,replies",
                           @Header("Authorization")header: String): TweetApiQueryResult
 }

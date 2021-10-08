@@ -92,6 +92,12 @@ abstract class GenericAdapter<TData, TBinding : ViewDataBinding>(
         res.dispatchUpdatesTo(this)
     }
 
+
+    open fun delete(pos: Int) {
+        _currentItems.removeAt(pos)
+        notifyItemRemoved(pos)
+    }
+
     open fun delete(item: TData) {
         val index = _currentItems.indexOf(item)
         if (index >= 0)

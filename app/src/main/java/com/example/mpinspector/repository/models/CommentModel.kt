@@ -20,4 +20,3 @@ data class CommentModel (
     val like: Boolean,
     val timestamp: Long
 )
-

@@ -68,7 +68,7 @@ class MpViewModel(var mpId: Int) : ViewModel() {
 
     fun twitterButtonClicked() {
         viewModelScope.launch {
-            val fav = TwitterFeedModel(mpId)
+            val fav = TwitterFeedModel(mpId, null)
             val name = mpWithComments.value?.mp?.fullName
             if (isTwitterLiveData.value == true) {
                 Repository.twitter.removeMpFromFeed(fav)
