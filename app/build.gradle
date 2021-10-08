@@ -5,9 +5,9 @@ plugins {
     id 'androidx.navigation.safeargs'
 }
 
-def apikeyPropertiesFile = rootProject.file("apikey.properties")
-def apikeyProperties = new Properties()
-apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+// def apikeyPropertiesFile = rootProject.file("apikey.properties")
+// def apikeyProperties = new Properties()
+// apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
 android {
     signingConfigs {
@@ -23,10 +23,9 @@ android {
         versionCode 1
         versionName "1.0"
 
+        buildConfigField("String", "TWITTER_AUTH", '"AAAAAAAAAAAAAAAAAAAAAKAOUAEAAAAAm58cB1eWdHaDKxfH2SSpDJrDxao%3DOjJGa8hF80tHCGtVX4SZl3z21DpuMAgbOLptQVq4YmLhaSQPOb"')
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-
-        buildConfigField("String", "TWITTER_AUTH", apikeyProperties['CONSUMER_KEY'])
     }
 
     buildFeatures {
