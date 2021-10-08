@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.CommentDialogBinding
-import com.example.mpinspector.ui.anim.AppAnimations
 
 class CommentDialogFragment: DialogFragment() {
     private lateinit var binding: CommentDialogBinding
@@ -23,29 +23,31 @@ class CommentDialogFragment: DialogFragment() {
 
         viewModel.isDislikeActive.observe(viewLifecycleOwner, { dislike ->
             if (dislike) {
-                binding.dislikeButton.startAnimation(AppAnimations.iconClickGrow)
+                // Dislike is now active
+                binding.dislikeButton.startAnimation(loadGrowAnim())
+                // Check if like button needs to shrink.
                 viewModel.isLikeActive.value?.let { like ->
-                    if (like) {
-                        binding.likeButton.startAnimation(AppAnimations.iconClickToNormal)
-                    }
+                    if (like)
+                        binding.likeButton.startAnimation(loadNormalAnim())
                 }
             }
+            // Dislike is now inactive.
+            // Check if it needs to shrink
             else if (viewModel.dislikePrevState) {
-                binding.dislikeButton.startAnimation(AppAnimations.iconClickToNormal)
+                binding.dislikeButton.startAnimation(loadNormalAnim())
             }
         })
 
         viewModel.isLikeActive.observe(viewLifecycleOwner, { like ->
             if (like) {
-                binding.likeButton.startAnimation(AppAnimations.iconClickGrow)
+                binding.likeButton.startAnimation(loadGrowAnim())
                 viewModel.isDislikeActive.value?.let { dislike ->
-                    if (dislike) {
-                        binding.dislikeButton.startAnimation(AppAnimations.iconClickToNormal)
-                    }
+                    if (dislike)
+                        binding.dislikeButton.startAnimation(loadNormalAnim())
                 }
             }
             else if (viewModel.likePrevState) {
-                binding.likeButton.startAnimation(AppAnimations.iconClickToNormal)
+                binding.likeButton.startAnimation(loadNormalAnim())
             }
         })
         
@@ -73,6 +75,9 @@ class CommentDialogFragment: DialogFragment() {
 
         return binding.root
     }
+
+    private fun loadGrowAnim() = AnimationUtils.loadAnimation(context, R.anim.icon_scale_grow)
+    private fun loadNormalAnim() = AnimationUtils.loadAnimation(context, R.anim.icon_scale_normal)
 
     fun setOnSubmit(cb: (s: String, like: Boolean) -> Unit) { onSubmitCb = cb }
 }

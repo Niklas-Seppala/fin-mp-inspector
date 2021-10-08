@@ -1,35 +1,28 @@
 package com.example.mpinspector.ui.twitter
 
-import android.graphics.Bitmap
+import android.content.Context
+import android.view.animation.AnimationUtils
 import androidx.core.text.HtmlCompat
-import androidx.recyclerview.widget.DiffUtil
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentTweetBinding
 import com.example.mpinspector.ui.adapters.*
-import com.example.mpinspector.ui.anim.AppAnimations
+import com.example.mpinspector.utils.PartyMapper
 import java.text.DateFormat
-import java.time.Instant
 
-
-class TweetAdapter(items: List<TweetWithAuthor>,
-                   private var images: Map<Int, Bitmap>,
-                   otherListeners: Array<OnRecycleViewItemClick<TweetWithAuthor>>) :
-    GenericAdapter<TweetWithAuthor, FragmentTweetBinding>(
+class TweetAdapter(private val context: Context,
+                   items: List<TweetWithImage>,
+                   otherListeners: Array<OnRecycleViewItemClick<TweetWithImage>>) :
+    GenericAdapter<TweetWithImage, FragmentTweetBinding>(
         items,
         R.layout.fragment_tweet,
         otherListeners = otherListeners
     ) {
 
-    override val diffComparator: DiffComparator<TweetWithAuthor> = { a, b -> a.second.id  == b.second.id }
-
-    fun updateWithImages(newItems: List<TweetWithAuthor>, newImages: Map<Int, Bitmap>) {
-        images = newImages
-        update(newItems)
-    }
+    override val diffComparator: DiffComparator<TweetWithImage> = { a, b -> a.tweet.id  == b.tweet.id }
 
     override fun bindAdditionalListeners(
-        otherListeners: Array<OnRecycleViewItemClick<TweetWithAuthor>>?,
-        viewHolder: GenericViewHolder<TweetWithAuthor, FragmentTweetBinding>
+        otherListeners: Array<OnRecycleViewItemClick<TweetWithImage>>?,
+        viewHolder: GenericViewHolder<TweetWithImage, FragmentTweetBinding>
     ) {
         if (otherListeners == null) return
 
@@ -39,14 +32,12 @@ class TweetAdapter(items: List<TweetWithAuthor>,
 
         viewHolder.binding.tweetOpen.setOnClickListener {
             openInTwitter.onItemClick(viewHolder.itemAtCurrentPos())
-            viewHolder.binding.tweetOpen.startAnimation(AppAnimations.iconClickAnimation)
+            viewHolder.binding.tweetOpen.startAnimation(AnimationUtils.loadAnimation(context, R.anim.icon_click))
         }
-
         viewHolder.binding.tweetClose.setOnClickListener {
             deleteTweet.onItemClick(viewHolder.itemAtCurrentPos())
-            viewHolder.binding.tweetClose.startAnimation(AppAnimations.iconClickAnimation)
+            viewHolder.binding.tweetClose.startAnimation(AnimationUtils.loadAnimation(context, R.anim.icon_click))
         }
-
         viewHolder.binding.tweetProfilePic.setOnClickListener {
             moveToInspect.onItemClick(viewHolder.itemAtCurrentPos())
         }
@@ -58,21 +49,15 @@ class TweetAdapter(items: List<TweetWithAuthor>,
     // https://stackoverflow.com/questions/38506598/regular-expression-to-match-hashtag-but-not-hashtag-with-semicolon
     private val hashtagRegex = Regex("\\B((\\#|\\@)[a-zA-Z]+\\b)")
 
-    override fun hookUpItemWithView(
-        binding: FragmentTweetBinding,
-        item: TweetWithAuthor
-    ) {
-        val author = item.first
-        val tweet = item.second
-        val img = images[author.personNumber]
+    override fun hookUpItemWithView(binding: FragmentTweetBinding, item: TweetWithImage) {
 
-        val colored = tweet.content.replace(hashtagRegex) { "<font color=#004143><b>${it.value}</b></font>" }
+        val colored = item.tweet.content.replace(hashtagRegex) { "<font color=#004143><b>${it.value}</b></font>" }
         binding.tweetContent.text = HtmlCompat.fromHtml(colored, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        binding.TweetPartyIcon.setImageResource(PartyMapper.partyIcon(item.tweet.authorParty))
 
         binding.createdAt.text = DateFormat.getInstance()
-            .format(Instant.parse(tweet.createdAt).epochSecond * 1000)
-        binding.tweetAuthor.text =
-            binding.root.context.getString(R.string.mpFragFullName, author.first, author.last)
-        binding.tweetProfilePic.setImageBitmap(img)
+            .format(item.tweet.timestamp * 1000L)
+        binding.tweetAuthor.text = item.tweet.authorName
+        binding.tweetProfilePic.setImageBitmap(item.image)
     }
 }

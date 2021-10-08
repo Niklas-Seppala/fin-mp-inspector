@@ -1,30 +1,49 @@
 package com.example.mpinspector.ui.mplist
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.mpinspector.R
 import com.example.mpinspector.repository.Repository
 import com.example.mpinspector.repository.models.MpModel
 import java.security.InvalidParameterException
 
+fun <T, K, R> LiveData<T>.combineWith(liveData: LiveData<K>, block: (T?, K?) -> R): LiveData<R> {
+    val result = MediatorLiveData<R>()
+    result.addSource(this) { result.value = block(this.value, liveData.value) }
+    result.addSource(liveData) { result.value = block(this.value, liveData.value) }
+    return result
+}
+
 class MpListViewModel: ViewModel() {
 
+    // Live data of all of the Mps from database.
     val mps: LiveData<List<MpModel>> = Repository.mps.getMps()
 
-    private val searchText = MutableLiveData("")
+    // Live data for typed search query.
+    private val searchText = Transformations.switchMap(mps) {
+        MutableLiveData("")
+    }  as MutableLiveData<String>
+
+    // Live data for active party filters.
     private val _partyFilter = Transformations.switchMap(mps) {
         MutableLiveData(partyMap.map { it.value }.toMutableSet())
     } as MutableLiveData<MutableSet<String>>
 
-    val activeMps = Transformations.map(_partyFilter) { pFilter ->
-        searchText.value?.let { search ->
-            mps.value?.let { mps ->
-                mps.filter { mp ->
-                    mp.party in pFilter && "${mp.first} ${mp.last}".contains(search)
-                }
-            } as List<MpModel>
+    // Live data of combined query (text and party filters).
+    val queryChange = searchText.combineWith(_partyFilter) { text, partyFilter -> text to partyFilter }
+
+    // Live data of the current mps (after filtering).
+    val active = Transformations.map(queryChange) {
+        val text = it.first
+        val parties = it.second
+
+        // for smart casts
+        if (text == null || parties == null) return@map listOf<MpModel>()
+
+        mps.value?.let { mps ->
+            mps.filter { mp ->
+                val name = "${mp.first} ${mp.last}"
+                mp.party in parties && name.contains(text, ignoreCase = true)
+            }
         }
     }
 

@@ -20,13 +20,15 @@ typealias DiffComparator<TData> = (TData, TData) -> Boolean
  * Jack of all trades RecycleViewAdapter base class with generic data and binding.
  * Provide list item type and ViewDataBinding type with related item layout resId.
  * RecycleView item clicks will be delegated to optional OnRecycleViewItemClick
- * listener object.
+ * listener object. If you instead wish to have more precise click listeners,
+ * pass in otherListeners parameter.
  *
  * @param TData List item Type.
  * @param TBinding : ViewDataBinding Type of the item layout ViewDataBiding.
  * @property items List<TData> All start items.
  * @property itemLayoutRes Int Item layout resId.
  * @property onItemClick OnRecycleViewItemClick<TData>? optional click listener.
+ * @property otherListeners Array<OnRecycleViewItemClick<TData>>? More precise click listeners.
  * @property currentItems List<TData> Currently displayed items.
  */
 abstract class GenericAdapter<TData, TBinding : ViewDataBinding>(
@@ -47,12 +49,9 @@ abstract class GenericAdapter<TData, TBinding : ViewDataBinding>(
     override fun getItemCount(): Int = _currentItems.size
 
     protected open fun bindAdditionalListeners(otherListeners: Array<OnRecycleViewItemClick<TData>>?,
-                                               viewHolder: GenericViewHolder<TData, TBinding>) {
-    }
+                                               viewHolder: GenericViewHolder<TData, TBinding>) {}
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int
     ): GenericViewHolder<TData, TBinding> {
         val holder: GenericViewHolder<TData, TBinding> = GenericViewHolder(
             DataBindingUtil.inflate(
@@ -86,13 +85,12 @@ abstract class GenericAdapter<TData, TBinding : ViewDataBinding>(
     open val diffComparator: DiffComparator<TData>? = null
 
     open fun update(new: List<TData>) {
-        val res = DiffUtil.calculateDiff(GenericDiffUtilCB(_currentItems, new, diffComparator
+        val res = DiffUtil.calculateDiff(GenericDiffUtilCallback(_currentItems, new, diffComparator
                 ?: throw NullPointerException("Override diffComparator before calling update()")))
         _currentItems.clear()
         _currentItems.addAll(new)
         res.dispatchUpdatesTo(this)
     }
-
 
     open fun delete(item: TData) {
         val index = _currentItems.indexOf(item)

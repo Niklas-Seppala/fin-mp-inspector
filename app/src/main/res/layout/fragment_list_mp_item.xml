@@ -39,39 +39,5 @@
         app:layout_constraintTop_toTopOf="@+id/content"
         tools:src="@drawable/ic_minister" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/content"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@{@string/mpFragFullName(mp.first, mp.last) }"-->
-<!--        android:layout_marginStart="16dp"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:textSize="20sp"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        tools:text="Matti Vanhanen" />-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/partyLogoIv"-->
-<!--        android:layout_width="64dp"-->
-<!--        android:layout_height="64dp"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        setPartyIcon="@{mp.party}"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/content"-->
-<!--        tools:src="@mipmap/ic_party_kok" />-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/imageView3"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        setMinisterIcon="@{mp.minister}"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="@+id/content"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/partyLogoIv"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/content"-->
-<!--        tools:src="@drawable/ic_minister" />-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

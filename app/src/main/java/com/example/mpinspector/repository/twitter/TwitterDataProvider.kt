@@ -10,7 +10,15 @@ import com.example.mpinspector.repository.models.TwitterFeedModel
  */
 interface TwitterDataProvider {
 
-    suspend fun getTweets(twitterId: String): List<TweetModel>
+    fun twitterFeedSize(): LiveData<Int>
+
+    suspend fun markTweetAsRead(tweet: TweetModel)
+
+//    suspend fun deleteAllReadByOwner(mpId: Int)
+
+    suspend fun getNewTweets();
+
+    fun getAllNotYetRead() : LiveData<List<TweetModel>>
 
     /**
      *
@@ -29,7 +37,7 @@ interface TwitterDataProvider {
      * @param mpId Int
      * @return Boolean
      */
-    fun mpHasTwitter(mpId: Int): LiveData<Boolean>
+    suspend fun mpHasTwitter(mpId: Int): Boolean
 
     /**
      *

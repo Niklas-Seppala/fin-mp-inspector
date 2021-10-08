@@ -15,4 +15,3 @@ data class TwitterFeedModel(
     @PrimaryKey
     val mpId: Int
 )
-
