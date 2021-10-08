@@ -7,6 +7,7 @@ import androidx.core.text.HtmlCompat
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentCommentBinding
 import com.example.mpinspector.databinding.FragmentListMpItemBinding
+import java.util.*
 
 typealias CommentBinding = FragmentCommentBinding
 typealias MpItemBinding = FragmentListMpItemBinding
@@ -35,6 +36,10 @@ object Toaster {
                 .show()
         }
     }
+}
+
+object Year {
+    val current = Calendar.getInstance().get(Calendar.YEAR)
 }
 
 object BitmapUtil {

@@ -1,11 +1,14 @@
 package com.example.mpinspector.ui.adapters
 
-import androidx.recyclerview.widget.DiffUtil
+import android.icu.text.DateFormat
 import com.example.mpinspector.R
 import com.example.mpinspector.repository.models.CommentModel
 import com.example.mpinspector.utils.CommentBinding
-import java.text.DateFormat
 import java.util.*
+
+object MyDateFormat {
+    const val format = "${DateFormat.ABBR_MONTH_DAY} ${DateFormat.HOUR24_MINUTE} ${DateFormat.YEAR}"
+}
 
 /**
  * RecycleView Adapter for comments.
@@ -13,7 +16,8 @@ import java.util.*
 class CommentAdapter(items: List<CommentModel>) : GenericAdapter<CommentModel, CommentBinding>(items, R.layout.fragment_comment) {
     override fun hookUpItemWithView(binding: CommentBinding, item: CommentModel) {
         binding.comment.text = item.content
-        binding.commentDate.text = DateFormat.getInstance().format(Date(item.timestamp))
+        binding.commentDate.text =
+            DateFormat.getPatternInstance(MyDateFormat.format).format(Date(item.timestamp))
         binding.likeIcon.setImageResource(if (item.like) R.drawable.ic_like else R.drawable.ic_dislike)
     }
 

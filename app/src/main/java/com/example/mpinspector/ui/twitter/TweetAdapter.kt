@@ -1,15 +1,16 @@
 package com.example.mpinspector.ui.twitter
 
+import android.content.Context
+import android.view.animation.AnimationUtils
 import androidx.core.text.HtmlCompat
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentTweetBinding
 import com.example.mpinspector.ui.adapters.*
-import com.example.mpinspector.ui.anim.AppAnimations
 import com.example.mpinspector.utils.PartyMapper
 import java.text.DateFormat
-import java.time.Instant
 
-class TweetAdapter(items: List<TweetWithImage>,
+class TweetAdapter(private val context: Context,
+                   items: List<TweetWithImage>,
                    otherListeners: Array<OnRecycleViewItemClick<TweetWithImage>>) :
     GenericAdapter<TweetWithImage, FragmentTweetBinding>(
         items,
@@ -31,14 +32,12 @@ class TweetAdapter(items: List<TweetWithImage>,
 
         viewHolder.binding.tweetOpen.setOnClickListener {
             openInTwitter.onItemClick(viewHolder.itemAtCurrentPos())
-            viewHolder.binding.tweetOpen.startAnimation(AppAnimations.iconClickAnimation)
+            viewHolder.binding.tweetOpen.startAnimation(AnimationUtils.loadAnimation(context, R.anim.icon_click))
         }
-
         viewHolder.binding.tweetClose.setOnClickListener {
             deleteTweet.onItemClick(viewHolder.itemAtCurrentPos())
-            viewHolder.binding.tweetClose.startAnimation(AppAnimations.iconClickAnimation)
+            viewHolder.binding.tweetClose.startAnimation(AnimationUtils.loadAnimation(context, R.anim.icon_click))
         }
-
         viewHolder.binding.tweetProfilePic.setOnClickListener {
             moveToInspect.onItemClick(viewHolder.itemAtCurrentPos())
         }

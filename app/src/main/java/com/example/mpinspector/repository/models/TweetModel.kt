@@ -1,15 +1,17 @@
 package com.example.mpinspector.repository.models
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.mpinspector.repository.db.GenericDao
 import com.squareup.moshi.Json
 import java.time.Instant
 
-
-
-@Entity(tableName = "tweet_complete")
-data class TweetModelComplete(
+@Entity(tableName = "tweet",
+    foreignKeys = [ForeignKey(
+        entity = TwitterFeedModel::class,
+        parentColumns = ["mpId"],
+        childColumns = ["authorId"],
+        onDelete = ForeignKey.CASCADE
+    )])
+data class TweetModel(
     @PrimaryKey
     val id: String,
 
@@ -23,7 +25,6 @@ data class TweetModelComplete(
     val content: String,
 
     var isRead: Boolean = false,
-
     var authorId: Int,
     var authorName: String,
     var authorParty: String,
@@ -60,6 +61,6 @@ data class TweetApiQueryMeta(
 )
 
 data class TweetApiQueryResult(
-    val data: List<TweetModelComplete>,
+    val data: List<TweetModel>,
     val meta: TweetApiQueryMeta,
 )

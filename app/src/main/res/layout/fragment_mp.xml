@@ -18,10 +18,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/mp_card_bg"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:visibility="invisible"
             tools:visibility="visible">
 
             <ImageView
@@ -31,7 +31,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                setImageRes="@{viewModel.iconLiveData}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragProfileIv"
@@ -48,19 +47,16 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="@{@string/mpFragFullName(viewModel.mpLiveData.first, viewModel.mpLiveData.last) }"
                 tools:text="Sale Ninistöö" />
 
             <ImageView
                 android:id="@+id/mpFragPartyIv"
                 android:layout_width="130dp"
                 android:layout_height="101dp"
+                android:contentDescription="@string/mp_party_icon_desc"
                 app:layout_constraintStart_toEndOf="@+id/mpFragProfileIv"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragNameTv"
-
-                setPartyIcon="@{viewModel.mpLiveData.party}"
-                tools:src="@mipmap/ic_party_kok"
-                android:contentDescription="@string/mp_party_icon_desc"/>
+                tools:src="@mipmap/ic_party_kok" />
 
             <TextView
                 android:id="@+id/mpFragMinisterTv"
@@ -68,7 +64,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:textSize="@dimen/text_small"
-                setMinisterStatus="@{viewModel.mpLiveData.minister}"
                 app:layout_constraintBaseline_toBaselineOf="@+id/mpFragNameTv"
                 app:layout_constraintStart_toEndOf="@+id/mpFragNameTv"
                 tools:text="Minister" />
@@ -79,7 +74,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:textSize="@dimen/text_small"
-                android:text="@{viewModel.mpLiveData.constituency}"
                 app:layout_constraintStart_toStartOf="@+id/mpFragPartyIv"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragPartyIv"
                 tools:text="Uusimaa" />
@@ -89,7 +83,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_small"
-                android:text="@{viewModel.ageLiveData.toString()}"
                 app:layout_constraintStart_toStartOf="@+id/mpFragConstTv"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragConstTv"
                 tools:text="Age 55" />
@@ -99,11 +92,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                setProfileImage="@{viewModel.imageLiveData}"
+                android:contentDescription="@string/mp_image_desc"
                 app:layout_constraintStart_toStartOf="@+id/mpFragNameTv"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragNameTv"
-                tools:srcCompat="@tools:sample/avatars"
-                android:contentDescription="@string/mp_image_desc"/>
+                tools:srcCompat="@tools:sample/avatars" />
 
             <ImageView
                 android:id="@+id/noteButton"
@@ -131,23 +123,10 @@
                 app:layout_constraintBottom_toBottomOf="@+id/favButton"
                 app:layout_constraintStart_toEndOf="@+id/favButton"
                 app:layout_constraintTop_toTopOf="@+id/favButton"
-                setImageResCollapseOnZero="@{viewModel.twitterLiveData}"
                 app:srcCompat="@drawable/ic_twitter_filled" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mpFragCommentView"

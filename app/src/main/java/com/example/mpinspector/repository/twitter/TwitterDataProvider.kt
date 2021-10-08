@@ -1,7 +1,7 @@
 package com.example.mpinspector.repository.twitter
 
 import androidx.lifecycle.LiveData
-import com.example.mpinspector.repository.models.TweetModelComplete
+import com.example.mpinspector.repository.models.TweetModel
 import com.example.mpinspector.repository.models.TwitterFeedModel
 
 /**
@@ -9,18 +9,16 @@ import com.example.mpinspector.repository.models.TwitterFeedModel
  * related Twitter data.
  */
 interface TwitterDataProvider {
-//
-//    suspend fun insertReadTweetId(readTweet: ReadTweet)
-//
-//    fun getReadTweetIds(): LiveData<List<String>>
 
-    suspend fun markTweetAsRead(tweet: TweetModelComplete)
+    fun twitterFeedSize(): LiveData<Int>
+
+    suspend fun markTweetAsRead(tweet: TweetModel)
 
 //    suspend fun deleteAllReadByOwner(mpId: Int)
 
     suspend fun getNewTweets();
 
-    fun getAllNotYetRead() : LiveData<List<TweetModelComplete>>
+    fun getAllNotYetRead() : LiveData<List<TweetModel>>
 
     /**
      *
@@ -39,7 +37,7 @@ interface TwitterDataProvider {
      * @param mpId Int
      * @return Boolean
      */
-    fun mpHasTwitter(mpId: Int): LiveData<Boolean>
+    suspend fun mpHasTwitter(mpId: Int): Boolean
 
     /**
      *

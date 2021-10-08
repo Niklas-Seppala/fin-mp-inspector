@@ -24,21 +24,11 @@ class MpViewModel(var mpId: Int) : ViewModel() {
         }
     }
 
-
     val toastMessage = MutableLiveData<String>()
-    val mpLiveData = Repository.mps.getMp(mpId)
-    val ageLiveData: LiveData<Int> = Transformations.map(mpLiveData) { year - it.bornYear }
-    val commentsLiveData = Repository.mps.getMpComments(mpId)
-    val imageLiveData = liveData { emit(Repository.mps.getMpImage(mpId, ImageSize.NORMAL)) }
+    val isFavLiveData = Repository.mps.isMpInFavorites(mpId)
 
-    private val isFavLiveData = Repository.mps.isMpInFavorites(mpId)
-    val iconLiveData: LiveData<Int> = Transformations.map(isFavLiveData) {
-        if (it) R.drawable.ic_star
-        else R.drawable.ic_star_outline
-    }
-
-    private val doesMpHaveTwitter = Repository.twitter.mpHasTwitter(mpId)
     private val isTwitterLiveData = Repository.twitter.isMpInTwitterFeed(mpId)
+    private val doesMpHaveTwitter = liveData { emit(Repository.twitter.mpHasTwitter(mpId)) }
     val twitterLiveData: LiveData<Int> = Transformations.switchMap(doesMpHaveTwitter) {
         if (!it) Transformations.map(doesMpHaveTwitter) {0}
         else
@@ -52,24 +42,12 @@ class MpViewModel(var mpId: Int) : ViewModel() {
     var mpLoaded = false
         set(value) {
             field = value
-            loadComplete.value = mpLoaded && imageLoaded
+            loadComplete.value = mpLoaded
         }
-    var imageLoaded = false
-        set(value) {
-            field = value
-            loadComplete.value = mpLoaded && imageLoaded
-        }
-
-    val mpAge: Int
-        get() = year - (mpLiveData.value?.bornYear ?: 0)
-
-    val fullName: String
-        get() = "${mpLiveData.value?.first} ${mpLiveData.value?.last}"
-
 
     fun commentOkButtonClick (commentText: String, like: Boolean) {
-        mpLiveData.value?.let {
-            val comment = CommentModel(0, it.personNumber, commentText, like, MyTime.timestampLong)
+        mpInspectBundle.value?.let {
+            val comment = CommentModel(0, it.mpWithComments.mp.personNumber, commentText, like, MyTime.timestampLong)
             viewModelScope.launch { Repository.mps.storeMpComment(comment) }
         }
     }
@@ -77,12 +55,13 @@ class MpViewModel(var mpId: Int) : ViewModel() {
     fun favoriteButtonClick() {
         viewModelScope.launch {
             val fav = FavoriteModel(mpId, MyTime.timestampLong)
+            val name = mpWithComments.value?.mp?.fullName
             if (isFavLiveData.value == true) {
                 Repository.mps.deleteFavoriteMp(fav)
-                toastMessage.value = "$fullName removed from your favorites."
+                toastMessage.value = "$name removed from your favorites."
             } else {
                 Repository.mps.storeFavoriteMp(fav)
-                toastMessage.value = "$fullName added to your favorites."
+                toastMessage.value = "$name added to your favorites."
             }
         }
     }
@@ -90,17 +69,14 @@ class MpViewModel(var mpId: Int) : ViewModel() {
     fun twitterButtonClicked() {
         viewModelScope.launch {
             val fav = TwitterFeedModel(mpId)
+            val name = mpWithComments.value?.mp?.fullName
             if (isTwitterLiveData.value == true) {
                 Repository.twitter.removeMpFromFeed(fav)
-                toastMessage.value = "$fullName removed from your Twitter feed."
+                toastMessage.value = "$name removed from your Twitter feed."
             } else {
                 Repository.twitter.addMpToTwitterFeed(fav)
-                toastMessage.value = "$fullName added to your Twitter feed."
+                toastMessage.value = "$name added to your Twitter feed."
             }
         }
-    }
-
-    private companion object {
-        private val year = Calendar.getInstance().get(Calendar.YEAR)
     }
 }
