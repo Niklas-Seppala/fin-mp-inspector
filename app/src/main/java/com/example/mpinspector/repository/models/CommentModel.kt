@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "mp_comments",
-    indices = [Index(value = ["id"], unique = true)],
+    indices = [Index(value = ["mpId"], unique = true)],
     foreignKeys = [ForeignKey(
         entity = MpModel::class,
         parentColumns = ["personNumber"],

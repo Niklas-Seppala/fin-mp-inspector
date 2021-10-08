@@ -5,6 +5,7 @@ import com.squareup.moshi.Json
 import java.time.Instant
 
 @Entity(tableName = "tweet",
+    indices = [Index("authorId", unique = false)],
     foreignKeys = [ForeignKey(
         entity = TwitterFeedModel::class,
         parentColumns = ["mpId"],

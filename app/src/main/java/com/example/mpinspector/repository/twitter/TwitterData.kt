@@ -15,7 +15,6 @@ import java.time.Instant
 class TwitterData : TwitterDataProvider {
     private val twitterWebService = Network.twitterClient.create(TwitterService::class.java)
 
-
     override fun isMpInTwitterFeed(mpId: Int): LiveData<Boolean> {
         return MpDatabase.instance.twitterDao().existsById(mpId)
     }
