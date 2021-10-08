@@ -33,18 +33,15 @@ typealias DiffComparator<TData> = (TData, TData) -> Boolean
  */
 abstract class GenericAdapter<TData, TBinding : ViewDataBinding>(
     protected var items: List<TData>,
-    protected val itemLayoutRes: Int,
+    private val itemLayoutRes: Int,
+    private val color: Boolean = true,
     private val onItemClick: OnRecycleViewItemClick<TData>? = null,
     private val otherListeners: Array<OnRecycleViewItemClick<TData>>? = null
 ) : RecyclerView.Adapter<GenericViewHolder<TData, TBinding>>() {
 
-    protected val _currentItems = items.toMutableList()
+    private val _currentItems = items.toMutableList()
     val currentItems: List<TData>
         get() = _currentItems
-
-    fun setNewBaseItems(new: List<TData>) {
-        items = new
-    }
 
     override fun getItemCount(): Int = _currentItems.size
 
@@ -67,10 +64,12 @@ abstract class GenericAdapter<TData, TBinding : ViewDataBinding>(
 
     override fun onBindViewHolder(holder: GenericViewHolder<TData, TBinding>, position: Int) {
         // Set every other item background dark/light
-        holder.binding.root.setBackgroundColor(
-            if (position % 2 == 0) darkColor
-            else lightColor
-        )
+        if (color) {
+            holder.binding.root.setBackgroundColor(
+                if (position % 2 == 0) darkColor
+                else lightColor
+            )
+        }
         // Abstract func call
         hookUpItemWithView(holder.binding, _currentItems[position])
     }

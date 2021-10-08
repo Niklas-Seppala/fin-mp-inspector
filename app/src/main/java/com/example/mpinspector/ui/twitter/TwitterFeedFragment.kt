@@ -33,7 +33,7 @@ class TwitterFeedFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(TwitterFeedViewModel::class.java)
 
         adapter = TweetAdapter(activity as Context, listOf(),
-            arrayOf(onTwitterBtnClick, onDeleteTweetBtnClick, onProfileClick))
+            arrayOf(onTwitterBtnClick, onProfileClick))
         binding.tweetList.adapter = adapter
 
         viewModel.emptyMessage.observe(viewLifecycleOwner, {
@@ -78,7 +78,6 @@ class TwitterFeedFragment : Fragment() {
             if (direction == ItemTouchHelper.LEFT) {
                 lifecycleScope.launch { Repository.twitter.markTweetAsRead(
                     adapter.currentItems.get(pos).tweet) }
-//                adapter.delete(pos)
             }
         }
 
@@ -108,22 +107,12 @@ class TwitterFeedFragment : Fragment() {
         }
     }
 
-    /**
-     * Tweet delete button click listener object. Deletes clicked item from RecycleView,
-     * and updates UI
-     */
-    private val onDeleteTweetBtnClick = object : OnRecycleViewItemClick<TweetWithImage> {
-        override fun onItemClick(itemData: TweetWithImage) {
-            lifecycleScope.launch { Repository.twitter.markTweetAsRead(itemData.tweet) }
-        }
-    }
 
     /**
      * Listener array indexes.
      */
     companion object {
         const val OPEN_IN_TWITTER_LISTENER = 0
-        const val DELETE_TWEET_LISTENER = 1
-        const val INSPECT_PROFILE_LISTENER = 2
+        const val INSPECT_PROFILE_LISTENER = 1
     }
 }

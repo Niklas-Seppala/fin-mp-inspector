@@ -31,5 +31,8 @@
     <string name="leave_a_comment">Leave a Comment</string>
     <string name="mp_party_icon_desc">MP Party Icon</string>
     <string name="mp_image_desc">MP image</string>
+    <string name="mp_profile_picture">Mp profile picture</string>
+    <string name="content_desc_party_icon">Party Icon</string>
+    <string name="content_desc_open_in_twitter">Open in twitter</string>
 
 </resources>

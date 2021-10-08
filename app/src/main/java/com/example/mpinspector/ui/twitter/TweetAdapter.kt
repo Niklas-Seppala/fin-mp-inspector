@@ -15,6 +15,7 @@ class TweetAdapter(private val context: Context,
     GenericAdapter<TweetWithImage, FragmentTweetBinding>(
         items,
         R.layout.fragment_tweet,
+        false,
         otherListeners = otherListeners
     ) {
 
@@ -27,17 +28,12 @@ class TweetAdapter(private val context: Context,
         if (otherListeners == null) return
 
         val openInTwitter = otherListeners[TwitterFeedFragment.OPEN_IN_TWITTER_LISTENER]
-        val deleteTweet = otherListeners[TwitterFeedFragment.DELETE_TWEET_LISTENER]
         val moveToInspect = otherListeners[TwitterFeedFragment.INSPECT_PROFILE_LISTENER]
 
         viewHolder.binding.tweetOpen.setOnClickListener {
             openInTwitter.onItemClick(viewHolder.itemAtCurrentPos())
             viewHolder.binding.tweetOpen.startAnimation(AnimationUtils.loadAnimation(context, R.anim.icon_click))
         }
-//        viewHolder.binding.tweetClose.setOnClickListener {
-//            deleteTweet.onItemClick(viewHolder.itemAtCurrentPos())
-//            viewHolder.binding.tweetClose.startAnimation(AnimationUtils.loadAnimation(context, R.anim.icon_click))
-//        }
         viewHolder.binding.tweetProfilePic.setOnClickListener {
             moveToInspect.onItemClick(viewHolder.itemAtCurrentPos())
         }
