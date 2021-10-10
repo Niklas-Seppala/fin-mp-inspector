@@ -14,10 +14,6 @@ import kotlinx.coroutines.launch
 class TwitterFeedViewModel : ViewModel() {
     val updating: MutableLiveData<Boolean> = MutableLiveData(false)
 
-    init {
-        loadLatestTweets()
-    }
-
     // Check if feed size is zero, set empty message based on that.
     private val feedSize = Repository.twitter.getTwitterFeedSize()
     val emptyMessage = Transformations.map(feedSize) {

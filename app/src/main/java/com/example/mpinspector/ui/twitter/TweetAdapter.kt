@@ -10,6 +10,8 @@ import com.example.mpinspector.utils.MyTime
 import com.example.mpinspector.utils.PartyMapper
 
 /**
+ * RecycleViewAdapter class for tweet view. Binds an array of click listeners
+ * to view components. Processes Tweet content and colors "#" and "@".
  *
  * @author Niklas Seppälä - 2013018
  * @date 10/10/2021
@@ -23,6 +25,8 @@ class TweetAdapter(private val context: Context,
         false,
         otherListeners = otherListeners
     ) {
+    // https://stackoverflow.com/questions/38506598/regular-expression-to-match-hashtag-but-not-hashtag-with-semicolon
+    private val hashtagRegex = Regex("\\B((\\#|\\@)[a-zA-Z]+\\b)")
 
     override val diffCompare: (TweetBundle, TweetBundle) -> Boolean = { a, b -> a.tweet.id  == b.tweet.id }
 
@@ -30,7 +34,7 @@ class TweetAdapter(private val context: Context,
         otherListeners: Array<OnRecycleViewItemClick<TweetBundle>>?,
         viewHolder: GenericViewHolder<TweetBundle, FragmentTweetBinding>
     ) {
-        if (otherListeners == null) return
+        if (otherListeners.isNullOrEmpty()) return
 
         val openInTwitter = otherListeners[TwitterFeedFragment.OPEN_IN_TWITTER_LISTENER]
         val moveToInspect = otherListeners[TwitterFeedFragment.INSPECT_PROFILE_LISTENER]
@@ -47,10 +51,8 @@ class TweetAdapter(private val context: Context,
         }
     }
 
-    // https://stackoverflow.com/questions/38506598/regular-expression-to-match-hashtag-but-not-hashtag-with-semicolon
-    private val hashtagRegex = Regex("\\B((\\#|\\@)[a-zA-Z]+\\b)")
-
     override fun bindDataToView(binding: FragmentTweetBinding, item: TweetBundle) {
+        // Process Tweet content
         val colored = item.tweet.content.replace(hashtagRegex) { "<font color=#004143><b>${it.value}</b></font>" }
         binding.tweetContent.text = HtmlCompat.fromHtml(colored, HtmlCompat.FROM_HTML_MODE_LEGACY)
         binding.TweetPartyIcon.setImageResource(PartyMapper.partyIcon(item.tweet.authorParty))

@@ -15,7 +15,7 @@ import com.example.mpinspector.ui.adapters.MpAdapter
 import com.google.android.material.chip.Chip
 
 /**
- * MpList view Fragment class.
+ * Fragment class for MP list view.
  *
  * @author Niklas Seppälä - 2013018
  * @date 10/10/2021

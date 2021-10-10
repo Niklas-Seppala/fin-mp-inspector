@@ -11,7 +11,7 @@ import com.example.mpinspector.databinding.FragmentFavMpsBinding
 import com.example.mpinspector.ui.adapters.MpAdapter
 
 /**
- *
+ * Fragment class for Favorite MPs view.
  *
  * @author Niklas Seppälä - 2013018
  * @date 10/10/2021

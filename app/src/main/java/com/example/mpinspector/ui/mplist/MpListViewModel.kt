@@ -35,7 +35,7 @@ class MpListViewModel: ViewModel() {
     } as MutableLiveData<MutableSet<String>>
 
     // Live data of combined query (text and party filters).
-    val queryChange = searchText.combineWith(_partyFilter) { text, partyFilter -> text to partyFilter }
+    private val queryChange = searchText.combineWith(_partyFilter) { text, partyFilter -> text to partyFilter }
 
     // Live data of the current mps (after filtering).
     val active = Transformations.map(queryChange) {
@@ -47,16 +47,29 @@ class MpListViewModel: ViewModel() {
 
         mps.value?.let { mps ->
             mps.filter { mp ->
-                val name = "${mp.first} ${mp.last}"
-                mp.party in parties && name.contains(text, ignoreCase = true)
+                mp.party in parties && mp.fullName.contains(text, ignoreCase = true)
             }
         }
     }
 
-    fun searchTextChanged(new: String) { searchText.value = new }
+    /**
+     * Updates Search text LiveData
+     *
+     * @param new String Latest search text.
+     */
+    fun searchTextChanged(new: String) {
+        searchText.value = new
+    }
 
-    fun partyChipClicked(resId: Int, checked: Boolean) {
-        val party = partyMap[resId] ?: throw InvalidParameterException("Chip id not mapped to party.")
+    /**
+     * Updates party filter LiveData based on happened
+     * change in party Chips.
+     *
+     * @param viewId Int changed Chip's id.
+     * @param checked Boolean Is the clicked Chip active
+     */
+    fun partyChipClicked(viewId: Int, checked: Boolean) {
+        val party = partyMap[viewId] ?: throw InvalidParameterException("Chip id not mapped to party.")
 
         _partyFilter.value?.let {
             if (checked) it.add(party) else it.remove(party)
@@ -66,6 +79,7 @@ class MpListViewModel: ViewModel() {
         }
     }
 
+    // Party filtering chips mapped to party ids.
     companion object Party {
         val partyMap = mapOf(
             R.id.chipKok to "kok",

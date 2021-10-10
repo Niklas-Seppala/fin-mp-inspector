@@ -24,7 +24,7 @@ import com.example.mpinspector.R
  * @param TBinding : ViewDataBinding Type of the item layout ViewDataBiding.
  * @property items List<TData> All start items.
  * @property itemLayoutRes Int Item layout resId.
- * @property color: Boolean Use dark/light colors in view holders.
+ * @property colorEveryOtherItem: Boolean Use dark/light colors in view holders.
  * @property onItemClick OnRecycleViewItemClick<TData>? optional click listener.
  * @property otherListeners Array<OnRecycleViewItemClick<TData>>? More precise click listeners.
  * @property currentItems List<TData> Currently displayed items.
@@ -32,7 +32,7 @@ import com.example.mpinspector.R
 abstract class GenericAdapter<TData, TBinding : ViewDataBinding>(
     protected var items: List<TData>,
     private val itemLayoutRes: Int,
-    private val color: Boolean = true,
+    private val colorEveryOtherItem: Boolean = true,
     private val onItemClick: OnRecycleViewItemClick<TData>? = null,
     private val otherListeners: Array<OnRecycleViewItemClick<TData>>? = null
 ) : RecyclerView.Adapter<GenericViewHolder<TData, TBinding>>() {
@@ -69,7 +69,7 @@ abstract class GenericAdapter<TData, TBinding : ViewDataBinding>(
 
     override fun onBindViewHolder(holder: GenericViewHolder<TData, TBinding>, position: Int) {
         // Set every other item background dark/light
-        if (color) {
+        if (colorEveryOtherItem) {
             holder.binding.root.setBackgroundColor(
                 if (position % 2 == 0) darkColor
                 else lightColor

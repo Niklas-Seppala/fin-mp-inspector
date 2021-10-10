@@ -41,18 +41,13 @@ class TwitterFeedFragment : Fragment() {
     override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View {
         binding = DataBindingUtil.inflate(infl, R.layout.fragment_twitter_feed, cont, false)
         viewModel = ViewModelProvider(this).get(TwitterFeedViewModel::class.java)
+        viewModel.loadLatestTweets()
 
-        adapter = TweetAdapter(activity as Context, listOf(),
-            arrayOf(onTwitterBtnClick, onProfileClick))
-        binding.tweetList.adapter = adapter
+        initTweetList()
 
         viewModel.emptyMessage.observe(viewLifecycleOwner, {
             binding.emptyListLabel.text = it
         })
-
-        binding.tweetSwipeRefresh.setOnRefreshListener {
-            viewModel.loadLatestTweets()
-        }
 
         viewModel.updating.observe(viewLifecycleOwner, {
             binding.tweetSwipeRefresh.isRefreshing = it
@@ -71,15 +66,24 @@ class TwitterFeedFragment : Fragment() {
                 binding.emptyListLabel.visibility = View.VISIBLE
         })
 
-        ItemTouchHelper(touch).attachToRecyclerView(binding.tweetList)
-
         return binding.root
     }
 
+    private fun initTweetList() {
+        // Adapter
+        adapter = TweetAdapter(activity as Context, listOf(),
+            arrayOf(onTwitterBtnClick, onProfileClick))
+        binding.tweetList.adapter = adapter
+
+        // Touch
+        ItemTouchHelper(touch).attachToRecyclerView(binding.tweetList)
+        binding.tweetSwipeRefresh.setOnRefreshListener {
+            viewModel.loadLatestTweets()
+        }
+    }
+
     private val touch = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
+        override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
         ) =  false
 
@@ -90,7 +94,7 @@ class TwitterFeedFragment : Fragment() {
             val pos = viewHolder.absoluteAdapterPosition
             if (direction == ItemTouchHelper.LEFT) {
                 lifecycleScope.launch { Repository.twitter.markTweetAsRead(
-                    adapter.currentItems.get(pos).tweet) }
+                    adapter.currentItems[pos].tweet) }
             }
         }
     }
