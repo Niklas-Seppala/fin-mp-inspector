@@ -6,12 +6,6 @@
     app:startDestination="@id/nav_mp_list">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.example.mpinspector.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
-
-    <fragment
         android:id="@+id/nav_mp_inspect"
         android:name="com.example.mpinspector.ui.mpinspect.MpFragment"
         android:label="Inspect">
@@ -20,23 +14,26 @@
             android:defaultValue="0"
             app:argType="integer" />
     </fragment>
+
     <fragment
         android:id="@+id/nav_mp_list"
         android:name="com.example.mpinspector.ui.mplist.MpListFragment"
-        android:label="MP list"
+        android:label="Browse"
         tools:layout="@layout/fragment_item_list">
         <action
             android:id="@+id/action_mpListItemFragment_to_mpFragment"
             app:destination="@id/nav_mp_inspect" />
     </fragment>
+
     <fragment
         android:id="@+id/nav_fav_mps"
         android:name="com.example.mpinspector.ui.mplist.FavoriteMpsFragment"
-        android:label="Favorite MPs" >
+        android:label="Favorites" >
         <action
             android:id="@+id/action_nav_fav_mps_to_nav_mp_inspect"
             app:destination="@id/nav_mp_inspect" />
     </fragment>
+
     <fragment
         android:id="@+id/nav_twitter_feed"
         android:name="com.example.mpinspector.ui.twitter.TwitterFeedFragment"
