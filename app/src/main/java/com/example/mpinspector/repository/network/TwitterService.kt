@@ -6,6 +6,12 @@ import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+/**
+ * Retrofit interface for fetching Tweets.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 interface TwitterService {
 
     @GET("users/{id}/tweets")

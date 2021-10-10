@@ -3,9 +3,15 @@ package com.example.mpinspector.repository.db
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.mpinspector.MyApp
+import com.example.mpinspector.App
 import com.example.mpinspector.repository.models.*
 
+/**
+ * Database singleton class.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 @Database(version = 1,
     entities = [MpModel::class, CommentModel::class, FavoriteModel::class,
         TwitterFeedModel::class, MpTwitterIdModel::class, TweetModel::class],
@@ -25,7 +31,7 @@ abstract class MpDatabase : RoomDatabase() {
             get() {
                 synchronized(this) {
                     mInstance = mInstance ?: Room
-                        .databaseBuilder(MyApp.appContext, MpDatabase::class.java, "mp-db")
+                        .databaseBuilder(App.appContext, MpDatabase::class.java, "mp-db")
                         .fallbackToDestructiveMigration()
                         .build()
                     return mInstance as MpDatabase

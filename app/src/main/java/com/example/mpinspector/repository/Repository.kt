@@ -9,6 +9,9 @@ import com.example.mpinspector.repository.twitter.TwitterDataProvider
  * Application's Repository singleton.
  *
  * All data access should flow through this object.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
  */
 object Repository {
     /**

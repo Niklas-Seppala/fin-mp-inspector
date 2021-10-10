@@ -4,6 +4,13 @@ import androidx.room.*
 import com.squareup.moshi.Json
 import java.time.Instant
 
+/**
+ * Model class for database tweet entries, and API query
+ * results.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 @Entity(tableName = "tweet",
     indices = [Index("authorId", unique = false)],
     foreignKeys = [ForeignKey(
@@ -44,6 +51,12 @@ data class TweetModel(
     }
 }
 
+/**
+ * Meta part of the API tweet query.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 data class TweetApiQueryMeta(
     @field:Json(name = "oldest_id")
     val oldestId: String,
@@ -61,6 +74,12 @@ data class TweetApiQueryMeta(
     val previousToken: String?,
 )
 
+/**
+ * API response object for tweet query.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 data class TweetApiQueryResult(
     val data: List<TweetModel>?,
     val meta: TweetApiQueryMeta?,

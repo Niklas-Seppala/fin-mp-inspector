@@ -3,7 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Nikke/StudioProjects/fin-mp-inspector/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Nikke/StudioProjects/fin-mp-inspector/app/src/main/res/layout/app_bar_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Nikke/StudioProjects/fin-mp-inspector/app/src/main/res/layout/comment_dialog.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Nikke/StudioProjects/fin-mp-inspector/app/src/main/res/layout/fragment_list_mp_item.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Nikke/StudioProjects/fin-mp-inspector/app/src/main/res/layout/fragment_mp.xml" value="0.47058823529411764" />
         <entry key="..\:/Users/Nikke/StudioProjects/fin-mp-inspector/app/src/main/res/layout/fragment_tweet.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Nikke/StudioProjects/fin-mp-inspector/app/src/main/res/layout/nav_header_main.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2640625" />
         <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.3828125" />
         <entry key="..\:/Users/Nikke/source/AndroidStudioProjects/fin-mp-inspector/app/src/main/res/drawable/ic_note.xml" value="0.3828125" />

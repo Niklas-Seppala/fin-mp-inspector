@@ -1,7 +1,6 @@
 package com.example.mpinspector.ui.mpinspect
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,19 +14,22 @@ import com.example.mpinspector.ui.adapters.CommentAdapter
 import com.example.mpinspector.utils.PartyMapper
 import com.example.mpinspector.utils.Toaster
 
+/**
+ * Mp inspect view Fragment class.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 class MpFragment : Fragment() {
     private lateinit var binding: FragmentMpBinding
     private lateinit var viewModel: MpViewModel
-    private lateinit var commentDialog: CommentDialogFragment
+    private lateinit var noteDialog: NoteDialogFragment
     private lateinit var adapter: CommentAdapter
 
     override fun onCreateView(infl: LayoutInflater, cont: ViewGroup?, sInstState: Bundle?): View {
         binding = DataBindingUtil.inflate(infl, R.layout.fragment_mp, cont, false)
-        commentDialog = CommentDialogFragment()
-        commentDialog.setOnSubmit { text, like ->
-            viewModel.commentOkButtonClick(text, like)
-        }
 
+        // Set button listeners.
         binding.noteButton.setOnClickListener { noteBtnClick(it) }
         binding.favButton.setOnClickListener { favoriteBtnClick(it) }
         binding.twitterButton.setOnClickListener {
@@ -40,43 +42,67 @@ class MpFragment : Fragment() {
 
     override fun onViewCreated(view: View, sInstState: Bundle?) {
         super.onViewCreated(view, sInstState)
+
+        // Get the mpId from safe args and build view model.
         val mpId = arguments?.getInt("mpId") ?: throw RuntimeException()
         viewModel = ViewModelProvider(this, MpViewModelFactory(mpId)).get(MpViewModel::class.java)
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
 
+
+        noteDialog = NoteDialogFragment { text, like ->
+            viewModel.submitComment(text, like)
+        }
+
+        createNoteAdapter()
+
+        observeMpAndComments()
+        observeTwitterButton()
+        observeFavoriteButton()
+
+        viewModel.toastMessage.observe(viewLifecycleOwner, {
+            Toaster.make(context, it)
+        })
+
+        viewModel.loadComplete.observe(viewLifecycleOwner, {
+            if (it) binding.card.visibility = View.VISIBLE
+        })
+    }
+
+    private fun createNoteAdapter() {
         adapter = CommentAdapter(listOf())
         binding.mpFragCommentView.adapter = adapter
+    }
 
-
+    private fun observeMpAndComments() {
         viewModel.mpInspectBundle.observe(viewLifecycleOwner, {
+            // Update note list data
             adapter.update(it.mpWithComments.comments)
 
             val mp = it.mpWithComments.mp
-            val image = it.image
+            // Update mp related views
             binding.mpFragNameTv.text = mp.fullName
             binding.mpFragAgeTv.text = mp.age.toString()
             binding.mpFragPartyIv.setImageResource(PartyMapper.partyIcon(mp.party))
             binding.mpFragConstTv.text = mp.constituency
-
             binding.mpFragMinisterTv.text = mp.ministerStr
-
-            binding.mpFragProfileIv.setImageBitmap(image)
+            binding.mpFragProfileIv.setImageBitmap(it.image)
             viewModel.mpLoaded = true
         })
+    }
 
+    private fun observeFavoriteButton() {
+        viewModel.isFavLiveData.observe(viewLifecycleOwner, {
+            binding.favButton.setImageResource(if (it)
+                R.drawable.ic_star
+            else R.drawable.ic_star_outline)
+        })
+    }
+
+    private fun observeTwitterButton() {
         viewModel.twitterLiveData.observe(viewLifecycleOwner, {
             binding.twitterButton.setImageResource(it)
             binding.twitterButton.visibility = if (it == 0) View.GONE else View.VISIBLE
             binding.twitterButton.setImageResource(it)
         })
-
-        viewModel.isFavLiveData.observe(viewLifecycleOwner, {
-            binding.favButton.setImageResource(if (it) R.drawable.ic_star else R.drawable.ic_star_outline)
-        })
-
-        viewModel.loadComplete.observe(viewLifecycleOwner, { if (it) binding.card.visibility = View.VISIBLE })
-        viewModel.toastMessage.observe(viewLifecycleOwner, { Toaster.make(context, it) })
     }
 
     private fun favoriteBtnClick(view: View) {
@@ -86,6 +112,6 @@ class MpFragment : Fragment() {
 
     private fun noteBtnClick(view: View) {
         view.startAnimation(AnimationUtils.loadAnimation(activity, R.anim.icon_click))
-        commentDialog.show(childFragmentManager, "")
+        noteDialog.show(childFragmentManager, "")
     }
 }

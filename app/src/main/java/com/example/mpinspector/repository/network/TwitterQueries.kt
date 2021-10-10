@@ -1,5 +1,11 @@
 package com.example.mpinspector.repository.network
 
+/**
+ * Twitter API query string utils.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 object TwitterQueries {
     fun join(queries: Array<String>): String {
         val sb = StringBuilder()

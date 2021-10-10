@@ -2,6 +2,13 @@ package com.example.mpinspector.repository.db
 
 import androidx.room.*
 
+/**
+ *  Generic base DAO class for basic database
+ *  operations.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 @Dao
 abstract class GenericDao<T> {
     @Insert(onConflict = OnConflictStrategy.IGNORE)

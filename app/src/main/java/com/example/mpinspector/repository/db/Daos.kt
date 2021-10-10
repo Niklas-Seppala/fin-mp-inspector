@@ -7,6 +7,12 @@ import androidx.room.RewriteQueriesToDropUnusedColumns
 import androidx.room.Transaction
 import com.example.mpinspector.repository.models.*
 
+/**
+ * Data-access object class for favorites.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 @Dao
 abstract class FavoriteDao : GenericDao<FavoriteModel>() {
     @Query("SELECT EXISTS(SELECT * FROM favorites WHERE mpId is (:id))")
@@ -17,6 +23,12 @@ abstract class FavoriteDao : GenericDao<FavoriteModel>() {
     abstract fun getAllSorted(): LiveData<List<MpModel>>
 }
 
+/**
+ * Data-access object class for Tweets.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 @Dao
 abstract class TweetDao : GenericDao<TweetModel>() {
     @Query(
@@ -24,15 +36,28 @@ abstract class TweetDao : GenericDao<TweetModel>() {
     WHERE authorId IN 
         (SELECT mpId FROM twitter_feed) 
     ORDER BY timestamp DESC""")
-    abstract fun getNotYetRead(): LiveData<List<TweetModel>>
+    abstract fun getTweets(): LiveData<List<TweetModel>>
 }
 
+/**
+ *
+ * Data-access object class for Comments.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 @Dao
 abstract class CommentDao : GenericDao<CommentModel>() {
     @Query("SELECT * FROM mp_comments WHERE mpId IS (:id)")
     abstract fun selectForMpId(id: Int): LiveData<MutableList<CommentModel>>
 }
 
+/**
+ * Data-access object class for MPs.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 @Dao
 abstract class MpDao : GenericDao<MpModel>() {
     @Query("SELECT picture FROM mp WHERE mp.personNumber IS (:id)")
@@ -50,6 +75,12 @@ abstract class MpDao : GenericDao<MpModel>() {
     abstract fun getMpWithComments(id: Int): LiveData<MpWithComments>
 }
 
+/**
+ * Data-access object class for MP twitter data.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 @Dao
 abstract class MpTwitterDao : GenericDao<MpTwitterIdModel>() {
     @RewriteQueriesToDropUnusedColumns
@@ -70,6 +101,12 @@ abstract class MpTwitterDao : GenericDao<MpTwitterIdModel>() {
     abstract suspend fun mpHasTwitter(mpId: Int): Boolean
 }
 
+/**
+ * Data-access object class for Twitter feed subscriptions.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 @Dao
 abstract class TwitterFeedDao : GenericDao<TwitterFeedModel>() {
     @Query("SELECT COUNT(*) FROM twitter_feed ")

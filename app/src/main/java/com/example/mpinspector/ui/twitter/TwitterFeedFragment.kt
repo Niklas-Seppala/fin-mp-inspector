@@ -21,8 +21,18 @@ import com.example.mpinspector.repository.models.TweetModel
 import com.example.mpinspector.ui.NavActions
 import kotlinx.coroutines.launch
 
-data class TweetWithImage(val tweet: TweetModel, val image: Bitmap)
+/**
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
+data class TweetBundle(val tweet: TweetModel, val image: Bitmap)
 
+/**
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 class TwitterFeedFragment : Fragment() {
     private lateinit var binding: FragmentTwitterFeedBinding
     private lateinit var viewModel: TwitterFeedViewModel
@@ -41,7 +51,7 @@ class TwitterFeedFragment : Fragment() {
         })
 
         binding.tweetSwipeRefresh.setOnRefreshListener {
-            viewModel.loadNewTweets()
+            viewModel.loadLatestTweets()
         }
 
         viewModel.updating.observe(viewLifecycleOwner, {
@@ -50,29 +60,32 @@ class TwitterFeedFragment : Fragment() {
         })
 
         viewModel.tweetsWithImages.observe(viewLifecycleOwner, {
+            // Set not list of not yet read tweets to list view.
             val displayTweets = it.filter { item -> !item.tweet.isRead }
             adapter.update(displayTweets)
 
+            // Display empty message, if no tweets available.
             if (displayTweets.isNotEmpty())
                 binding.emptyListLabel.visibility = View.GONE
             else
                 binding.emptyListLabel.visibility = View.VISIBLE
         })
 
-        ItemTouchHelper(asd).attachToRecyclerView(binding.tweetList)
+        ItemTouchHelper(touch).attachToRecyclerView(binding.tweetList)
 
         return binding.root
     }
 
-    private val asd = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+    private val touch = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
-        ): Boolean {
-            return false
-        }
+        ) =  false
 
+        /**
+         * Delete left swiped item from repository.
+         */
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val pos = viewHolder.absoluteAdapterPosition
             if (direction == ItemTouchHelper.LEFT) {
@@ -80,15 +93,14 @@ class TwitterFeedFragment : Fragment() {
                     adapter.currentItems.get(pos).tweet) }
             }
         }
-
     }
 
     /**
      * Twitter button click listener object. Starts Browser Intent with clicked
      * tweet as URL.
      */
-    private val onTwitterBtnClick = object : OnRecycleViewItemClick<TweetWithImage> {
-        override fun onItemClick(itemData: TweetWithImage) {
+    private val onTwitterBtnClick = object : OnRecycleViewItemClick<TweetBundle> {
+        override fun onItemClick(itemData: TweetBundle) {
             val uri = Uri.parse("https://twitter.com/${itemData.tweet.username}/status/${itemData.tweet.id}")
             val browserIntent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(browserIntent)
@@ -98,15 +110,14 @@ class TwitterFeedFragment : Fragment() {
     /**
      * Tweet profile click listener object. Navigates to MpInspect.
      */
-    private val onProfileClick = object : OnRecycleViewItemClick<TweetWithImage> {
-        override fun onItemClick(itemData: TweetWithImage) {
+    private val onProfileClick = object : OnRecycleViewItemClick<TweetBundle> {
+        override fun onItemClick(itemData: TweetBundle) {
             val nav = findNavController()
             val action = NavActions.fromTwitterFeedToInspect
             action.mpId = itemData.tweet.authorId
             nav.navigate(action)
         }
     }
-
 
     /**
      * Listener array indexes.

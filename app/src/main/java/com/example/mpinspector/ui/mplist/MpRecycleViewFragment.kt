@@ -11,9 +11,11 @@ import com.example.mpinspector.ui.adapters.OnRecycleViewItemClick
 
 /**
  * Base class for fragments that use RecycleView with MpModel type.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
  */
 abstract class MpRecycleViewFragment : Fragment(), OnRecycleViewItemClick<MpModel> {
-
     /**
      * Reads current location and chooses correct navigation action.
      * Destination on all is mpInspect

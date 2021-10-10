@@ -34,5 +34,8 @@
     <string name="mp_profile_picture">Mp profile picture</string>
     <string name="content_desc_party_icon">Party Icon</string>
     <string name="content_desc_open_in_twitter">Open in twitter</string>
+    <string name="desc_add_to_twitter_feed">Add to twitter feed.</string>
+    <string name="desc_add_note">Add note.</string>
+    <string name="add_to_favorites">Add to favorites.</string>
 
 </resources>

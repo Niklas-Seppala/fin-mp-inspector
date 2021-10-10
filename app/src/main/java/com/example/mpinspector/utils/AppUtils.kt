@@ -2,22 +2,35 @@ package com.example.mpinspector.utils
 
 import android.content.Context
 import android.graphics.*
+import android.icu.text.DateFormat
 import android.widget.Toast
 import androidx.core.text.HtmlCompat
 import com.example.mpinspector.R
-import com.example.mpinspector.databinding.FragmentCommentBinding
-import com.example.mpinspector.databinding.FragmentListMpItemBinding
 import java.util.*
 
-typealias CommentBinding = FragmentCommentBinding
-typealias MpItemBinding = FragmentListMpItemBinding
-
+/**
+ * Helper object for time related stuff.
+ */
 object MyTime {
+    /**
+     * Get current time as unix timestamp (MS)
+     */
     val timestampLong: Long
         get() = System.currentTimeMillis()
 
-    val timestampInt: Int
-        get() = (System.currentTimeMillis() / 1000L).toInt()
+    private const val format = "${DateFormat.ABBR_MONTH_DAY} ${DateFormat.HOUR24_MINUTE} ${DateFormat.YEAR}"
+
+    // This year.
+    val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
+    /**
+     * Get datetime from timestamp using apps datetime format.
+     * @param timestamp: Millis
+     * @return String Formatted datetime string.
+     */
+    fun strTime(timestamp: Long): String {
+        return DateFormat.getPatternInstance(format).format(Date(timestamp))
+    }
 }
 
 object Toaster {
@@ -29,7 +42,7 @@ object Toaster {
      */
     fun make(context: Context?, text: String) {
         context?.let {
-            val color = it.resources.getColor(R.color.purple_700)
+            val color = it.resources.getColor(R.color.purple_700, null)
             Toast.makeText(context,
                 HtmlCompat.fromHtml("<font color='$color'>$text</font>", HtmlCompat.FROM_HTML_MODE_LEGACY),
                 Toast.LENGTH_SHORT)
@@ -38,48 +51,37 @@ object Toaster {
     }
 }
 
-object Year {
-    val current = Calendar.getInstance().get(Calendar.YEAR)
-}
-
+/**
+ * Bitmap manipulation utility functions.
+ */
 object BitmapUtil {
 
+    /**
+     * Resizes specified bitmap. Retains w/h ratio.
+     * @param bitmap Bitmap Src Bitmap
+     * @param destWidth Int New width.
+     * @return Bitmap Resized Bitmap.
+     */
     fun resizeBitmap(bitmap: Bitmap, destWidth: Int): Bitmap {
         val scale = destWidth.toDouble() / bitmap.width
         val destHeight = (scale * bitmap.height).toInt()
         return Bitmap.createScaledBitmap(bitmap, destWidth, destHeight, false)
     }
 
-
-    fun circleCrop(bitmap: Bitmap, x: Int, y: Int, diameter: Int): Bitmap {
-
-        val rect = Rect(0, 0, diameter, diameter)
-
-        val out = Bitmap.createBitmap(diameter, diameter, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(out)
-
-        val paint = Paint()
-        paint.isAntiAlias = true
-        canvas.drawARGB(0, 0, 0, 0)
-        paint.color = 0xff000000.toInt()
-        canvas.drawCircle(x.toFloat(), y.toFloat(), diameter.toFloat() / 2, paint)
-
-        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
-        canvas.drawBitmap(bitmap, rect, rect, paint)
-
-        return out
-    }
-
-
-
-    fun roundCorners(bm: Bitmap, px: Int = 30): Bitmap {
+    /**
+     * Rounds Bitmap corners based on provided bitmap size and round value.
+     * @param bm Bitmap Src bitmap.
+     * @param roundVal Int px.
+     * @return Bitmap Bitmap with round corners.
+     */
+    fun roundCorners(bm: Bitmap, roundVal: Int = 30): Bitmap {
         val out = Bitmap.createBitmap(bm.width, bm.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(out)
 
         val paint = Paint()
         val rect = Rect(0, 0, bm.width, bm.height)
         val rectF = RectF(rect)
-        val roundPx = px.toFloat()
+        val roundPx = roundVal.toFloat()
 
         paint.isAntiAlias = true
         canvas.drawARGB(0, 0, 0, 0)
@@ -96,10 +98,22 @@ object BitmapUtil {
 class NoSuchPartyException(partyId: String, msg: String = "No such \"$partyId\" party mapped.") :
     Exception(msg)
 
+object IconService {
+    /**
+     * Get Like/Dislike icon from like boolean.
+     * @param like Boolean like.
+     * @return Int icon res id.
+     */
+    fun getLikeIconRes(like: Boolean) =
+        if (like) R.drawable.ic_like
+        else R.drawable.ic_dislike
+}
+
+/**
+ * Helper object to map parties to icons and names
+ */
 object PartyMapper {
-
     data class Party(val name: Int, val icon: Int)
-
     private val partyMap = mapOf(
         "kok" to Party(R.string.partyKok, R.mipmap.ic_party_kok),
         "vas" to Party(R.string.partyVas, R.mipmap.ic_party_vas),
@@ -112,9 +126,19 @@ object PartyMapper {
         "kesk" to Party(R.string.partyKesk, R.mipmap.ic_party_kesk)
     )
 
+    /**
+     * Get party name from party id
+     * @param id String party id.
+     * @return Party name.
+     */
     @Throws(NoSuchPartyException::class)
     fun partyName(id: String) = partyMap[id]?.name ?: throw NoSuchPartyException(id)
 
+    /**
+     * Get party icon res from party id.
+     * @param id String party id.
+     * @return Int party icon res id.
+     */
     @Throws(NoSuchPartyException::class)
     fun partyIcon(id: String) = partyMap[id]?.icon ?: throw NoSuchPartyException(id)
 }

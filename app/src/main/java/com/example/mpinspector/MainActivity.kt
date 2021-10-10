@@ -1,7 +1,6 @@
 package com.example.mpinspector
 
 import android.os.Bundle
-import android.view.Menu
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -13,6 +12,13 @@ import com.example.mpinspector.databinding.ActivityMainBinding
 import com.example.mpinspector.repository.Repository
 import kotlinx.coroutines.launch
 
+/**
+ * Entry point to the application.
+ * Loads latest MP related data when app starts.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -20,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MyApp.initApp(applicationContext)
+        App.initApp(applicationContext)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

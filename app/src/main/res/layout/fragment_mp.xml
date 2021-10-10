@@ -3,11 +3,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data>
-        <variable
-            name="viewModel"
-            type="com.example.mpinspector.ui.mpinspect.MpViewModel" />
-    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -35,7 +30,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragProfileIv"
                 app:layout_constraintVertical_bias="0.0"
-                tools:srcCompat="@drawable/ic_star" />
+                tools:srcCompat="@drawable/ic_star"
+                android:contentDescription="@string/add_to_favorites" />
 
             <TextView
                 android:id="@+id/mpFragNameTv"
@@ -109,7 +105,8 @@
                 app:layout_constraintStart_toEndOf="@+id/twitterButton"
                 app:layout_constraintTop_toBottomOf="@+id/mpFragProfileIv"
                 app:layout_constraintVertical_bias="0.0"
-                tools:srcCompat="@drawable/ic_note" />
+                tools:srcCompat="@drawable/ic_note"
+                android:contentDescription="@string/desc_add_note" />
 
             <ImageView
                 android:id="@+id/twitterButton"
@@ -123,10 +120,10 @@
                 app:layout_constraintBottom_toBottomOf="@+id/favButton"
                 app:layout_constraintStart_toEndOf="@+id/favButton"
                 app:layout_constraintTop_toTopOf="@+id/favButton"
-                app:srcCompat="@drawable/ic_twitter_filled" />
+                app:srcCompat="@drawable/ic_twitter_filled"
+                android:contentDescription="@string/desc_add_to_twitter_feed" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mpFragCommentView"

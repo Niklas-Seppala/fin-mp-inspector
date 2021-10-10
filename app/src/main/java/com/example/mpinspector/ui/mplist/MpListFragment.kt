@@ -14,6 +14,12 @@ import com.example.mpinspector.databinding.FragmentItemListBinding
 import com.example.mpinspector.ui.adapters.MpAdapter
 import com.google.android.material.chip.Chip
 
+/**
+ * MpList view Fragment class.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 class MpListFragment : MpRecycleViewFragment() {
     private lateinit var adapter: MpAdapter
     private lateinit var binding: FragmentItemListBinding

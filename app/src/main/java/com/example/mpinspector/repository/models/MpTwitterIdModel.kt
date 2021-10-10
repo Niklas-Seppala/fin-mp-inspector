@@ -6,6 +6,12 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 
+/**
+ * Model class for MPs twitter data entries.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 @Entity(tableName = "mp_twitter_data",
     foreignKeys = [ForeignKey(
         entity = MpModel::class,

@@ -4,8 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class CommentDialogViewModel : ViewModel() {
+/**
+ * ViewModel class for Note dialog view.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
+class NoteDialogViewModel : ViewModel() {
 
+    /**
+     *
+     */
     fun likeClicked() {
         likedLiveData.value?.let {
             likePrevState = it
@@ -15,6 +24,10 @@ class CommentDialogViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Stores dislike's previous state to helper var,
+     * and negates dislike state.
+     */
     fun dislikeClicked() {
         dislikedLiveData.value?.let {
             dislikePrevState = it
@@ -24,6 +37,9 @@ class CommentDialogViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Checks if either of the like buttons is active.
+     */
     fun oneOfLikeButtonsIsActive(): Boolean {
         return (likedLiveData.value ?: false) || (dislikedLiveData.value ?: false)
     }

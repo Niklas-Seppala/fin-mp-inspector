@@ -1,5 +1,11 @@
 package com.example.mpinspector.repository.models
 
+/**
+ *
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 data class MpTwitterModel(
     val personNumber: Int,
     val first: String,

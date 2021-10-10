@@ -1,9 +1,14 @@
 package com.example.mpinspector.repository.models
 
 import androidx.room.*
-import com.example.mpinspector.ui.mpinspect.MpViewModel
-import com.example.mpinspector.utils.Year
+import com.example.mpinspector.utils.MyTime
 
+/**
+ * Model class for database MP entries.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 @Entity(tableName = "mp")
 data class MpModel (
     @PrimaryKey
@@ -21,11 +26,17 @@ data class MpModel (
     @Ignore
     val fullName = "$first $last"
     @Ignore
-    val age = Year.current - bornYear
+    val age = MyTime.currentYear - bornYear
     @Ignore
     val ministerStr = if (minister) "Minister" else ""
 }
 
+/**
+ * Relation class for Mp and it's comments.
+ * 
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 data class MpWithComments(
     @Embedded
     val mp: MpModel,

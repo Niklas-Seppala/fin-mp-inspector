@@ -1,25 +1,25 @@
 package com.example.mpinspector.ui.adapters
 
-import android.icu.text.DateFormat
 import com.example.mpinspector.R
+import com.example.mpinspector.databinding.FragmentCommentBinding
 import com.example.mpinspector.repository.models.CommentModel
-import com.example.mpinspector.utils.CommentBinding
-import java.util.*
-
-object MyDateFormat {
-    const val format = "${DateFormat.ABBR_MONTH_DAY} ${DateFormat.HOUR24_MINUTE} ${DateFormat.YEAR}"
-}
+import com.example.mpinspector.utils.IconService
+import com.example.mpinspector.utils.MyTime
 
 /**
  * RecycleView Adapter for comments.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
  */
-class CommentAdapter(items: List<CommentModel>) : GenericAdapter<CommentModel, CommentBinding>(items, R.layout.fragment_comment) {
-    override fun hookUpItemWithView(binding: CommentBinding, item: CommentModel) {
+class CommentAdapter(items: List<CommentModel>) :
+    GenericAdapter<CommentModel, FragmentCommentBinding>(items, R.layout.fragment_comment) {
+
+    override fun bindDataToView(binding: FragmentCommentBinding, item: CommentModel) {
         binding.comment.text = item.content
-        binding.commentDate.text =
-            DateFormat.getPatternInstance(MyDateFormat.format).format(Date(item.timestamp))
-        binding.likeIcon.setImageResource(if (item.like) R.drawable.ic_like else R.drawable.ic_dislike)
+        binding.commentDate.text = MyTime.strTime(item.timestamp)
+        binding.likeIcon.setImageResource(IconService.getLikeIconRes(item.like))
     }
 
-    override val diffComparator: DiffComparator<CommentModel> = { a, b -> a.id == b.id }
+    override val diffCompare: ((CommentModel, CommentModel) -> Boolean) = { a, b -> a.id == b.id }
 }

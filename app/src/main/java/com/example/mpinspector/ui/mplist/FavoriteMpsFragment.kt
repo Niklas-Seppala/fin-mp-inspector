@@ -10,7 +10,13 @@ import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentFavMpsBinding
 import com.example.mpinspector.ui.adapters.MpAdapter
 
-class FavoriteMpRecycleViewFragment : MpRecycleViewFragment() {
+/**
+ *
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
+class FavoriteMpsFragment : MpRecycleViewFragment() {
     private lateinit var adapter: MpAdapter
     private lateinit var viewModel: FavoriteMpListViewModel
     private lateinit var binding: FragmentFavMpsBinding

@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
  * ViewHolder class for GenericAdapter. Delegates possible click events
  * to Adapters OnRecycleViewItemClick listener, if it is provided.
  *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ *
  * @param TData List item Type.
  * @param TBinding : ViewDataBinding Type of the item layout ViewDataBiding.
  * @property binding TBinding ViewDataBinding object.

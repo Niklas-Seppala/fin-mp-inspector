@@ -13,6 +13,12 @@ fun <T, K, R> LiveData<T>.combineWith(liveData: LiveData<K>, block: (T?, K?) -> 
     return result
 }
 
+/**
+ * ViewModel class for MpList view.
+ *
+ * @author Niklas Seppälä - 2013018
+ * @date 10/10/2021
+ */
 class MpListViewModel: ViewModel() {
 
     // Live data of all of the Mps from database.
