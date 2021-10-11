@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mpinspector.repository.Repository
 import com.example.mpinspector.repository.models.TweetModel
 import com.example.mpinspector.ui.NavActions
+import com.example.mpinspector.ui.adapters.TweetAdapter
 import kotlinx.coroutines.launch
 
 /**
@@ -26,7 +27,7 @@ import kotlinx.coroutines.launch
  * @author Niklas Seppälä - 2013018
  * @date 10/10/2021
  */
-data class TweetBundle(val tweet: TweetModel, val image: Bitmap)
+data class TweetBundle(val tweet: TweetModel, val image: Bitmap?)
 
 /**
  *

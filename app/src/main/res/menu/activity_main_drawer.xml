@@ -5,50 +5,19 @@
 
     <group android:id="@+id/main_grp"
         android:checkableBehavior="single">
-
-<!--        <item-->
-<!--            android:id="@+id/nav_home"-->
-<!--            android:icon="@drawable/ic_home"-->
-<!--            android:title="Home" />-->
         <item
             android:id="@+id/nav_mp_list"
             android:icon="@drawable/ic_mp_search"
-            android:title="Browse" />
+            android:title="@string/menu_header_browse" />
 
         <item
             android:id="@+id/nav_twitter_feed"
-            android:icon="@drawable/ic_logo_white"
-            android:title="Twitter Feed" />
+            android:icon="@drawable/ic_twitter_filled"
+            android:title="@string/menu_header_twitter_feed"/>
 
         <item
             android:id="@+id/nav_fav_mps"
             android:icon="@drawable/ic_star"
-            android:title="Favorites" />
-
-
+            android:title="@string/menu_header_favorites" />
     </group>
-
-<!--    <group-->
-<!--        android:id="@+id/mp_browse_grp"-->
-<!--        android:checkableBehavior="single">-->
-
-<!--        <item-->
-<!--            android:id="@+id/subtitle"-->
-<!--            android:title="Browse">-->
-
-<!--&lt;!&ndash;            <menu>&ndash;&gt;-->
-<!--&lt;!&ndash;                <item&ndash;&gt;-->
-<!--&lt;!&ndash;                    android:id="@+id/nav_mp_list"&ndash;&gt;-->
-<!--&lt;!&ndash;                    android:icon="@drawable/ic_mp_search"&ndash;&gt;-->
-<!--&lt;!&ndash;                    android:title="MP List" />&ndash;&gt;-->
-
-<!--&lt;!&ndash;                <item&ndash;&gt;-->
-<!--&lt;!&ndash;                    android:id="@+id/nav_fav_mps"&ndash;&gt;-->
-<!--&lt;!&ndash;                    android:icon="@drawable/ic_star"&ndash;&gt;-->
-<!--&lt;!&ndash;                    android:title="Favorites" />&ndash;&gt;-->
-<!--&lt;!&ndash;            </menu>&ndash;&gt;-->
-
-<!--        </item>-->
-
-<!--    </group>-->
 </menu>

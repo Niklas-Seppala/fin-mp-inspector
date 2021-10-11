@@ -25,10 +25,13 @@ class TwitterFeedViewModel : ViewModel() {
     private val tweets = Repository.twitter.getTweets()
     val tweetsWithImages = Transformations.switchMap(tweets) {
         liveData {
-            val imageMap = it.map { it.authorId }.toSet()
+            val imageMap = it
+                .map { it.authorId }.toSet()
                 .map { it to  Repository.mps.getMpImage(it, ImageSize.SMALL, 15)}
                 .toMap()
-            emit( it.map { TweetBundle(it, imageMap[it.authorId]!!)  })
+            emit(it.map {
+                TweetBundle(it, imageMap[it.authorId])
+            })
         }
     }
 

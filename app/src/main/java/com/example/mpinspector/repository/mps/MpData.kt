@@ -72,7 +72,7 @@ class MpData : MpDataProvider {
 
     /**
      * Check if specified MP is in favorites.
-     * @param MpId MP id.
+     * @param mpId MP id.
      * @return LiveData<Boolean> True if is.
      */
     override fun isMpInFavorites(mpId: Int): LiveData<Boolean> {
@@ -145,11 +145,11 @@ class MpData : MpDataProvider {
      * @return Bitmap MP image in requested size as a Bitmap object.
      */
     private suspend fun networkFetch(id: Int, size: ImageSize): Bitmap {
-        val endP = MpDatabase.instance.mpDao().selectPicture(id)
-        val resp = imgWebService.getImage(endP)
+        val requestEndPoint = MpDatabase.instance.mpDao().selectPicture(id)
+        val response = imgWebService.getImage(requestEndPoint)
 
-        // Create a bitmaps from network response (Both normal and small)
-        val normalSizeBm = BitmapUtil.resizeBitmap(BitmapFactory.decodeStream(resp.byteStream()), 300)
+        // Create a bitmaps from network response (Both normal and small).
+        val normalSizeBm = BitmapUtil.resizeBitmap(BitmapFactory.decodeStream(response.byteStream()), 300)
         val out = File(App.appContext.cacheDir, "img/$id.jpg")
         val outSmall = File(App.appContext.cacheDir, "img/${id}_small.jpg")
         normalSizeBm.compress(Bitmap.CompressFormat.JPEG, 70, out.outputStream())

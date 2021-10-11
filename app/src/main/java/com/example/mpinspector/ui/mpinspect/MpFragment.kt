@@ -8,11 +8,14 @@ import android.view.animation.AnimationUtils
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentMpBinding
 import com.example.mpinspector.ui.adapters.CommentAdapter
 import com.example.mpinspector.utils.PartyMapper
 import com.example.mpinspector.utils.Toaster
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Mp inspect view Fragment class.
@@ -52,8 +55,15 @@ class MpFragment : Fragment() {
             viewModel.submitComment(text, like)
         }
 
-        createNoteAdapter()
+        // Set progress bar active if mp is not fetched in 100ms
+        lifecycleScope.launch {
+            delay(100)
+            viewModel.loadComplete.value?.let {
+                if (!it) binding.progressBar.visibility = View.VISIBLE
+            }
+        }
 
+        createNoteAdapter()
         observeMpAndComments()
         observeTwitterButton()
         observeFavoriteButton()
@@ -64,6 +74,7 @@ class MpFragment : Fragment() {
 
         viewModel.loadComplete.observe(viewLifecycleOwner, {
             if (it) binding.card.visibility = View.VISIBLE
+            binding.progressBar.visibility = View.GONE
         })
     }
 
@@ -85,6 +96,7 @@ class MpFragment : Fragment() {
             binding.mpFragConstTv.text = mp.constituency
             binding.mpFragMinisterTv.text = mp.ministerStr
             binding.mpFragProfileIv.setImageBitmap(it.image)
+
             viewModel.mpLoaded = true
         })
     }

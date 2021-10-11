@@ -13,8 +13,13 @@ import com.example.mpinspector.repository.models.*
  * @date 10/10/2021
  */
 @Database(version = 1,
-    entities = [MpModel::class, CommentModel::class, FavoriteModel::class,
-        TwitterFeedModel::class, MpTwitterIdModel::class, TweetModel::class],
+    entities = [
+        MpModel::class,
+        CommentModel::class,
+        FavoriteModel::class,
+        TwitterFeedModel::class,
+        MpTwitterIdModel::class,
+        TweetModel::class],
     exportSchema = false)
 abstract class MpDatabase : RoomDatabase() {
     abstract fun mpDao(): MpDao

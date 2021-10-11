@@ -43,7 +43,12 @@ class MpListFragment : MpRecycleViewFragment() {
                 viewModel.partyChipClicked(view.id, checked)
             }
         }
-
         return binding.root
+    }
+
+    // When leaving this view, clear possible search textview.
+    override fun onPause() {
+        super.onPause()
+        binding.personName.text.clear()
     }
 }

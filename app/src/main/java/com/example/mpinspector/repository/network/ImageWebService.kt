@@ -11,6 +11,11 @@ import retrofit2.http.Path
  * @date 10/10/2021
  */
 interface ImageWebService {
+
+    /**
+     * @param picture String Profile picture endpoint.
+     * @return ResponseBody Raw Okhttp3 response object.
+     */
     @GET("{pic}")
     suspend fun getImage(@Path("pic")  picture: String): ResponseBody
 }

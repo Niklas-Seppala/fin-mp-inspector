@@ -3,6 +3,9 @@ package com.example.mpinspector.repository.network
 /**
  * Twitter API query string utils.
  *
+ * API docs:
+ *  https://developer.twitter.com/en/docs/twitter-api/tweets/timelines/api-reference/get-users-id-tweets
+ *
  * @author Niklas Seppälä - 2013018
  * @date 10/10/2021
  */

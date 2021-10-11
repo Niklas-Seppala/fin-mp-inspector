@@ -1,11 +1,12 @@
-package com.example.mpinspector.ui.twitter
+package com.example.mpinspector.ui.adapters
 
 import android.content.Context
 import android.view.animation.AnimationUtils
 import androidx.core.text.HtmlCompat
 import com.example.mpinspector.R
 import com.example.mpinspector.databinding.FragmentTweetBinding
-import com.example.mpinspector.ui.adapters.*
+import com.example.mpinspector.ui.twitter.TweetBundle
+import com.example.mpinspector.ui.twitter.TwitterFeedFragment
 import com.example.mpinspector.utils.MyTime
 import com.example.mpinspector.utils.PartyMapper
 
@@ -25,8 +26,6 @@ class TweetAdapter(private val context: Context,
         false,
         otherListeners = otherListeners
     ) {
-    // https://stackoverflow.com/questions/38506598/regular-expression-to-match-hashtag-but-not-hashtag-with-semicolon
-    private val hashtagRegex = Regex("\\B((\\#|\\@)[a-zA-Z]+\\b)")
 
     override val diffCompare: (TweetBundle, TweetBundle) -> Boolean = { a, b -> a.tweet.id  == b.tweet.id }
 
@@ -34,11 +33,12 @@ class TweetAdapter(private val context: Context,
         otherListeners: Array<OnRecycleViewItemClick<TweetBundle>>?,
         viewHolder: GenericViewHolder<TweetBundle, FragmentTweetBinding>
     ) {
+        // Unpack listeners from array.
         if (otherListeners.isNullOrEmpty()) return
-
         val openInTwitter = otherListeners[TwitterFeedFragment.OPEN_IN_TWITTER_LISTENER]
         val moveToInspect = otherListeners[TwitterFeedFragment.INSPECT_PROFILE_LISTENER]
 
+        // Set listeners.
         viewHolder.binding.tweetOpen.setOnClickListener {
             openInTwitter.onItemClick(viewHolder.itemAtCurrentPos())
             viewHolder.binding.tweetOpen.startAnimation(AnimationUtils.loadAnimation(context, R.anim.icon_click))
@@ -52,7 +52,7 @@ class TweetAdapter(private val context: Context,
     }
 
     override fun bindDataToView(binding: FragmentTweetBinding, item: TweetBundle) {
-        // Process Tweet content
+        // Process Tweet's text content.
         val colored = item.tweet.content.replace(hashtagRegex) { "<font color=#004143><b>${it.value}</b></font>" }
         binding.tweetContent.text = HtmlCompat.fromHtml(colored, HtmlCompat.FROM_HTML_MODE_LEGACY)
         binding.TweetPartyIcon.setImageResource(PartyMapper.partyIcon(item.tweet.authorParty))
@@ -60,5 +60,9 @@ class TweetAdapter(private val context: Context,
         binding.createdAt.text = MyTime.strTime(item.tweet.timestamp * 1000)
         binding.tweetAuthor.text = item.tweet.authorName
         binding.tweetProfilePic.setImageBitmap(item.image)
+    }
+
+    private companion object {
+        val hashtagRegex = Regex("\\B((\\#|\\@)[a-zA-Z]+\\b)")
     }
 }

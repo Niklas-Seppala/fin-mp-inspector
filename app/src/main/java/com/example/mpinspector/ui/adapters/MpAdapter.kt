@@ -19,6 +19,7 @@ class MpAdapter(items: List<MpModel>, listener: OnRecycleViewItemClick<MpModel>)
     GenericAdapter<MpModel, FragmentListMpItemBinding>(
         items,
         R.layout.fragment_list_mp_item,
+        colorEveryOtherItem = false,
         onItemClick = listener
     ) {
 

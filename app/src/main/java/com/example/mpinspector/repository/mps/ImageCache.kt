@@ -6,13 +6,13 @@ import com.example.mpinspector.App
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.lang.Exception
 
 /**
  * @author Niklas Seppälä - 2013018
  * @date 10/10/2021
  */
-class InvalidCacheReadException(msg: String) : Exception(msg)
+class InvalidCacheReadException(cacheId: String) :
+    Exception("No requested \"$cacheId\" cached image exists.")
 
 /**
  * Class for caching images to device disk. If no image is yet cached,
@@ -31,18 +31,22 @@ class ImageCache {
      * and cache map will be empty.
      */
     fun load() {
+        // Only load once.
         if (cacheInitFlag) return
 
-        val imgCacheDir = File("${App.appContext.cacheDir}/img")
-        if (!imgCacheDir.exists()) imgCacheDir.mkdir()
+        // Load cache dir / create one.
+        val cacheDir = File("${App.appContext.cacheDir}/img")
+        if (!cacheDir.exists())
+            cacheDir.mkdir()
 
-        val files = imgCacheDir.listFiles()
+        // Populate cache image map.
+        cacheDir.listFiles()
             ?.filter { it.extension == "jpg" }
             ?.map { it.nameWithoutExtension to it }
-        if (files != null) {
-            cache.putAll(files)
-        }
-        cacheInitFlag = true
+            ?.apply {
+                cacheInitFlag = true
+                cache.putAll(this)
+            }
     }
 
     /**
@@ -55,14 +59,15 @@ class ImageCache {
      */
     @Throws(InvalidCacheReadException::class)
     suspend fun fetch(id: Int, size: ImageSize): Bitmap {
+        // Map size to cache key.
         val cacheId = when (size) {
             ImageSize.SMALL -> "${id}_small"
             ImageSize.NORMAL -> "$id"
         }
 
+        // Load image from disc.
         return withContext<Bitmap>(Dispatchers.IO) {
-            val file = cache[cacheId] ?: throw InvalidCacheReadException(
-                "No requested \"$cacheId\" cached image exists.")
+            val file = cache[cacheId] ?: throw InvalidCacheReadException(cacheId)
             BitmapFactory.decodeStream(file.inputStream())
         }
     }

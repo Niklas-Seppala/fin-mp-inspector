@@ -1,7 +1,7 @@
 package com.example.mpinspector.repository.models
 
 /**
- *
+ * MPs data combined with Twitter profile data.
  *
  * @author Niklas Seppälä - 2013018
  * @date 10/10/2021

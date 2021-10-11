@@ -43,6 +43,11 @@ data class TweetModel(
         timestamp = Instant.parse(createdAt).epochSecond
     }
 
+    /**
+     * Attach owner fields after object creation.
+     *
+     * @param owner: MpTwitterModel
+     */
     fun attachOwner(owner: MpTwitterModel) {
         authorId = owner.personNumber
         authorName = "${owner.first} ${owner.last}"

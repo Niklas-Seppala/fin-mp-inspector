@@ -32,7 +32,7 @@ object Network {
                     .baseUrl("https://avoindata.eduskunta.fi/")
                     .build()
             }
-            return  retrofitImages as Retrofit
+            return retrofitImages as Retrofit
         }
 
     // Twitter
