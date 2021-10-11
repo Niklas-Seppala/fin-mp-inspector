@@ -1,13 +1,12 @@
 package com.example.mpinspector.repository.twitter
 
 import androidx.lifecycle.LiveData
-import com.example.mpinspector.App
 import com.example.mpinspector.repository.db.MpDatabase
 import com.example.mpinspector.repository.models.TweetApiQueryResult
 import com.example.mpinspector.repository.models.TweetModel
 import com.example.mpinspector.repository.models.TwitterFeedModel
 import com.example.mpinspector.repository.network.Network
-import com.example.mpinspector.repository.network.TwitterQueries
+import com.example.mpinspector.repository.network.Twitter
 import com.example.mpinspector.repository.network.TwitterService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -123,10 +122,10 @@ class TwitterData : TwitterDataProvider {
     private suspend fun getTweetsByUser(id: String): TweetApiQueryResult {
         return twitterWebService.getTweets(id,
             count = "10",
-            header = App.TWITTER_AUTH,
-            fields = TwitterQueries.join(arrayOf(
-                TwitterQueries.TweetFields.AUTHOR_ID,
-                TwitterQueries.TweetFields.CREATED_AT)
+            header = Twitter.Auth.TWITTER_AUTH,
+            fields = Twitter.join(arrayOf(
+                Twitter.TweetFields.AUTHOR_ID,
+                Twitter.TweetFields.CREATED_AT)
             )
         )
     }
@@ -142,11 +141,11 @@ class TwitterData : TwitterDataProvider {
     private suspend fun getTweetsByUserSince(id: String, newestId: String): TweetApiQueryResult {
         return twitterWebService.getTweets(id,
             count = "10",
-            header = App.TWITTER_AUTH,
+            header = Twitter.Auth.TWITTER_AUTH,
             sinceId = newestId,
-            fields = TwitterQueries.join(arrayOf(
-                TwitterQueries.TweetFields.AUTHOR_ID,
-                TwitterQueries.TweetFields.CREATED_AT)
+            fields = Twitter.join(arrayOf(
+                Twitter.TweetFields.AUTHOR_ID,
+                Twitter.TweetFields.CREATED_AT)
             )
         )
     }
