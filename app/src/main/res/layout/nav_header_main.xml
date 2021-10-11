@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/side_nav_bar"
+    android:paddingTop="24dp"
+    android:paddingBottom="32dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
@@ -12,21 +14,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginTop="32dp"
         android:contentDescription="@string/nav_header_desc"
-        android:paddingTop="20dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_logo" />
+        app:srcCompat="@drawable/ic_gov" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="-4dp"
         android:text="Finnish Parliament"
         android:textSize="16sp"
         android:textStyle="bold"
