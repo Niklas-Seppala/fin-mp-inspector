@@ -1,8 +1,15 @@
 # Native Android application for following finnish MPs.
 
+### NOTE: before building the project
+At the root of the project, add `apikeys.properties` file with following content:
+```properties
+CONSUMER_KEY="TWITTER_API_KEY"
+```
+
 ## Product Requirements
 ___The target of the project is to design and implement an application that allows user to browse information about members of the
 parliament. It should also be possible to add comments about the MP and give them grades about their performance.___
+- Kotlin
 - Android Jetpack Architecture
 - Image chaching
 - LiveData
